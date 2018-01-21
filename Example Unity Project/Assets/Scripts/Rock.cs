@@ -2,13 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HelloWorld : MonoBehaviour {
+public class Rock : MonoBehaviour {
 
 	void Start () {
-        Debug.Log("Hello World!");
-    }
+	}
 	
 	void Update () {
-		
 	}
 }
