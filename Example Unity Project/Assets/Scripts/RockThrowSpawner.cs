@@ -6,6 +6,10 @@ public class RockThrowSpawner : MonoBehaviour {
 	[SerializeField]
 	private GameObject _thrownRockPrefab;
 
+	public float rockThrowDistanceZ = 15f;
+	public float rockThrowAmplitude = 15f;
+	public float rockThrowSpeed = 4f;
+
 	private float[] _pattern;
 	private int _currentPattern = -1;
 	private float _timeSinceLastSpawn;
@@ -22,7 +26,7 @@ public class RockThrowSpawner : MonoBehaviour {
 
 		if (_timeSinceLastSpawn > _nextSpawn) {
 			GameObject thrownRock = Instantiate(_thrownRockPrefab) as GameObject;
-			thrownRock.GetComponent<ThrownRock>().Initialize(transform.position.x, 15, 15, 4);
+			thrownRock.GetComponent<ThrownItem>().Initialize(transform.position.x, rockThrowDistanceZ, rockThrowAmplitude, rockThrowSpeed);
 
 			NextTimer();
 		}

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ThrownRock : MonoBehaviour {
+public class ThrownItem : MonoBehaviour {
 
 	private float _targetX;
 	private float _distanceZ;

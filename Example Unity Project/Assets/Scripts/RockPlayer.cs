@@ -11,14 +11,16 @@ public class RockPlayer : MonoBehaviour {
 	public float hurtDuration = 0.2f;
 	public float hurtShakeSpeed = 50f;
 	public float hurtShakeAmplitude = 0.1f;
-	public float hurtPlayerSize = 1.5f;
+	public float hurtSquashRatio = 0.8f;
 	private bool _shieldActive = false;
 	private bool _isHurt = false;
 	private float _hurtTimer = 0f;
 	private Vector3 _originalPosition;
+	private Vector3 _originalScale;
 
 	void Start () {
 		_originalPosition = transform.position;
+		_originalScale = transform.localScale;
 		GetComponent<Renderer>().material = defaultMaterial;
 	}
 	
@@ -29,20 +31,16 @@ public class RockPlayer : MonoBehaviour {
 
 		if (_isHurt) {
 			float shakeX = -1 * Mathf.Cos(_hurtTimer * hurtShakeSpeed) * hurtShakeAmplitude;
-			transform.position = new Vector3(_originalPosition.x + shakeX, _originalPosition.y, _originalPosition.z);
+			transform.position = new Vector3(_originalPosition.x + shakeX, transform.position.y, _originalPosition.z);
 			_hurtTimer += Time.deltaTime;
 		}
 	}
 
 	private void OnTriggerEnter(Collider other) {
-		Rock rock = other.GetComponent<Rock>();
-		ThrownRock thrownRock = other.GetComponent<ThrownRock>();
-		if (rock != null || thrownRock != null) {
-			if (!_shieldActive) {
-				StartCoroutine(Hurt());
-			}
-			if (rock != null) Destroy(rock.gameObject);
-			if (thrownRock != null) Destroy(thrownRock.gameObject);
+		ThrownItem thrownItem = other.GetComponent<ThrownItem>();
+		if (thrownItem != null) {
+			if (!_shieldActive) StartCoroutine(Hurt());
+			Destroy(thrownItem.gameObject);
 		}
 	}
 
@@ -59,13 +57,14 @@ public class RockPlayer : MonoBehaviour {
 	private IEnumerator Hurt() {
 		_isHurt = true;
 		_hurtTimer = 0f;
-		transform.localScale = Vector3.one * hurtPlayerSize;
+		transform.localScale = new Vector3(_originalScale.x, _originalScale.y * hurtSquashRatio, _originalScale.z);
+		transform.position = new Vector3(_originalPosition.x, _originalPosition.y - _originalScale.y * (1 - hurtSquashRatio) / 2, _originalPosition.z);
 		GetComponent<Renderer>().material.color = Color.red;
 
 		yield return new WaitForSeconds(hurtDuration);
 
 		_isHurt = false;
-		transform.localScale = Vector3.one;
+		transform.localScale = _originalScale;
 		transform.position = _originalPosition;
 		if (_shieldActive) {
 			GetComponent<Renderer>().material.color = shieldMaterial.color;
