@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RockDropSpawner : MonoBehaviour {
-	[SerializeField] private GameObject _rockPrefab;
+public class RockThrowSpawner : MonoBehaviour {
+	[SerializeField]
+	private GameObject _thrownRockPrefab;
 
 	private float[] _pattern;
 	private int _currentPattern = -1;
@@ -11,17 +12,17 @@ public class RockDropSpawner : MonoBehaviour {
 	private float _nextSpawn;
 	private bool _done = false;
 
-	void Start () {
+	void Start() {
 	}
-	
-	void Update () {
+
+	void Update() {
 		if (_pattern == null) return;
 
 		_timeSinceLastSpawn += Time.deltaTime;
 
 		if (_timeSinceLastSpawn > _nextSpawn) {
-			GameObject rock = Instantiate(_rockPrefab) as GameObject;
-			rock.transform.position = transform.position;
+			GameObject thrownRock = Instantiate(_thrownRockPrefab) as GameObject;
+			thrownRock.GetComponent<ThrownRock>().Initialize(transform.position.x, 15, 15, 4);
 
 			NextTimer();
 		}

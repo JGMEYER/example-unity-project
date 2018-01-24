@@ -34,7 +34,7 @@ public class RockSceneController : MonoBehaviour {
 			Vector3 playerPos = player.transform.position;
 			GameObject spawner = Instantiate(_rockSpawnerPrefab) as GameObject;
 			spawner.transform.position = new Vector3(playerPos.x, rockHeightAbovePlayers, playerPos.z);
-			RockDropSpawner rockSpawnerScript = spawner.GetComponent<RockDropSpawner>();
+			RockThrowSpawner rockSpawnerScript = spawner.GetComponent<RockThrowSpawner>();
 			rockSpawnerScript.Initialize(pattern);
 		}
 	}

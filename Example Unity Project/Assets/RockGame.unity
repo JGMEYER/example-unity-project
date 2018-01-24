@@ -136,7 +136,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 667289234}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.68050814, y: 1.1220958, z: -0.104579926}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -153,7 +153,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f2f91b9357c28c4caa64fa2e93bde7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _rockSpawnerPrefab: {fileID: 1980085153567578, guid: 3ebfba6ae82c54842acb1d0c4fdf2425,
+  _rockSpawnerPrefab: {fileID: 1615082500221788, guid: 28d33f8296021d64aa8c19a9346ec3a8,
     type: 2}
   numRocks: 100
   minSpawnDelaySec: 0.5

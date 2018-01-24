@@ -36,11 +36,13 @@ public class RockPlayer : MonoBehaviour {
 
 	private void OnTriggerEnter(Collider other) {
 		Rock rock = other.GetComponent<Rock>();
-		if (rock != null) {
+		ThrownRock thrownRock = other.GetComponent<ThrownRock>();
+		if (rock != null || thrownRock != null) {
 			if (!_shieldActive) {
 				StartCoroutine(Hurt());
 			}
-			Destroy(rock.gameObject);
+			if (rock != null) Destroy(rock.gameObject);
+			if (thrownRock != null) Destroy(thrownRock.gameObject);
 		}
 	}
 
