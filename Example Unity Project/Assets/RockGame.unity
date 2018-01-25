@@ -125,7 +125,7 @@ GameObject:
   - component: {fileID: 340702299}
   - component: {fileID: 340702298}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: Floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -243,7 +243,6 @@ MonoBehaviour:
   minSpawnDelaySec: 0.5
   maxSpawnDelaySec: 1.5
   spawnDelayInterval: 0.25
-  rockHeightAbovePlayers: 5
 --- !u!1 &983020491
 GameObject:
   m_ObjectHideFlags: 0
@@ -257,6 +256,7 @@ GameObject:
   - component: {fileID: 983020494}
   - component: {fileID: 983020493}
   - component: {fileID: 983020492}
+  - component: {fileID: 983020498}
   m_Layer: 0
   m_Name: Player3
   m_TagString: Untagged
@@ -364,6 +364,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &983020498
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 983020491}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d534dfe8ba30484cb1ea15fc0f37825, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  turnSpeed: 6
+  maxTurnAngle: 6
+  wobbleSpeed: 1
+  maxWobbleAngle: 2
 --- !u!1 &1188937512
 GameObject:
   m_ObjectHideFlags: 0
@@ -377,6 +392,7 @@ GameObject:
   - component: {fileID: 1188937515}
   - component: {fileID: 1188937514}
   - component: {fileID: 1188937513}
+  - component: {fileID: 1188937519}
   m_Layer: 0
   m_Name: Player1
   m_TagString: Untagged
@@ -484,6 +500,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1188937519
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1188937512}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d534dfe8ba30484cb1ea15fc0f37825, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  turnSpeed: 6
+  maxTurnAngle: 6
+  wobbleSpeed: 1
+  maxWobbleAngle: 2
 --- !u!1 &1340241884
 GameObject:
   m_ObjectHideFlags: 0
@@ -562,6 +593,7 @@ GameObject:
   - component: {fileID: 1584481700}
   - component: {fileID: 1584481699}
   - component: {fileID: 1584481698}
+  - component: {fileID: 1584481704}
   m_Layer: 0
   m_Name: Player4
   m_TagString: Untagged
@@ -669,6 +701,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1584481704
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1584481697}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d534dfe8ba30484cb1ea15fc0f37825, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  turnSpeed: 6
+  maxTurnAngle: 6
+  wobbleSpeed: 1
+  maxWobbleAngle: 2
 --- !u!1 &1801470404
 GameObject:
   m_ObjectHideFlags: 0
@@ -763,6 +810,7 @@ GameObject:
   - component: {fileID: 1923678579}
   - component: {fileID: 1923678578}
   - component: {fileID: 1923678577}
+  - component: {fileID: 1923678583}
   m_Layer: 0
   m_Name: Player2
   m_TagString: Untagged
@@ -870,6 +918,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1923678583
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1923678576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d534dfe8ba30484cb1ea15fc0f37825, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  turnSpeed: 6
+  maxTurnAngle: 6
+  wobbleSpeed: 1
+  maxWobbleAngle: 2
 --- !u!1 &1956740574
 GameObject:
   m_ObjectHideFlags: 0
