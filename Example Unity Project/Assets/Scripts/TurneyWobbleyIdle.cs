@@ -17,7 +17,8 @@ public class TurneyWobbleyIdle : IdleAnim {
 		_turnTimer += Time.deltaTime;
 
 		float turnY = Mathf.Sin(_turnTimer * turnSpeed) * maxTurnAngle;
-		transform.eulerAngles = new Vector3(0, turnY, 0);
+		float turnZ = Mathf.Sin(_turnTimer * wobbleSpeed) * maxWobbleAngle;
+		transform.eulerAngles = new Vector3(0, turnY, turnZ);
 	}
 
 	public new void Restart() {

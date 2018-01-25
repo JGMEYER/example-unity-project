@@ -375,10 +375,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d534dfe8ba30484cb1ea15fc0f37825, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  turnSpeed: 6
+  turnSpeed: 8
   maxTurnAngle: 6
-  wobbleSpeed: 1
-  maxWobbleAngle: 2
+  wobbleSpeed: 0
+  maxWobbleAngle: 0
 --- !u!1 &1188937512
 GameObject:
   m_ObjectHideFlags: 0
@@ -511,10 +511,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d534dfe8ba30484cb1ea15fc0f37825, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  turnSpeed: 6
+  turnSpeed: 8
   maxTurnAngle: 6
-  wobbleSpeed: 1
-  maxWobbleAngle: 2
+  wobbleSpeed: 0
+  maxWobbleAngle: 0
 --- !u!1 &1340241884
 GameObject:
   m_ObjectHideFlags: 0
@@ -712,10 +712,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d534dfe8ba30484cb1ea15fc0f37825, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  turnSpeed: 6
+  turnSpeed: 8
   maxTurnAngle: 6
-  wobbleSpeed: 1
-  maxWobbleAngle: 2
+  wobbleSpeed: 0
+  maxWobbleAngle: 0
 --- !u!1 &1801470404
 GameObject:
   m_ObjectHideFlags: 0
@@ -929,10 +929,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d534dfe8ba30484cb1ea15fc0f37825, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  turnSpeed: 6
+  turnSpeed: 8
   maxTurnAngle: 6
-  wobbleSpeed: 1
-  maxWobbleAngle: 2
+  wobbleSpeed: 0
+  maxWobbleAngle: 0
 --- !u!1 &1956740574
 GameObject:
   m_ObjectHideFlags: 0
