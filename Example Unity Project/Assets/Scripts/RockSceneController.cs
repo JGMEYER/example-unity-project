@@ -9,7 +9,6 @@ public class RockSceneController : MonoBehaviour {
 	public float minSpawnDelaySec = 1f;
 	public float maxSpawnDelaySec = 1.5f;
 	public float spawnDelayInterval = 0.5f;
-	public float rockHeightAbovePlayers = 5;
 
 	void Start () {
 		InitializeSpawners();
@@ -33,7 +32,7 @@ public class RockSceneController : MonoBehaviour {
 		foreach (RockPlayer player in players) {
 			Vector3 playerPos = player.transform.position;
 			GameObject spawner = Instantiate(_rockSpawnerPrefab) as GameObject;
-			spawner.transform.position = new Vector3(playerPos.x, rockHeightAbovePlayers, playerPos.z);
+			spawner.transform.position = new Vector3(playerPos.x, 2, playerPos.z);
 			RockThrowSpawner rockSpawnerScript = spawner.GetComponent<RockThrowSpawner>();
 			rockSpawnerScript.Initialize(pattern);
 		}

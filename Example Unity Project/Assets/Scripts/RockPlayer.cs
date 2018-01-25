@@ -33,6 +33,9 @@ public class RockPlayer : MonoBehaviour {
 			float shakeX = -1 * Mathf.Cos(_hurtTimer * hurtShakeSpeed) * hurtShakeAmplitude;
 			transform.position = new Vector3(_originalPosition.x + shakeX, transform.position.y, _originalPosition.z);
 			_hurtTimer += Time.deltaTime;
+
+			IdleAnim idleAnim = GetComponent<IdleAnim>();
+			if (idleAnim) idleAnim.Restart();
 		}
 	}
 
