@@ -7,6 +7,8 @@ public class RockPlayer : MonoBehaviour {
 	public KeyCode playerKey;
 	public Material defaultMaterial;
 	public Material shieldMaterial;
+	public int shieldDamage = 5;
+	public int hurtDamage = 15;
 	public float shieldDuration = 0.2f;
 	public float hurtDuration = 0.2f;
 	public float hurtShakeSpeed = 50f;
@@ -18,9 +20,12 @@ public class RockPlayer : MonoBehaviour {
 	private Vector3 _originalPosition;
 	private Vector3 _originalScale;
 
-	void Start () {
+	private void Awake() {
 		_originalPosition = transform.position;
 		_originalScale = transform.localScale;
+	}
+
+	void Start () {
 		GetComponent<Renderer>().material = defaultMaterial;
 	}
 	
@@ -35,19 +40,25 @@ public class RockPlayer : MonoBehaviour {
 			_hurtTimer += Time.deltaTime;
 
 			IdleAnim idleAnim = GetComponent<IdleAnim>();
-			if (idleAnim) idleAnim.Restart();
+			if (idleAnim) {
+				idleAnim.Restart();
+			}
 		}
 	}
 
 	private void OnTriggerEnter(Collider other) {
 		ThrownItem thrownItem = other.GetComponent<ThrownItem>();
 		if (thrownItem != null) {
-			if (!_shieldActive) StartCoroutine(Hurt());
+			if (!_shieldActive) {
+				StartCoroutine(Hurt());
+			}
 			Destroy(thrownItem.gameObject);
 		}
 	}
 
 	private IEnumerator ActivateShield() {
+		GetComponent<PlayerHealth>().TakeDamage(shieldDamage);
+
 		_shieldActive = true;
 		GetComponent<Renderer>().material = shieldMaterial;
 
@@ -58,6 +69,8 @@ public class RockPlayer : MonoBehaviour {
 	}
 
 	private IEnumerator Hurt() {
+		GetComponent<PlayerHealth>().TakeDamage(hurtDamage);
+
 		_isHurt = true;
 		_hurtTimer = 0f;
 		transform.localScale = new Vector3(_originalScale.x, _originalScale.y * hurtSquashRatio, _originalScale.z);
