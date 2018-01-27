@@ -7,7 +7,5 @@ public class CameraScreenResolution : MonoBehaviour {
 	void Start () {
 		Screen.SetResolution(1080, 1920, true);
 	}
-	
-	void Update () {
-	}
+
 }

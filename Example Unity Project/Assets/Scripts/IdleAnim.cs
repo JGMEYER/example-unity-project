@@ -4,12 +4,6 @@ using UnityEngine;
 
 public class IdleAnim : MonoBehaviour {
 
-	void Start () {
-	}
-	
-	void Update () {
-	}
+	public void Restart () {}
 
-	public void Restart () {
-	}
 }

@@ -15,10 +15,6 @@ public class PlayerHealth : MonoBehaviour {
 	void Start () {
 		healthSlider.value = currentHealth;		
 	}
-	
-	void Update () {
-		
-	}
 
 	public bool isDead () {
 		return currentHealth <= 0;
