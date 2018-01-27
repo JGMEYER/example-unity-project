@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class RockSceneController : MonoBehaviour {
+
 	[SerializeField] private GameObject _rockSpawnerPrefab;
 	[SerializeField] private PlayerControlsController _playerControlsController;
 
@@ -14,9 +15,6 @@ public class RockSceneController : MonoBehaviour {
 	void Start () {
 		InitializePlayers();
 		InitializeSpawners();
-	}
-	
-	void Update () {
 	}
 
 	private void InitializePlayers() {
@@ -51,4 +49,5 @@ public class RockSceneController : MonoBehaviour {
 			rockSpawnerScript.Initialize(pattern);
 		}
 	}
+
 }

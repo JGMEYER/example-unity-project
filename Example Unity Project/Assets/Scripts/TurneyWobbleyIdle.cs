@@ -9,9 +9,6 @@ public class TurneyWobbleyIdle : IdleAnim {
 	public float wobbleSpeed = 1f;
 	public float maxWobbleAngle = 2f;
 	private float _turnTimer = 0f;
-
-	void Start () {
-	}
 	
 	void Update () {
 		_turnTimer += Time.deltaTime;
@@ -24,4 +21,5 @@ public class TurneyWobbleyIdle : IdleAnim {
 	public new void Restart() {
 		_turnTimer = 0f;
 	}
+
 }

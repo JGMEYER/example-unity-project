@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class RockThrowSpawner : MonoBehaviour {
+
 	[SerializeField]
 	private GameObject _thrownRockPrefab;
 
@@ -15,9 +16,6 @@ public class RockThrowSpawner : MonoBehaviour {
 	private float _timeSinceLastSpawn;
 	private float _nextSpawn;
 	private bool _done = false;
-
-	void Start() {
-	}
 
 	void Update() {
 		if (_pattern == null) return;

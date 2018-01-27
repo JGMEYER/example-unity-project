@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
@@ -22,6 +22,7 @@ public class IcePlayer : MonoBehaviour {
     void Start() {
         rb = GetComponent<Rigidbody>();
         transform.position = spawnPoint;
+
         updateLifeText();
     }
 

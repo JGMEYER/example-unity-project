@@ -11,9 +11,6 @@ public class ThrownItem : MonoBehaviour {
 	private float _a;  // width modifier for parabola
 	private float _currentZ;
 
-	void Start () {
-	}
-	
 	void Update () {
 		_currentZ -= Time.deltaTime * _speed;
 

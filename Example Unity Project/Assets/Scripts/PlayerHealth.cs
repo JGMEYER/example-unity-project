@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class PlayerHealth : MonoBehaviour {
+
 	public Slider healthSlider;
 	public int totalHealth = 100;
 	public int currentHealth;
@@ -29,4 +30,5 @@ public class PlayerHealth : MonoBehaviour {
 
 		healthSlider.value = currentHealth;
 	}
+
 }
