@@ -4,15 +4,17 @@ using UnityEngine;
 
 public class RockSceneController : MonoBehaviour {
 
-	[SerializeField] private GameObject _rockSpawnerPrefab;
-	[SerializeField] private PlayerControlsController _playerControlsController;
+	[SerializeField]
+	private GameObject _rockSpawnerPrefab;
+	[SerializeField]
+	private PlayerControlsController _playerControlsController;
 
 	public int numRocks = 6;
 	public float minSpawnDelaySec = 1f;
 	public float maxSpawnDelaySec = 1.5f;
 	public float spawnDelayInterval = 0.5f;
 
-	void Start () {
+	void Start() {
 		InitializePlayers();
 		InitializeSpawners();
 	}

@@ -5,18 +5,17 @@ using UnityEngine;
 
 public class IcePlayer : MonoBehaviour {
 
+    public KeyCode upKey;
+	public KeyCode leftKey;
+    public KeyCode downKey;
+    public KeyCode rightKey;
     public float speed;
-    public string inputKeys = "wasd";
     public Vector3 spawnPoint;
     public float collisionForce;
     public int numLife = 3;
     public Text lifeText;
 
     private Rigidbody rb;
-    private string left;
-    private string right;
-    private string up;
-    private string down;
     private Vector3 currentPosition;
 
     void Start() {
@@ -27,18 +26,6 @@ public class IcePlayer : MonoBehaviour {
     }
 
     void FixedUpdate() {
-        float moveHorizontal = 0;
-        float moveVertical = 0;
-        if (inputKeys.Equals("arrows")) {
-            moveHorizontal = Input.GetAxis("Horizontal");
-            moveVertical = Input.GetAxis("Vertical");
-        } else if (inputKeys.Equals("wasd")) {
-            moveHorizontal = Input.GetAxis("Horizontal2");
-            moveVertical = Input.GetAxis("Vertical2");
-        }
-        Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
-
-        rb.AddForce(movement * speed);
     }
 
     void OnCollisionEnter(Collision collision) {
@@ -53,15 +40,34 @@ public class IcePlayer : MonoBehaviour {
     void Update() {
         currentPosition = transform.position;
         if (currentPosition.y < -20) {
-            handleDeath();
+            HandleDeath();
         }
+
+        float moveHorizontal = 0;
+        float moveVertical = 0;
+
+		if (Input.GetKey(upKey)) {
+			moveVertical += 1;
+		}
+		if (Input.GetKey(leftKey)) {
+			moveHorizontal -= 1;
+		}
+		if (Input.GetKey(downKey)) {
+			moveVertical -= 1;
+		}
+		if (Input.GetKey(rightKey)) {
+			moveHorizontal += 1;
+		}
+
+		Vector3 movement = new Vector3(moveHorizontal, 0f, moveVertical);
+        rb.AddForce(movement * speed);
     }
 
     public Rigidbody GetRigidBody() {
         return rb;
     }
 
-    private void handleDeath() {
+    private void HandleDeath() {
         numLife--;
         updateLifeText();
 
@@ -72,7 +78,7 @@ public class IcePlayer : MonoBehaviour {
         } else {
             GameObject manager = GameObject.Find("IceGameManager");
             IceGameManager iceManager = (IceGameManager)manager.GetComponent(typeof(IceGameManager));
-            iceManager.handlePlayerDeath(this.name);
+            iceManager.HandlePlayerDeath(this.name);
             Destroy(this);
         }
     }
