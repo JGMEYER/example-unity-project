@@ -25,8 +25,9 @@ public class RockThrowSpawner : MonoBehaviour {
 		if (_timeSinceLastSpawn > _nextSpawn) {
 			GameObject thrownRock = Instantiate(_thrownRockPrefab) as GameObject;
 			thrownRock.GetComponent<ThrownItem>().Initialize(transform.position.x, rockThrowDistanceZ, rockThrowAmplitude, rockThrowSpeed);
+            FindObjectOfType<AudioManager>().Play("Throw");
 
-			NextTimer();
+            NextTimer();
 		}
 	}
 

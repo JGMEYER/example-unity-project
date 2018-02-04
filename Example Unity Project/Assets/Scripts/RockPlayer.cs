@@ -39,7 +39,7 @@ public class RockPlayer : MonoBehaviour {
 			transform.position = new Vector3(_originalPosition.x + shakeX, transform.position.y, _originalPosition.z);
 			_hurtTimer += Time.deltaTime;
 
-			IdleAnim idleAnim = GetComponent<IdleAnim>();
+            IdleAnim idleAnim = GetComponent<IdleAnim>();
 			if (idleAnim) {
 				idleAnim.Restart();
 			}
@@ -70,8 +70,9 @@ public class RockPlayer : MonoBehaviour {
 
 	private IEnumerator Hurt() {
 		GetComponent<PlayerHealth>().TakeDamage(hurtDamage);
+        FindObjectOfType<AudioManager>().Play("Hit");
 
-		_isHurt = true;
+        _isHurt = true;
 		_hurtTimer = 0f;
 		transform.localScale = new Vector3(_originalScale.x, _originalScale.y * hurtSquashRatio, _originalScale.z);
 		transform.position = new Vector3(_originalPosition.x, _originalPosition.y - _originalScale.y * (1 - hurtSquashRatio) / 2, _originalPosition.z);
