@@ -9,14 +9,18 @@ public class IcePlayer : MonoBehaviour {
 	public KeyCode leftKey;
     public KeyCode downKey;
     public KeyCode rightKey;
-    public float speed;
+    public float acceleration;
     public Vector3 spawnPoint;
     public float collisionForce;
     public int numLife = 3;
     public Text lifeText;
+    public float maxSpeed = 8;
 
     private Rigidbody rb;
     private Vector3 currentPosition;
+    private int fallFloor = 20;
+    private int floorHeight = 2;
+    private int resetHeight = -20;
 
     void Start() {
         rb = GetComponent<Rigidbody>();
@@ -34,37 +38,49 @@ public class IcePlayer : MonoBehaviour {
             dir = -dir.normalized;
             dir.y = 0;
             GetComponent<Rigidbody>().AddForce(dir * collisionForce);
+            FindObjectOfType<AudioManager>().Play("Bump");
         }
     }
 
     void Update() {
         currentPosition = transform.position;
-        if (currentPosition.y < -20) {
+        if (currentPosition.y < resetHeight) {
             HandleDeath();
         }
 
-        float moveHorizontal = 0;
-        float moveVertical = 0;
-
-		if (Input.GetKey(upKey)) {
-			moveVertical += 1;
-		}
-		if (Input.GetKey(leftKey)) {
-			moveHorizontal -= 1;
-		}
-		if (Input.GetKey(downKey)) {
-			moveVertical -= 1;
-		}
-		if (Input.GetKey(rightKey)) {
-			moveHorizontal += 1;
-		}
-
-		Vector3 movement = new Vector3(moveHorizontal, 0f, moveVertical);
-        rb.AddForce(movement * speed);
+        if (currentPosition.y > floorHeight) {
+            HandleInput();
+        }
     }
 
     public Rigidbody GetRigidBody() {
         return rb;
+    }
+
+    private void HandleInput() {
+        float moveHorizontal = 0;
+        float moveVertical = 0;
+
+        if (Input.GetKey(upKey)) {
+            moveVertical += 1;
+        }
+        if (Input.GetKey(leftKey)) {
+            moveHorizontal -= 1;
+        }
+        if (Input.GetKey(downKey)) {
+            moveVertical -= 1;
+        }
+        if (Input.GetKey(rightKey)) {
+            moveHorizontal += 1;
+        }
+
+        Vector3 movement = new Vector3(moveHorizontal, 0f, moveVertical);
+
+        rb.AddForce(movement * acceleration);
+
+        if (rb.velocity.magnitude > maxSpeed) {
+            rb.velocity = rb.velocity.normalized * maxSpeed;
+        }
     }
 
     private void HandleDeath() {
@@ -79,7 +95,7 @@ public class IcePlayer : MonoBehaviour {
             GameObject manager = GameObject.Find("IceGameManager");
             IceGameManager iceManager = (IceGameManager)manager.GetComponent(typeof(IceGameManager));
             iceManager.HandlePlayerDeath(this.name);
-            Destroy(this);
+            Destroy(this.gameObject);
         }
     }
 

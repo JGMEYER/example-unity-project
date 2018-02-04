@@ -1537,6 +1537,98 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1149891692}
+--- !u!1001 &1161086545
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 114995063160217296, guid: 133e0d0e8a744bb40938bf57974aaa10,
+        type: 2}
+      propertyPath: sounds.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4141733599417230, guid: 133e0d0e8a744bb40938bf57974aaa10, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: -2.49
+      objectReference: {fileID: 0}
+    - target: {fileID: 4141733599417230, guid: 133e0d0e8a744bb40938bf57974aaa10, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 2.37
+      objectReference: {fileID: 0}
+    - target: {fileID: 4141733599417230, guid: 133e0d0e8a744bb40938bf57974aaa10, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0.88399994
+      objectReference: {fileID: 0}
+    - target: {fileID: 4141733599417230, guid: 133e0d0e8a744bb40938bf57974aaa10, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4141733599417230, guid: 133e0d0e8a744bb40938bf57974aaa10, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4141733599417230, guid: 133e0d0e8a744bb40938bf57974aaa10, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4141733599417230, guid: 133e0d0e8a744bb40938bf57974aaa10, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4141733599417230, guid: 133e0d0e8a744bb40938bf57974aaa10, type: 2}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 114995063160217296, guid: 133e0d0e8a744bb40938bf57974aaa10,
+        type: 2}
+      propertyPath: sounds.Array.data[0].name
+      value: Theme
+      objectReference: {fileID: 0}
+    - target: {fileID: 114995063160217296, guid: 133e0d0e8a744bb40938bf57974aaa10,
+        type: 2}
+      propertyPath: sounds.Array.data[0].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 0377f90054597b14d95c29bc38e2b4f5, type: 3}
+    - target: {fileID: 114995063160217296, guid: 133e0d0e8a744bb40938bf57974aaa10,
+        type: 2}
+      propertyPath: sounds.Array.data[0].volume
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 114995063160217296, guid: 133e0d0e8a744bb40938bf57974aaa10,
+        type: 2}
+      propertyPath: sounds.Array.data[0].loop
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114995063160217296, guid: 133e0d0e8a744bb40938bf57974aaa10,
+        type: 2}
+      propertyPath: sounds.Array.data[1].name
+      value: Theme
+      objectReference: {fileID: 0}
+    - target: {fileID: 114995063160217296, guid: 133e0d0e8a744bb40938bf57974aaa10,
+        type: 2}
+      propertyPath: sounds.Array.data[1].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 0377f90054597b14d95c29bc38e2b4f5, type: 3}
+    - target: {fileID: 114995063160217296, guid: 133e0d0e8a744bb40938bf57974aaa10,
+        type: 2}
+      propertyPath: sounds.Array.data[1].volume
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 114995063160217296, guid: 133e0d0e8a744bb40938bf57974aaa10,
+        type: 2}
+      propertyPath: sounds.Array.data[1].pitch
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114995063160217296, guid: 133e0d0e8a744bb40938bf57974aaa10,
+        type: 2}
+      propertyPath: sounds.Array.data[1].loop
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 133e0d0e8a744bb40938bf57974aaa10, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1 &1270090808
 GameObject:
   m_ObjectHideFlags: 0

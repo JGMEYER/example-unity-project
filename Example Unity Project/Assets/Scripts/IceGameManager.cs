@@ -14,7 +14,8 @@ public class IceGameManager : MonoBehaviour {
 
 	void Start() {
 		InitializePlayers();
-	}
+        //FindObjectOfType<AudioManager>().Play("Theme");
+    }
 
 	public void HandlePlayerDeath(string playerName) {
 		playersDead++;
