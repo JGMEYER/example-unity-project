@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine;
 
@@ -21,6 +22,8 @@ public class IcePlayer : MonoBehaviour {
     private int fallFloor = 20;
     private int floorHeight = 2;
     private int resetHeight = -20;
+
+    private string SceneSelect = "MainMenu";
 
     void Start() {
         rb = GetComponent<Rigidbody>();
@@ -58,6 +61,11 @@ public class IcePlayer : MonoBehaviour {
     }
 
     private void HandleInput() {
+
+        if (Input.GetKey(KeyCode.Escape)) {
+            SceneManager.LoadSceneAsync(SceneSelect);
+        }
+
         float moveHorizontal = 0;
         float moveVertical = 0;
 

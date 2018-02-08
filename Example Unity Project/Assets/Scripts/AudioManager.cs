@@ -7,6 +7,8 @@ public class AudioManager : MonoBehaviour {
     // To play sound
     // FindObjectOfType<AudioManager>().Play("SoundName");
 
+
+    public bool mute = false;
     public Sound[] sounds;
 
 	void Awake () {
@@ -26,10 +28,10 @@ public class AudioManager : MonoBehaviour {
 	
 	public void Play(string name) {
         Sound s = Array.Find(sounds, sound => sound.name == name);
-        if (s == null) {
+        if (s == null || mute == true) {
             return;
         }
         s.source.Play();
-        Debug.Log("Sound played: " + name);
+        //Debug.Log("Sound played: " + name);
     }
 }
