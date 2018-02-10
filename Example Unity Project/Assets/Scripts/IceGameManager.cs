@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class IceGameManager : MonoBehaviour {
 
@@ -11,16 +12,18 @@ public class IceGameManager : MonoBehaviour {
 	public int numPlayers;
 	public int playersDead = 0;
 	public Text victoryText;
+    private bool gameOver;
 
 	void Start() {
 		InitializePlayers();
-        //FindObjectOfType<AudioManager>().Play("Theme");
+        gameOver = false;
     }
 
 	public void HandlePlayerDeath(string playerName) {
 		playersDead++;
 		if (playersDead >= numPlayers - 1) {
-			victoryText.text = "Game Over!";
+			victoryText.text = "Game Over! Press ENTER to continue";
+            gameOver = true;
 		}
 	}
 
@@ -45,5 +48,11 @@ public class IceGameManager : MonoBehaviour {
 			player.rightKey = (KeyCode)System.Enum.Parse(typeof(KeyCode), playerRight);
 		}
 	}
+
+    void Update() {
+        if (gameOver && Input.GetKey(KeyCode.KeypadEnter)) {
+            SceneManager.LoadScene("MainMenu");
+        }
+    }
 
 }
