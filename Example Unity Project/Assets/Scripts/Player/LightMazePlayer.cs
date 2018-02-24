@@ -47,10 +47,6 @@ public class LightMazePlayer : MonoBehaviour {
 		}
 
 		Vector3 movement = new Vector3(moveHorizontal, moveVertical, 0);
-
-		Debug.Log(movement);
-		Debug.Log(canJump);
-
 		rb.AddForce(movement * acceleration);
 
 		if (rb.velocity.magnitude > maxSpeed) {
@@ -64,25 +60,17 @@ public class LightMazePlayer : MonoBehaviour {
 			return;
 		}
 
-		Debug.Log("colliding!");
+		bool collidingWithCeiling = false;
+		RaycastHit hit;
+		if (Physics.Raycast(transform.position, Vector3.up, out hit)) {
+			if (hit.distance < 1) {
+				collidingWithCeiling = true;
+			}
+		}
 
-		Vector3 collisionNormal = collision.contacts[0].normal;
-
-		canJump = true;
-
-		//if (collisionNormal.y > 0) {
-		//	canJump = true;
-		//}
-
-		//Debug.Log(collisionNormal);
-		//Debug.Log(canJump);
+		if (!collidingWithCeiling) {
+			canJump = true;
+		}
 	}
-
-	/*
-	public bool IsGrounded() {
-		float distToGround = rb.collider.bounds.extents.y;
-		return Physics.Raycast(transform.position, -Vector3.up, distToGround + 0.1);
-	}
-	*/
 
 }
