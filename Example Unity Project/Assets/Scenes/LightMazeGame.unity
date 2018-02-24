@@ -376,9 +376,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d0179b7a1bff7443b54189592e46298, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  upKey: 119
-  leftKey: 97
-  rightKey: 100
+  upKey: 273
+  leftKey: 276
+  rightKey: 275
   acceleration: 14
   verticalAccelerationMultiplier: 30
   maxSpeed: 9
@@ -1852,9 +1852,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d0179b7a1bff7443b54189592e46298, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  upKey: 119
-  leftKey: 97
-  rightKey: 100
+  upKey: 112
+  leftKey: 108
+  rightKey: 39
   acceleration: 14
   verticalAccelerationMultiplier: 30
   maxSpeed: 9
@@ -4588,9 +4588,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d0179b7a1bff7443b54189592e46298, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  upKey: 273
-  leftKey: 276
-  rightKey: 275
+  upKey: 121
+  leftKey: 103
+  rightKey: 106
   acceleration: 14
   verticalAccelerationMultiplier: 30
   maxSpeed: 9
@@ -5149,9 +5149,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d0179b7a1bff7443b54189592e46298, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  upKey: 273
-  leftKey: 276
-  rightKey: 275
+  upKey: 119
+  leftKey: 97
+  rightKey: 100
   acceleration: 14
   verticalAccelerationMultiplier: 30
   maxSpeed: 9
