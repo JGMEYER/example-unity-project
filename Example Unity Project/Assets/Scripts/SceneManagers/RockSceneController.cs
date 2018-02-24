@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 
 public class RockSceneController : MonoBehaviour {
@@ -14,9 +15,17 @@ public class RockSceneController : MonoBehaviour {
 	public float maxSpawnDelaySec = 1.5f;
 	public float spawnDelayInterval = 0.5f;
 
+    private string _sceneSelect = "MainMenu";
+
 	void Start() {
 		InitializePlayers();
 		InitializeSpawners();
+	}
+
+	private void Update() {
+		if (Input.GetKey(KeyCode.Escape)) {
+			SceneManager.LoadSceneAsync(_sceneSelect);
+		}
 	}
 
 	private void InitializePlayers() {

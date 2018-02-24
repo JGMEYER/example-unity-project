@@ -4,16 +4,4 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes:
-  - enabled: 1
-    path: Assets/Scenes/MainMenu.unity
-    guid: 927dbef20565bd8458947538a9a57eca
-  - enabled: 1
-    path: Assets/Scenes/RockGame.unity
-    guid: a55f229cc16db2c46be17601080e03d7
-  - enabled: 1
-    path: Assets/Scenes/IceGame.unity
-    guid: 1d985b1dbe5c22c45ad81dee2ca2337f
-  - enabled: 1
-    path: Assets/Scenes/StartMenu.unity
-    guid: 4cf4f44477acf5f4c92a5154a8cf3491
+  m_Scenes: []
