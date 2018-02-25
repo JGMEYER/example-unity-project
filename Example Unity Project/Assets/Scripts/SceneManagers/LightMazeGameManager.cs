@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using UnityEngine;
+using System.Linq;
 
 public class LightMazeGameManager : MonoBehaviour {
 
@@ -11,6 +13,8 @@ public class LightMazeGameManager : MonoBehaviour {
 	private Camera _camera;
 	[SerializeField]
 	private GameObject _lightMazeWallPrefab;
+	[SerializeField]
+	private Text _victoryText;
 
 	public bool cameraMoveEnabled = true;
 	public float cameraSpeed = 0.5f;
@@ -20,12 +24,13 @@ public class LightMazeGameManager : MonoBehaviour {
 	public int minPlatformSize = 3;
 	public int gapSize = 3;
 
-	private GameObject[,] _map;
     private string _sceneSelect = "MainMenu";
+	private GameObject[,] _map;
+	private bool _gameOver;
 
 	void Start () {
 		Vector3 camera_pos = _camera.transform.position;
-		camera_pos[0] = mapWidth / 2;
+		camera_pos[0] = (float) mapWidth / 2;
 		camera_pos[1] = -2;
 		_camera.transform.position = camera_pos;
 
@@ -37,8 +42,34 @@ public class LightMazeGameManager : MonoBehaviour {
 		if (Input.GetKey(KeyCode.Escape)) {
 			SceneManager.LoadSceneAsync(_sceneSelect);
 		}
-		if (cameraMoveEnabled) {
-			_camera.transform.Translate(0, Time.deltaTime * cameraSpeed, 0);
+
+		if (!_gameOver) {
+			if (cameraMoveEnabled) {
+				_camera.transform.Translate(0, Time.deltaTime * cameraSpeed, 0);
+			}
+
+			LightMazePlayer[] players = Object.FindObjectsOfType(typeof(LightMazePlayer)) as LightMazePlayer[];
+			CheckGameOver(players);
+		}
+	}
+
+	private void CheckGameOver(LightMazePlayer[] players) {
+		LightMazePlayer[] alivePlayers = players.Where(player => !player.IsDead()).ToArray();
+		LightMazePlayer[] deadPlayers = players.Where(player => player.IsDead()).ToArray();
+
+		if (alivePlayers.Length == 1) {
+			StartCoroutine(players[0].KillSelf(false));
+			_victoryText.text = string.Format("{0} Wins!", players[0].name);
+			_gameOver = true;
+
+		} else if (alivePlayers.Length == 0) {
+			string[] names = deadPlayers.Select(player => player.name).ToArray();
+			string victoryText = "DRAW!\n";
+			foreach (string name in names) {
+				victoryText += ", " + name;
+			}
+			_victoryText.text = victoryText;
+			_gameOver = true;
 		}
 	}
 

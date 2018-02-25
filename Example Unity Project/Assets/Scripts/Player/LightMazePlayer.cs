@@ -13,7 +13,8 @@ public class LightMazePlayer : MonoBehaviour {
 
 	private Renderer rend;
 	private Rigidbody rb;
-	private bool canJump = true;
+	private bool _canJump = true;
+	private bool _isDying = false;
 	private float _rayCastDist = 0.27f;
 
 	void Start() {
@@ -22,7 +23,9 @@ public class LightMazePlayer : MonoBehaviour {
 	}
 
 	void Update() {
-		HandleInput();
+		if (!_isDying) {
+			HandleInput();
+		}
 	}
 
 	void OnDrawGizmos() {
@@ -31,7 +34,7 @@ public class LightMazePlayer : MonoBehaviour {
 		Gizmos.DrawRay(transform.position, Vector3.left * _rayCastDist);
 		Gizmos.DrawRay(transform.position, Vector3.right * _rayCastDist);
 
-		if (canJump) {
+		if (_canJump) {
 			Gizmos.color = Color.yellow;
 			Gizmos.DrawSphere(transform.position, 0.1f);
 		}
@@ -41,9 +44,9 @@ public class LightMazePlayer : MonoBehaviour {
 		float moveHorizontal = 0;
 		float moveVertical = 0;
 
-		if (canJump && Input.GetKey(upKey)) {
+		if (_canJump && Input.GetKey(upKey)) {
 			moveVertical += verticalAccelerationMultiplier;
-			canJump = false;
+			_canJump = false;
 		}
 		if (Input.GetKey(leftKey)) {
 			moveHorizontal -= 1;
@@ -98,12 +101,12 @@ public class LightMazePlayer : MonoBehaviour {
 		}
 
 		if (collisionBelow || collisionLeft || collisionRight) {
-			canJump = true;
+			_canJump = true;
 		}
 	}
 
 	private void OnCollisionExit(Collision collision) {
-		if (!canJump) {
+		if (!_canJump) {
 			return;
 		}
 
@@ -117,8 +120,33 @@ public class LightMazePlayer : MonoBehaviour {
 		}
 
 		if (!collisionBelow) {
-			canJump = false;
+			_canJump = false;
 		}
+	}
+
+	private void OnBecameInvisible() {
+		StartCoroutine(KillSelf(true));
+	}
+
+	public IEnumerator KillSelf(bool explode) {
+		rb.velocity = new Vector3(0, 0, 0);
+		rb.useGravity = false;
+		_isDying = true;
+
+		// Hacky hacky hacky
+		ParticleSystem explosion = GetComponentInChildren<ParticleSystem>();
+
+		if (explode) {
+			explosion.Play();
+		}
+
+		// Hacky hacky hacky
+		yield return new WaitForSeconds(explosion.main.duration);
+		Destroy(this.gameObject);
+	}
+
+	public bool IsDead() {
+		return _isDying;
 	}
 
 }
