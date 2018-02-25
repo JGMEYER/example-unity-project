@@ -12,6 +12,7 @@ public class LightMazeGameManager : MonoBehaviour {
 	[SerializeField]
 	private GameObject _lightMazeWallPrefab;
 
+	public bool cameraMoveEnabled = true;
 	public float cameraSpeed = 0.5f;
 	public int mapWidth = 14;
 	public int mapHeight = 100;
@@ -36,7 +37,9 @@ public class LightMazeGameManager : MonoBehaviour {
 		if (Input.GetKey(KeyCode.Escape)) {
 			SceneManager.LoadSceneAsync(_sceneSelect);
 		}
-		_camera.transform.Translate(0, Time.deltaTime * cameraSpeed, 0);	
+		if (cameraMoveEnabled) {
+			_camera.transform.Translate(0, Time.deltaTime * cameraSpeed, 0);
+		}
 	}
 
 	private void AddWall(int row, int col) {

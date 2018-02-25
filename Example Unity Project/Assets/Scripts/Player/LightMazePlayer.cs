@@ -14,6 +14,7 @@ public class LightMazePlayer : MonoBehaviour {
 	private Renderer rend;
 	private Rigidbody rb;
 	private bool canJump = true;
+	private float _rayCastDist = 0.27f;
 
 	void Start() {
 		rend = GetComponent<Renderer>();
@@ -24,11 +25,16 @@ public class LightMazePlayer : MonoBehaviour {
 		HandleInput();
 	}
 
-	private void OnDrawGizmosSelected() {
-		// Vector3 center = rend.bounds.center;
-		// float radius = rend.bounds.extents.magnitude;
-		// Gizmos.color = Color.white;
-		// Gizmos.DrawWireSphere(center, radius);
+	void OnDrawGizmos() {
+		Gizmos.color = Color.red;
+		Gizmos.DrawRay(transform.position, Vector3.down * _rayCastDist);
+		Gizmos.DrawRay(transform.position, Vector3.left * _rayCastDist);
+		Gizmos.DrawRay(transform.position, Vector3.right * _rayCastDist);
+
+		if (canJump) {
+			Gizmos.color = Color.yellow;
+			Gizmos.DrawSphere(transform.position, 0.1f);
+		}
 	}
 
 	private void HandleInput() {
@@ -55,21 +61,63 @@ public class LightMazePlayer : MonoBehaviour {
 	}
 
 	private void OnCollisionEnter(Collision collision) {
+		CheckCanJump(collision);
+	}
+
+	private void OnCollisionStay(Collision collision) {
+		CheckCanJump(collision);
+	}
+
+	private void CheckCanJump(Collision collision) {
 		if (collision.gameObject.name.StartsWith("Player")) {
 			Physics.IgnoreCollision(collision.gameObject.GetComponent<Collider>(), GetComponent<Collider>());
 			return;
 		}
 
-		bool collidingWithCeiling = false;
 		RaycastHit hit;
-		if (Physics.Raycast(transform.position, Vector3.up, out hit)) {
-			if (hit.distance < 1) {
-				collidingWithCeiling = true;
+
+		bool collisionLeft = false;
+		if (Physics.Raycast(transform.position, Vector3.left, out hit)) {
+			if (hit.distance <= _rayCastDist) {
+				collisionLeft = true;
 			}
 		}
 
-		if (!collidingWithCeiling) {
+		bool collisionRight = false;
+		if (Physics.Raycast(transform.position, Vector3.right, out hit)) {
+			if (hit.distance <= _rayCastDist) {
+				collisionRight = true;
+			}
+		}
+
+		bool collisionBelow = false;
+		if (Physics.Raycast(transform.position, Vector3.down, out hit)) {
+			if (hit.distance <= _rayCastDist) {
+				collisionBelow = true;
+			}
+		}
+
+		if (collisionBelow || collisionLeft || collisionRight) {
 			canJump = true;
+		}
+	}
+
+	private void OnCollisionExit(Collision collision) {
+		if (!canJump) {
+			return;
+		}
+
+		RaycastHit hit;
+
+		bool collisionBelow = false;
+		if (Physics.Raycast(transform.position, Vector3.down, out hit)) {
+			if (hit.distance <= _rayCastDist) {
+				collisionBelow = true;
+			}
+		}
+
+		if (!collisionBelow) {
+			canJump = false;
 		}
 	}
 

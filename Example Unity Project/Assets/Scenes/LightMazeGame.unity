@@ -144,6 +144,7 @@ MonoBehaviour:
   _camera: {fileID: 1279661990}
   _lightMazeWallPrefab: {fileID: 1871416734483368, guid: 8d35fd6095362d248a228f08c16d7c6e,
     type: 2}
+  cameraEnabled: 0
   cameraSpeed: 0.75
   mapWidth: 20
   mapHeight: 100
@@ -344,8 +345,8 @@ GameObject:
   - component: {fileID: 53055981}
   - component: {fileID: 53055980}
   - component: {fileID: 53055979}
-  - component: {fileID: 53055978}
   - component: {fileID: 53055977}
+  - component: {fileID: 53055978}
   m_Layer: 0
   m_Name: Player4
   m_TagString: Untagged
@@ -4960,7 +4961,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1279661987}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.5, y: 6, z: -10}
+  m_LocalPosition: {x: 6.5, y: -1, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
