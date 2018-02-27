@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class LightMazePlayer : MonoBehaviour {
 
+	[SerializeField]
+	private ParticleSystem _deathExplosion;
+
 	public KeyCode upKey;
 	public KeyCode leftKey;
 	public KeyCode rightKey;
@@ -14,7 +17,8 @@ public class LightMazePlayer : MonoBehaviour {
 	private Renderer rend;
 	private Rigidbody rb;
 	private bool _canJump = true;
-	private bool _isDying = false;
+	private bool _isDead = false;
+	private bool _isVisible = true;
 	private float _rayCastDist = 0.27f;
 
 	void Start() {
@@ -23,7 +27,7 @@ public class LightMazePlayer : MonoBehaviour {
 	}
 
 	void Update() {
-		if (!_isDying) {
+		if (!_isDead) {
 			HandleInput();
 		}
 	}
@@ -124,29 +128,30 @@ public class LightMazePlayer : MonoBehaviour {
 		}
 	}
 
-	private void OnBecameInvisible() {
-		StartCoroutine(KillSelf(true));
+	public bool IsVisible() {
+		return _isVisible;
 	}
 
-	public IEnumerator KillSelf(bool explode) {
+	public void OnBecameVisible() {
+		_isVisible = true;
+	}
+
+	public void OnBecameInvisible() {
+		_isVisible = false;
+	}
+
+	public void Kill(bool explode) {
 		rb.velocity = new Vector3(0, 0, 0);
 		rb.useGravity = false;
-		_isDying = true;
-
-		// Hacky hacky hacky
-		ParticleSystem explosion = GetComponentInChildren<ParticleSystem>();
+		_isDead = true;
 
 		if (explode) {
-			explosion.Play();
+			_deathExplosion.Emit(5);
 		}
-
-		// Hacky hacky hacky
-		yield return new WaitForSeconds(explosion.main.duration);
-		Destroy(this.gameObject);
 	}
 
 	public bool IsDead() {
-		return _isDying;
+		return _isDead;
 	}
 
 }

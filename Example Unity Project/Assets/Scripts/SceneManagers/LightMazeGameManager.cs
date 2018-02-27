@@ -26,13 +26,15 @@ public class LightMazeGameManager : MonoBehaviour {
 
     private string _sceneSelect = "MainMenu";
 	private GameObject[,] _map;
-	private bool _gameOver;
+	private bool _gameOver = false;
+	private LightMazePlayer[] _players;
+	private LightMazePlayer[] _playersAliveLastFrame;
 
 	void Start () {
-		Vector3 camera_pos = _camera.transform.position;
-		camera_pos[0] = (float) mapWidth / 2;
-		camera_pos[1] = -2;
-		_camera.transform.position = camera_pos;
+		Vector3 cameraPos = _camera.transform.position;
+		cameraPos[0] = (float) mapWidth / 2;
+		cameraPos[1] = -2;
+		_camera.transform.position = cameraPos;
 
 		GenerateMap();
 		InitializePlayers();
@@ -48,29 +50,46 @@ public class LightMazeGameManager : MonoBehaviour {
 				_camera.transform.Translate(0, Time.deltaTime * cameraSpeed, 0);
 			}
 
-			LightMazePlayer[] players = Object.FindObjectsOfType(typeof(LightMazePlayer)) as LightMazePlayer[];
-			CheckGameOver(players);
+			KillOffscreenPlayers();
+			CheckGameOver();
 		}
 	}
 
-	private void CheckGameOver(LightMazePlayer[] players) {
-		LightMazePlayer[] alivePlayers = players.Where(player => !player.IsDead()).ToArray();
-		LightMazePlayer[] deadPlayers = players.Where(player => player.IsDead()).ToArray();
+	private void KillOffscreenPlayers() {
+		foreach(LightMazePlayer player in _players) {
+			if (player.IsVisible() || player.IsDead()) {
+				continue;
+			}
+
+			Vector3 playerPos = player.transform.position;
+			Vector3 cameraPos = _camera.transform.position;
+
+			if (playerPos[1] < cameraPos[1]) {
+				bool explode = true;
+				player.Kill(explode);
+			}
+		}
+	}
+
+	private void CheckGameOver() {
+		LightMazePlayer[] alivePlayers = _players.Where(player => !player.IsDead()).ToArray();
+		LightMazePlayer[] deadPlayers = _players.Where(player => player.IsDead()).ToArray();
 
 		if (alivePlayers.Length == 1) {
-			StartCoroutine(players[0].KillSelf(false));
-			_victoryText.text = string.Format("{0} Wins!", players[0].name);
 			_gameOver = true;
+			_victoryText.text = string.Format("{0} Wins!", _players[0].name);
+			bool explode = false;
+			_players[0].Kill(explode);
 
 		} else if (alivePlayers.Length == 0) {
-			string[] names = deadPlayers.Select(player => player.name).ToArray();
+			string[] names = _playersAliveLastFrame.Select(player => player.name).ToArray();
 			string victoryText = "DRAW!\n";
-			foreach (string name in names) {
-				victoryText += ", " + name;
-			}
+			victoryText += string.Join(", ", names);
 			_victoryText.text = victoryText;
 			_gameOver = true;
 		}
+
+		_playersAliveLastFrame = alivePlayers;
 	}
 
 	private void AddWall(int row, int col) {
@@ -125,6 +144,9 @@ public class LightMazeGameManager : MonoBehaviour {
 
 	private void InitializePlayers() {
 		LightMazePlayer[] players = Object.FindObjectsOfType(typeof(LightMazePlayer)) as LightMazePlayer[];
+		_players = players;
+
+		// TODO FIX!
 		foreach (LightMazePlayer player in players) {
 			// Using player name here is a hack because I don't know how to get a proper
 			// player object from a tag. Make sure the object name matches the config.
