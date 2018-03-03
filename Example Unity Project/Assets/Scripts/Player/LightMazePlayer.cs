@@ -10,27 +10,34 @@ public class LightMazePlayer : MonoBehaviour {
 	public KeyCode upKey;
 	public KeyCode leftKey;
 	public KeyCode rightKey;
-	public float acceleration;
-	public float verticalAccelerationMultiplier;
-	public float maxSpeed = 8;
 
-	private Renderer rend;
-	private Rigidbody rb;
+	public float horizontalSpeed = 8f;
+	public float initialJumpVelocity = 3f;
+	public float jumpGravityMultiplier = 1f;
+	public float fallGravityMultiplier = 2.5f;
+	public bool canWallJump = false;
+
+	private Rigidbody _rb;
+	private int _inputHorizontal = 0;
+	private int _inputVertical = 0;
 	private bool _canJump = true;
 	private bool _isDead = false;
 	private bool _isVisible = true;
 	private float _rayCastDist = 0.27f;
 
 	void Start() {
-		rend = GetComponent<Renderer>();
-		rb = GetComponent<Rigidbody>();
+		_rb = GetComponent<Rigidbody>();
 	}
 
 	void Update() {
 		if (!_isDead) {
-			HandleInput();
+			DoInput();
 		}
 	}
+
+	void FixedUpdate() {
+		DoMovement();		
+	} 
 
 	void OnDrawGizmos() {
 		Gizmos.color = Color.red;
@@ -44,27 +51,34 @@ public class LightMazePlayer : MonoBehaviour {
 		}
 	}
 
-	private void HandleInput() {
-		float moveHorizontal = 0;
-		float moveVertical = 0;
+	void DoInput() {
+		_inputHorizontal = 0;
+		_inputVertical = 0;
 
-		if (_canJump && Input.GetKey(upKey)) {
-			moveVertical += verticalAccelerationMultiplier;
+		if (Input.GetKey(upKey) && _canJump) {
+			_inputVertical = 1;
 			_canJump = false;
 		}
+
 		if (Input.GetKey(leftKey)) {
-			moveHorizontal -= 1;
+			_inputHorizontal -= 1;
 		}
 		if (Input.GetKey(rightKey)) {
-			moveHorizontal += 1;
+			_inputHorizontal += 1;
+		}
+	}
+
+	void DoMovement() {
+		if (_inputVertical != 0) {
+			_rb.velocity = new Vector3(_rb.velocity.x, _inputVertical * initialJumpVelocity, _rb.velocity.z);
+		}
+		if (_rb.velocity.y < 0) {
+			_rb.velocity += Vector3.up * Physics.gravity.y * (fallGravityMultiplier - 1) * Time.deltaTime;
+		} else if (_rb.velocity.y > 0 && !Input.GetKey(upKey)) {
+			_rb.velocity += Vector3.up * Physics.gravity.y * (jumpGravityMultiplier - 1) * Time.deltaTime;
 		}
 
-		Vector3 movement = new Vector3(moveHorizontal, moveVertical, 0);
-		rb.AddForce(movement * acceleration);
-
-		if (rb.velocity.magnitude > maxSpeed) {
-			rb.velocity = rb.velocity.normalized * maxSpeed;
-		}
+		_rb.velocity += Vector3.right * _inputHorizontal * horizontalSpeed * Time.deltaTime;
 	}
 
 	private void OnCollisionEnter(Collision collision) {
@@ -73,40 +87,6 @@ public class LightMazePlayer : MonoBehaviour {
 
 	private void OnCollisionStay(Collision collision) {
 		CheckCanJump(collision);
-	}
-
-	private void CheckCanJump(Collision collision) {
-		if (collision.gameObject.name.StartsWith("Player")) {
-			Physics.IgnoreCollision(collision.gameObject.GetComponent<Collider>(), GetComponent<Collider>());
-			return;
-		}
-
-		RaycastHit hit;
-
-		bool collisionLeft = false;
-		if (Physics.Raycast(transform.position, Vector3.left, out hit)) {
-			if (hit.distance <= _rayCastDist) {
-				collisionLeft = true;
-			}
-		}
-
-		bool collisionRight = false;
-		if (Physics.Raycast(transform.position, Vector3.right, out hit)) {
-			if (hit.distance <= _rayCastDist) {
-				collisionRight = true;
-			}
-		}
-
-		bool collisionBelow = false;
-		if (Physics.Raycast(transform.position, Vector3.down, out hit)) {
-			if (hit.distance <= _rayCastDist) {
-				collisionBelow = true;
-			}
-		}
-
-		if (collisionBelow || collisionLeft || collisionRight) {
-			_canJump = true;
-		}
 	}
 
 	private void OnCollisionExit(Collision collision) {
@@ -128,6 +108,46 @@ public class LightMazePlayer : MonoBehaviour {
 		}
 	}
 
+	private void CheckCanJump(Collision collision) {
+		if (collision.gameObject.name.StartsWith("Player")) {
+			Physics.IgnoreCollision(collision.gameObject.GetComponent<Collider>(), GetComponent<Collider>());
+			return;
+		}
+
+		RaycastHit hit;
+
+		bool collisionBelow = false;
+		if (Physics.Raycast(transform.position, Vector3.down, out hit)) {
+			if (hit.distance <= _rayCastDist) {
+				collisionBelow = true;
+			}
+		}
+
+		if (collisionBelow) {
+			_canJump = true;
+		}
+
+		if (canWallJump) {
+			bool collisionLeft = false;
+			if (Physics.Raycast(transform.position, Vector3.left, out hit)) {
+				if (hit.distance <= _rayCastDist) {
+					collisionLeft = true;
+				}
+			}
+
+			bool collisionRight = false;
+			if (Physics.Raycast(transform.position, Vector3.right, out hit)) {
+				if (hit.distance <= _rayCastDist) {
+					collisionRight = true;
+				}
+			}
+
+			if (collisionLeft || collisionRight) {
+				_canJump = true;
+			}
+		}
+	}
+
 	public bool IsVisible() {
 		return _isVisible;
 	}
@@ -141,8 +161,8 @@ public class LightMazePlayer : MonoBehaviour {
 	}
 
 	public void Kill(bool explode) {
-		rb.velocity = new Vector3(0, 0, 0);
-		rb.useGravity = false;
+		_rb.velocity = new Vector3(0, 0, 0);
+		_rb.useGravity = false;
 		_isDead = true;
 
 		if (explode) {

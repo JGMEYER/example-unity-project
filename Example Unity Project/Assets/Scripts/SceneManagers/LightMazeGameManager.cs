@@ -73,7 +73,6 @@ public class LightMazeGameManager : MonoBehaviour {
 
 	private void CheckGameOver() {
 		LightMazePlayer[] alivePlayers = _players.Where(player => !player.IsDead()).ToArray();
-		LightMazePlayer[] deadPlayers = _players.Where(player => player.IsDead()).ToArray();
 
 		if (alivePlayers.Length == 1) {
 			_gameOver = true;
