@@ -11,11 +11,12 @@ public class LightMazePlayer : MonoBehaviour {
 	public KeyCode leftKey;
 	public KeyCode rightKey;
 
+	public bool canWallJump = false;
 	public float horizontalSpeed = 8f;
 	public float initialJumpVelocity = 3f;
 	public float jumpGravityMultiplier = 1f;
 	public float fallGravityMultiplier = 2.5f;
-	public bool canWallJump = false;
+	public float rayCastDist = 0.27f;
 
 	private Rigidbody _rb;
 	private int _inputHorizontal = 0;
@@ -23,7 +24,6 @@ public class LightMazePlayer : MonoBehaviour {
 	private bool _canJump = true;
 	private bool _isDead = false;
 	private bool _isVisible = true;
-	private float _rayCastDist = 0.27f;
 
 	void Start() {
 		_rb = GetComponent<Rigidbody>();
@@ -41,9 +41,9 @@ public class LightMazePlayer : MonoBehaviour {
 
 	void OnDrawGizmos() {
 		Gizmos.color = Color.red;
-		Gizmos.DrawRay(transform.position, Vector3.down * _rayCastDist);
-		Gizmos.DrawRay(transform.position, Vector3.left * _rayCastDist);
-		Gizmos.DrawRay(transform.position, Vector3.right * _rayCastDist);
+		Gizmos.DrawRay(transform.position, Vector3.down * rayCastDist);
+		Gizmos.DrawRay(transform.position, Vector3.left * rayCastDist);
+		Gizmos.DrawRay(transform.position, Vector3.right * rayCastDist);
 
 		if (_canJump) {
 			Gizmos.color = Color.yellow;
@@ -98,7 +98,7 @@ public class LightMazePlayer : MonoBehaviour {
 
 		bool collisionBelow = false;
 		if (Physics.Raycast(transform.position, Vector3.down, out hit)) {
-			if (hit.distance <= _rayCastDist) {
+			if (hit.distance <= rayCastDist) {
 				collisionBelow = true;
 			}
 		}
@@ -118,7 +118,7 @@ public class LightMazePlayer : MonoBehaviour {
 
 		bool collisionBelow = false;
 		if (Physics.Raycast(transform.position, Vector3.down, out hit)) {
-			if (hit.distance <= _rayCastDist) {
+			if (hit.distance <= rayCastDist) {
 				collisionBelow = true;
 			}
 		}
@@ -130,14 +130,14 @@ public class LightMazePlayer : MonoBehaviour {
 		if (canWallJump) {
 			bool collisionLeft = false;
 			if (Physics.Raycast(transform.position, Vector3.left, out hit)) {
-				if (hit.distance <= _rayCastDist) {
+				if (hit.distance <= rayCastDist) {
 					collisionLeft = true;
 				}
 			}
 
 			bool collisionRight = false;
 			if (Physics.Raycast(transform.position, Vector3.right, out hit)) {
-				if (hit.distance <= _rayCastDist) {
+				if (hit.distance <= rayCastDist) {
 					collisionRight = true;
 				}
 			}

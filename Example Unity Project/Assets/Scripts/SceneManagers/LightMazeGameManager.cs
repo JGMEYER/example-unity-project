@@ -16,64 +16,87 @@ public class LightMazeGameManager : MonoBehaviour {
 	[SerializeField]
 	private Text _victoryText;
 
-	public bool cameraMoveEnabled = true;
-	public float cameraSpeed = 0.5f;
+	public bool scrollEnabled = true;
+	public float rowScrollSpeed = 0.5f;
 	public int mapWidth = 14;
-	public int mapHeight = 100;
-	public int rowSpacing = 2;
-	public int minPlatformSize = 3;
+	public int mapHeight = 10;
+	public float rowSpacing = 2.5f;
+	public int maxGaps = 3;
 	public int gapSize = 3;
+	public int minPlatformSize = 3;
+	public float minAllowedPlayerHeight = -2f;
+	public float maxAllowedPlayerHeight = 14f;
 
     private string _gameSelect = "GameSelect";
-	private GameObject[,] _map;
 	private bool _gameOver = false;
+	private Queue<GameObject> _rows = new Queue<GameObject>();
 	private LightMazePlayer[] _players;
 	private LightMazePlayer[] _playersAliveLastFrame;
 
-	void Start () {
+	private void Start() {
 		Vector3 cameraPos = _camera.transform.position;
-		cameraPos[0] = (float) mapWidth / 2;
-		cameraPos[1] = -2;
-		_camera.transform.position = cameraPos;
+		_camera.transform.position = new Vector3(mapWidth / 2, cameraPos.y, cameraPos.z);
 
-		GenerateMap();
+		GenerateStartingMap();
 		InitializePlayers();
 	}
-	
-	void Update () {
-		if (Input.GetKeyDown(KeyCode.Escape)) {
-			SceneManager.LoadSceneAsync(_gameSelect);
-		}
 
+	void Update() {
+		DoInput();
 		if (!_gameOver) {
-			if (cameraMoveEnabled) {
-				_camera.transform.Translate(0, Time.deltaTime * cameraSpeed, 0);
-			}
-
-			KillOffscreenPlayers();
+			KillFallenPlayers();
 			CheckGameOver();
 		}
 	}
 
-	private void KillOffscreenPlayers() {
+	private void FixedUpdate() {
+		if (!_gameOver && scrollEnabled) {
+			ScrollRows();
+		}
+	}
+
+	void DoInput() {
+		if (Input.GetKeyDown(KeyCode.Escape)) {
+			SceneManager.LoadSceneAsync(_gameSelect);
+		}
+	}
+
+	void ScrollRows() {
+		bool addNewRow = false;
+		
 		foreach(LightMazePlayer player in _players) {
-			if (player.IsVisible() || player.IsDead()) {
-				continue;
+			player.transform.Translate(0, -1 * Time.deltaTime * rowScrollSpeed, 0);
+		}
+
+		foreach(GameObject row in _rows.ToList()) {
+			row.transform.Translate(0, -1 * Time.deltaTime * rowScrollSpeed, 0);
+
+			if (row.transform.position.y < minAllowedPlayerHeight - 0.5f) {
+				_rows.Dequeue();
+				Destroy(row);
+				addNewRow = true;
 			}
+		}
 
-			Vector3 playerPos = player.transform.position;
-			Vector3 cameraPos = _camera.transform.position;
+		if (addNewRow) {
+			float lastY = _rows.Last().transform.position.y;
+			GameObject row = AddRow(lastY + rowSpacing, maxGaps);
+			_rows.Enqueue(row);
+		}
+	}
 
-			if (playerPos[1] < cameraPos[1]) {
-				bool explode = true;
-				player.Kill(explode);
+	void KillFallenPlayers() {
+		foreach (LightMazePlayer player in _players) {
+			if (!player.IsDead() && player.transform.position.y < minAllowedPlayerHeight) {
+				player.Kill(explode: true);
 			}
 		}
 	}
 
-	private void CheckGameOver() {
+	void CheckGameOver() {
 		LightMazePlayer[] alivePlayers = _players.Where(player => !player.IsDead()).ToArray();
 
+		// TODO fix win conditions
 		if (alivePlayers.Length == 1) {
 			_gameOver = true;
 			_victoryText.text = string.Format("{0} Wins!", _players[0].name);
@@ -81,54 +104,66 @@ public class LightMazeGameManager : MonoBehaviour {
 			_players[0].Kill(explode);
 
 		} else if (alivePlayers.Length == 0) {
+			_gameOver = true;
 			string[] names = _playersAliveLastFrame.Select(player => player.name).ToArray();
 			string victoryText = "DRAW!\n";
 			victoryText += string.Join(", ", names);
 			_victoryText.text = victoryText;
-			_gameOver = true;
 		}
 
 		_playersAliveLastFrame = alivePlayers;
 	}
 
-	private void AddWall(int row, int col) {
-		_map[row, col] = Instantiate(_lightMazeWallPrefab) as GameObject;
-		_map[row, col].transform.position = new Vector3(col, row, 0);
+	void GenerateStartingMap() {
+		for (int y = -2; y < mapHeight; y++) {
+			AddWall(0, y);
+			AddWall(mapWidth - 1, y);
+		}
+		for (float y = 0; y < mapHeight; y+=rowSpacing) {
+			int gaps = (y == 0) ? 0 : maxGaps;
+			GameObject row = AddRow(y, gaps);
+			_rows.Enqueue(row);
+		}
 	}
 
-	private void RemoveWall(int row, int col) {
-		Destroy(_map[row, col].gameObject);
-		_map[row, col] = null;
+	GameObject AddWall(float x, float y, bool local = false) {
+		GameObject wall = Instantiate(_lightMazeWallPrefab) as GameObject;
+
+		if (local) {
+			wall.transform.localPosition = new Vector3(x, y, 0);
+		} else {
+			wall.transform.position = new Vector3(x, y, 0);
+		}
+
+		return wall;
 	}
 
-	private void GenerateMap() {
-		_map = new GameObject[mapHeight, mapWidth];
+	GameObject AddRow(float y, int gaps) {
+		GameObject row = new GameObject("Row");
+		BitArray rowMap = new BitArray(mapWidth - 2, true);
 
-		for (int col = 0; col < mapWidth; col++) {
-			AddWall(0, col);
-		}
-		for (int row = 0; row < mapHeight; row++) {
-			AddWall(row, 0);
-			AddWall(row, mapWidth - 1);
-		}
+		CreateGaps(rowMap, gaps, 0, rowMap.Length - 1);
 
-		for (int row = rowSpacing; row < mapHeight; row += rowSpacing) {
-			for (int col = 0; col < mapWidth; col += 1) {
-				AddWall(row, col);
+		row.transform.position = new Vector3(0, y, 0);
+
+		for (int x = 0; x < rowMap.Length; x++) {
+			if (rowMap.Get(x)) {
+				GameObject wall = AddWall(x + 1, y, local: true);
+				wall.transform.parent = row.transform;
 			}
-
-			AddGaps(3, row, 0, mapWidth - 1);
 		}
+
+		return row;
 	}
 
-	private int AddGaps(int remaining, int row, int start, int end) {
+	int CreateGaps(BitArray rowMap, int remaining, int start, int end) {
 		if (remaining == 0 || end - start < gapSize) {
 			return 0;
 		}
 
 		int split = (int)Random.Range(start, end - 1);
 		for (int gap = 0; gap < gapSize; gap++) {
-			RemoveWall(row, split + gap);
+			rowMap.Set(split + gap, false);
 		}
 
 		bool splitLeft = (Random.value < 0.5);
@@ -138,8 +173,8 @@ public class LightMazeGameManager : MonoBehaviour {
 			start = split + (minPlatformSize + gapSize);
 		}
 
-		return AddGaps(remaining - 1, row, start, end) + 1;
-	}
+		return CreateGaps(rowMap, remaining - 1, start, end);
+	}	
 
 	private void InitializePlayers() {
 		LightMazePlayer[] players = Object.FindObjectsOfType(typeof(LightMazePlayer)) as LightMazePlayer[];
