@@ -15,7 +15,7 @@ public class RockSceneController : MonoBehaviour {
 	public float maxSpawnDelaySec = 1.5f;
 	public float spawnDelayInterval = 0.5f;
 
-    private string _sceneSelect = "MainMenu";
+    private string _gameSelect = "GameSelect";
 
 	void Start() {
 		InitializePlayers();
@@ -23,8 +23,8 @@ public class RockSceneController : MonoBehaviour {
 	}
 
 	private void Update() {
-		if (Input.GetKey(KeyCode.Escape)) {
-			SceneManager.LoadSceneAsync(_sceneSelect);
+		if (Input.GetKeyDown(KeyCode.Escape)) {
+			SceneManager.LoadSceneAsync(_gameSelect);
 		}
 	}
 

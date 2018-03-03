@@ -23,7 +23,7 @@ public class IcePlayer : MonoBehaviour {
     private int floorHeight = 2;
     private int resetHeight = -20;
 
-    private string SceneSelect = "MainMenu";
+    private string SceneSelect = "GameSelect";
 
     void Start() {
         rb = GetComponent<Rigidbody>();
@@ -61,10 +61,6 @@ public class IcePlayer : MonoBehaviour {
     }
 
     private void HandleInput() {
-
-        if (Input.GetKey(KeyCode.Escape)) {
-            SceneManager.LoadSceneAsync(SceneSelect);
-        }
 
         float moveHorizontal = 0;
         float moveVertical = 0;

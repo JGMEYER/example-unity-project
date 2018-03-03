@@ -24,7 +24,7 @@ public class LightMazeGameManager : MonoBehaviour {
 	public int minPlatformSize = 3;
 	public int gapSize = 3;
 
-    private string _sceneSelect = "MainMenu";
+    private string _gameSelect = "GameSelect";
 	private GameObject[,] _map;
 	private bool _gameOver = false;
 	private LightMazePlayer[] _players;
@@ -41,8 +41,8 @@ public class LightMazeGameManager : MonoBehaviour {
 	}
 	
 	void Update () {
-		if (Input.GetKey(KeyCode.Escape)) {
-			SceneManager.LoadSceneAsync(_sceneSelect);
+		if (Input.GetKeyDown(KeyCode.Escape)) {
+			SceneManager.LoadSceneAsync(_gameSelect);
 		}
 
 		if (!_gameOver) {

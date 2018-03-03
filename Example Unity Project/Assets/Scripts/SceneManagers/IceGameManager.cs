@@ -50,8 +50,13 @@ public class IceGameManager : MonoBehaviour {
 	}
 
     void Update() {
-        if (gameOver && Input.GetKey(KeyCode.KeypadEnter)) {
-            SceneManager.LoadScene("MainMenu");
+
+		if (Input.GetKeyDown(KeyCode.Escape)) {
+            SceneManager.LoadScene("GameSelect");
+		}	
+
+		if (gameOver && Input.GetKeyDown(KeyCode.KeypadEnter)) {
+            SceneManager.LoadScene("GameSelect");
         }
     }
 
