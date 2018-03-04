@@ -24,7 +24,7 @@ public class LightMazeGameManager : MonoBehaviour {
 	public int maxGaps = 3;
 	public int gapSize = 3;
 	public int minPlatformSize = 3;
-	public float minAllowedPlayerHeight = -2f;
+	public float minAllowedPlayerHeight = -3f;
 	public float maxAllowedPlayerHeight = 14f;
 
     private string _gameSelect = "GameSelect";
@@ -45,7 +45,7 @@ public class LightMazeGameManager : MonoBehaviour {
 		DoInput();
 		if (!_gameOver) {
 			KillFallenPlayers();
-			CheckGameOver();
+			//CheckGameOver();
 		}
 	}
 
@@ -63,10 +63,6 @@ public class LightMazeGameManager : MonoBehaviour {
 
 	void ScrollRows() {
 		bool addNewRow = false;
-		
-		foreach(LightMazePlayer player in _players) {
-			player.transform.Translate(0, -1 * Time.deltaTime * rowScrollSpeed, 0);
-		}
 
 		foreach(GameObject row in _rows.ToList()) {
 			row.transform.Translate(0, -1 * Time.deltaTime * rowScrollSpeed, 0);
@@ -115,10 +111,11 @@ public class LightMazeGameManager : MonoBehaviour {
 	}
 
 	void GenerateStartingMap() {
-		for (int y = -2; y < mapHeight; y++) {
-			AddWall(0, y);
-			AddWall(mapWidth - 1, y);
-		}
+		int wallHeight = mapHeight + (int)Mathf.Ceil(Mathf.Abs(minAllowedPlayerHeight));
+		int wallY = mapHeight / 2 - (int)Mathf.Ceil(Mathf.Abs(minAllowedPlayerHeight));
+		AddPlatform(-1, wallY, height: wallHeight);
+		AddPlatform(mapWidth, wallY, height: wallHeight);
+
 		for (float y = 0; y < mapHeight; y+=rowSpacing) {
 			int gaps = (y == 0) ? 0 : maxGaps;
 			GameObject row = AddRow(y, gaps);
@@ -126,7 +123,7 @@ public class LightMazeGameManager : MonoBehaviour {
 		}
 	}
 
-	GameObject AddWall(float x, float y, bool local = false) {
+	GameObject AddPlatform(float x, float y, int width = 1, int height = 1, bool local = false) {
 		GameObject wall = Instantiate(_lightMazeWallPrefab) as GameObject;
 
 		if (local) {
@@ -135,21 +132,36 @@ public class LightMazeGameManager : MonoBehaviour {
 			wall.transform.position = new Vector3(x, y, 0);
 		}
 
+		wall.transform.localScale = new Vector3(width, height, 1);
+
 		return wall;
 	}
 
 	GameObject AddRow(float y, int gaps) {
 		GameObject row = new GameObject("Row");
-		BitArray rowMap = new BitArray(mapWidth - 2, true);
+		BitArray rowMap = new BitArray(mapWidth, true);
 
 		CreateGaps(rowMap, gaps, 0, rowMap.Length - 1);
 
 		row.transform.position = new Vector3(0, y, 0);
 
-		for (int x = 0; x < rowMap.Length; x++) {
+		int wallStart = 0;
+		int wallWidth = 0;
+
+		for (int x = 0; x < mapWidth; x++) {
 			if (rowMap.Get(x)) {
-				GameObject wall = AddWall(x + 1, y, local: true);
-				wall.transform.parent = row.transform;
+				wallWidth += 1;
+			}
+
+			if (!rowMap.Get(x) || x == mapWidth - 1) {
+				if (wallWidth > 0) {
+					float wallX = wallStart + ((float)wallWidth / 2) - 0.5f;
+					GameObject wall = AddPlatform(wallX, y, width: wallWidth, local: true);
+					wall.AddComponent<CarryRigidBodies>();
+					wall.transform.parent = row.transform;
+				}
+				wallStart = x + 1;
+				wallWidth = 0;
 			}
 		}
 

@@ -37,7 +37,7 @@ public class LightMazePlayer : MonoBehaviour {
 
 	void FixedUpdate() {
 		DoMovement();		
-	} 
+	}
 
 	void OnDrawGizmos() {
 		Gizmos.color = Color.red;
@@ -81,15 +81,15 @@ public class LightMazePlayer : MonoBehaviour {
 		_rb.velocity += Vector3.right * _inputHorizontal * horizontalSpeed * Time.deltaTime;
 	}
 
-	private void OnCollisionEnter(Collision collision) {
+	void OnCollisionEnter(Collision collision) {
 		CheckCanJump(collision);
 	}
 
-	private void OnCollisionStay(Collision collision) {
+	void OnCollisionStay(Collision collision) {
 		CheckCanJump(collision);
 	}
 
-	private void OnCollisionExit(Collision collision) {
+	void OnCollisionExit(Collision collision) {
 		if (!_canJump) {
 			return;
 		}
@@ -108,7 +108,7 @@ public class LightMazePlayer : MonoBehaviour {
 		}
 	}
 
-	private void CheckCanJump(Collision collision) {
+	void CheckCanJump(Collision collision) {
 		if (collision.gameObject.name.StartsWith("Player")) {
 			Physics.IgnoreCollision(collision.gameObject.GetComponent<Collider>(), GetComponent<Collider>());
 			return;

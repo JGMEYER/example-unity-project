@@ -6,6 +6,7 @@ TagManager:
   tags:
   - IcePlayer
   - IceManager
+  - platform
   layers:
   - Default
   - TransparentFX
