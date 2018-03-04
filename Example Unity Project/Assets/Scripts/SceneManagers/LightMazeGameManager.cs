@@ -17,6 +17,8 @@ public class LightMazeGameManager : MonoBehaviour {
 	private Text _victoryText;
 
 	public bool scrollEnabled = true;
+	public bool winConditionsEnabled = true;
+	public bool shiftMapWhenPlayerAhead = true;
 	public float rowScrollSpeed = 0.5f;
 	public int mapWidth = 14;
 	public int mapHeight = 10;
@@ -26,11 +28,13 @@ public class LightMazeGameManager : MonoBehaviour {
 	public int minPlatformSize = 3;
 	public float minAllowedPlayerHeight = -3f;
 	public float maxAllowedPlayerHeight = 14f;
+	public float pauseBetweenMapShifts = 1f;
 
     private string _gameSelect = "GameSelect";
 	private bool _gameOver = false;
 	private Queue<GameObject> _rows = new Queue<GameObject>();
 	private LightMazePlayer[] _players;
+	private float mapShiftPauseCounter = 0f;
 
 	private void Start() {
 		Vector3 cameraPos = _camera.transform.position;
@@ -43,13 +47,16 @@ public class LightMazeGameManager : MonoBehaviour {
 	void Update() {
 		DoInput();
 		if (!_gameOver) {
+			if (shiftMapWhenPlayerAhead) {
+				ShiftMapIfPlayerAhead(Time.deltaTime);
+			}
 			KillFallenPlayers();
 		}
 	}
 
 	private void FixedUpdate() {
 		if (!_gameOver && scrollEnabled) {
-			ScrollRows();
+			ScrollRows(rowScrollSpeed);
 		}
 	}
 
@@ -59,11 +66,11 @@ public class LightMazeGameManager : MonoBehaviour {
 		}
 	}
 
-	void ScrollRows() {
+	void ScrollRows(float changeY) {
 		bool addNewRow = false;
 
 		foreach(GameObject row in _rows.ToList()) {
-			row.transform.Translate(0, -1 * Time.deltaTime * rowScrollSpeed, 0);
+			row.transform.Translate(0, -1 * Time.deltaTime * changeY, 0);
 
 			if (row.transform.position.y < minAllowedPlayerHeight - 0.5f) {
 				_rows.Dequeue();
@@ -79,6 +86,26 @@ public class LightMazeGameManager : MonoBehaviour {
 		}
 	}
 
+	void ShiftMapIfPlayerAhead(float deltaTime) {
+		mapShiftPauseCounter -= Time.deltaTime;
+
+		if (mapShiftPauseCounter > 0) {
+			return;
+		}
+
+		bool bump = false;
+		foreach (LightMazePlayer player in _players) {
+			if (player.transform.position.y > maxAllowedPlayerHeight) {
+				bump = true;
+			}
+		}
+
+		if (bump) {
+			ScrollRows(1f + rowSpacing);
+			mapShiftPauseCounter = pauseBetweenMapShifts;
+		}
+	}
+
 	void KillFallenPlayers() {
 		List<LightMazePlayer> playersKilled = new List<LightMazePlayer>();
 
@@ -91,7 +118,9 @@ public class LightMazeGameManager : MonoBehaviour {
 
 		LightMazePlayer[] alivePlayers = _players.Where(player => !player.IsDead()).ToArray();
 
-		CheckGameOver(playersKilled.ToArray<LightMazePlayer>(), alivePlayers);
+		if (winConditionsEnabled) {
+			CheckGameOver(playersKilled.ToArray<LightMazePlayer>(), alivePlayers);
+		}
 	}
 
 	void CheckGameOver(LightMazePlayer[] playersKilled, LightMazePlayer[] alivePlayers) {
@@ -177,7 +206,7 @@ public class LightMazeGameManager : MonoBehaviour {
 			return 0;
 		}
 
-		int split = (int)Random.Range(start, end - 1);
+		int split = Random.Range(start, end - 1);
 		for (int gap = 0; gap < gapSize; gap++) {
 			rowMap.Set(split + gap, false);
 		}
