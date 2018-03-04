@@ -71,8 +71,11 @@ public class LightMazePlayer : MonoBehaviour {
 	}
 
 	void DoMovement() {
+		Vector3 resetHorizontalVelocity = new Vector3(0, _rb.velocity.y, 0);
+		_rb.velocity = resetHorizontalVelocity;
+
 		if (_inputVertical != 0) {
-			_rb.velocity = new Vector3(_rb.velocity.x, _inputVertical * initialJumpVelocity, _rb.velocity.z);
+			_rb.velocity += Vector3.up * _inputVertical * initialJumpVelocity;
 		}
 		if (_rb.velocity.y < 0) {
 			_rb.velocity += Vector3.up * Physics.gravity.y * (fallGravityMultiplier - 1) * Time.deltaTime;
@@ -84,7 +87,6 @@ public class LightMazePlayer : MonoBehaviour {
 
 		_inputHorizontal = 0;
 		_inputVertical = 0;
-
 	}
 
 	void OnCollisionEnter(Collision collision) {
