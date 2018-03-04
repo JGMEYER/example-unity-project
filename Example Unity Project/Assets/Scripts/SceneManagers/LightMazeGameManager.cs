@@ -31,7 +31,6 @@ public class LightMazeGameManager : MonoBehaviour {
 	private bool _gameOver = false;
 	private Queue<GameObject> _rows = new Queue<GameObject>();
 	private LightMazePlayer[] _players;
-	private LightMazePlayer[] _playersAliveLastFrame;
 
 	private void Start() {
 		Vector3 cameraPos = _camera.transform.position;
@@ -45,7 +44,6 @@ public class LightMazeGameManager : MonoBehaviour {
 		DoInput();
 		if (!_gameOver) {
 			KillFallenPlayers();
-			CheckGameOver();
 		}
 	}
 
@@ -82,37 +80,43 @@ public class LightMazeGameManager : MonoBehaviour {
 	}
 
 	void KillFallenPlayers() {
+		List<LightMazePlayer> playersKilled = new List<LightMazePlayer>();
+
 		foreach (LightMazePlayer player in _players) {
 			if (!player.IsDead() && player.transform.position.y < minAllowedPlayerHeight) {
 				player.Kill(explode: true);
+				playersKilled.Add(player);
 			}
 		}
-	}
 
-	void CheckGameOver() {
 		LightMazePlayer[] alivePlayers = _players.Where(player => !player.IsDead()).ToArray();
 
-		// TODO fix win conditions
-		if (alivePlayers.Length == 1) {
-			_gameOver = true;
-			_victoryText.text = string.Format("{0} Wins!", _players[0].name);
-			bool explode = false;
-			_players[0].Kill(explode);
+		CheckGameOver(playersKilled.ToArray<LightMazePlayer>(), alivePlayers);
+	}
 
+	void CheckGameOver(LightMazePlayer[] playersKilled, LightMazePlayer[] alivePlayers) {
+		List<string> winners = new List<string>();
+
+		if (alivePlayers.Length == 1) {
+			_victoryText.text = "WINNER!\n";
+			winners.Add(alivePlayers[0].name);
 		} else if (alivePlayers.Length == 0) {
-			_gameOver = true;
-			string[] names = _playersAliveLastFrame.Select(player => player.name).ToArray();
-			string victoryText = "DRAW!\n";
-			victoryText += string.Join(", ", names);
-			_victoryText.text = victoryText;
+			_victoryText.text = "DRAW!\n";
+			foreach (LightMazePlayer player in playersKilled) {
+				winners.Add(player.name);
+			}
 		}
 
-		_playersAliveLastFrame = alivePlayers;
+		if (winners.Count > 0) {
+			_gameOver = true;
+			_victoryText.text += string.Join(", ", winners.ToArray());
+		}
 	}
 
 	void GenerateStartingMap() {
 		int wallHeight = mapHeight + (int)Mathf.Ceil(Mathf.Abs(minAllowedPlayerHeight));
 		int wallY = mapHeight / 2 - (int)Mathf.Ceil(Mathf.Abs(minAllowedPlayerHeight));
+
 		AddPlatform(-1, wallY, height: wallHeight);
 		AddPlatform(mapWidth, wallY, height: wallHeight);
 
