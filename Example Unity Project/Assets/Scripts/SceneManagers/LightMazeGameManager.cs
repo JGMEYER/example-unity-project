@@ -101,7 +101,7 @@ public class LightMazeGameManager : MonoBehaviour {
 		}
 
 		if (bump) {
-			_mapShiftDistanceRemaining = 1f + rowSpacing;
+			_mapShiftDistanceRemaining = 1.5f + rowSpacing;
 			_mapShiftPauseCounter = pauseBetweenMapShifts;
 		}
 

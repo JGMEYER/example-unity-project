@@ -49,22 +49,24 @@ public class LightMazePlayer : MonoBehaviour {
 			Gizmos.color = Color.yellow;
 			Gizmos.DrawSphere(transform.position, 0.1f);
 		}
+
+		if (Application.isPlaying) {
+			Gizmos.color = Color.cyan;
+			Gizmos.DrawRay(transform.position, _rb.velocity);
+		}
 	}
 
 	void DoInput() {
-		_inputHorizontal = 0;
-		_inputVertical = 0;
-
 		if (Input.GetKey(upKey) && _canJump) {
 			_inputVertical = 1;
 			_canJump = false;
 		}
 
 		if (Input.GetKey(leftKey)) {
-			_inputHorizontal -= 1;
+			_inputHorizontal = -1;
 		}
 		if (Input.GetKey(rightKey)) {
-			_inputHorizontal += 1;
+			_inputHorizontal = 1;
 		}
 	}
 
@@ -79,6 +81,10 @@ public class LightMazePlayer : MonoBehaviour {
 		}
 
 		_rb.velocity += Vector3.right * _inputHorizontal * horizontalSpeed * Time.deltaTime;
+
+		_inputHorizontal = 0;
+		_inputVertical = 0;
+
 	}
 
 	void OnCollisionEnter(Collision collision) {
