@@ -45,7 +45,7 @@ public class LightMazeGameManager : MonoBehaviour {
 		DoInput();
 		if (!_gameOver) {
 			KillFallenPlayers();
-			//CheckGameOver();
+			CheckGameOver();
 		}
 	}
 
