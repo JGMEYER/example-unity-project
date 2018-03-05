@@ -72,8 +72,12 @@ public class LightMazeGameManager : MonoBehaviour {
 	void ScrollRows(float changeY) {
 		bool addNewRow = false;
 
+		foreach(LightMazePlayer player in _players) {
+			player.transform.Translate(0, -1 * changeY, 0, Space.World);
+		}
+
 		foreach(GameObject row in _rows.ToList()) {
-			row.transform.Translate(0, -1 * changeY, 0);
+			row.transform.Translate(0, -1 * changeY, 0, Space.World);
 
 			if (row.transform.position.y < minAllowedPlayerHeight - 0.5f) {
 				_rows.Dequeue();

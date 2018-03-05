@@ -14,13 +14,14 @@ public class LightMazePlayer : MonoBehaviour {
 	public bool canWallJump = false;
 	public float horizontalSpeed = 8f;
 	public float initialJumpVelocity = 3f;
-	public float jumpGravityMultiplier = 1f;
+	public float maxJumpHoldTime = 0.8f;
 	public float fallGravityMultiplier = 2.5f;
 	public float rayCastDist = 0.27f;
 
 	private Rigidbody _rb;
 	private int _inputHorizontal = 0;
 	private int _inputVertical = 0;
+	private float _jumpHoldCounter = 0;
 	private bool _canJump = true;
 	private bool _isDead = false;
 	private bool _isVisible = true;
@@ -57,8 +58,13 @@ public class LightMazePlayer : MonoBehaviour {
 	}
 
 	void DoInput() {
+		if (Input.GetKey(upKey)) {
+			_jumpHoldCounter -= Time.deltaTime;
+		}
+
 		if (Input.GetKey(upKey) && _canJump) {
 			_inputVertical = 1;
+			_jumpHoldCounter = maxJumpHoldTime;
 			_canJump = false;
 		}
 
@@ -74,13 +80,10 @@ public class LightMazePlayer : MonoBehaviour {
 		Vector3 resetHorizontalVelocity = new Vector3(0, _rb.velocity.y, 0);
 		_rb.velocity = resetHorizontalVelocity;
 
-		if (_inputVertical != 0) {
-			_rb.velocity += Vector3.up * _inputVertical * initialJumpVelocity;
-		}
-		if (_rb.velocity.y < 0) {
+		_rb.velocity += Vector3.up * _inputVertical * initialJumpVelocity * Time.deltaTime;
+
+		if (_rb.velocity.y < 0 || !Input.GetKey(upKey) || _jumpHoldCounter <= 0) {
 			_rb.velocity += Vector3.up * Physics.gravity.y * (fallGravityMultiplier - 1) * Time.deltaTime;
-		} else if (_rb.velocity.y > 0 && !Input.GetKey(upKey)) {
-			_rb.velocity += Vector3.up * Physics.gravity.y * (jumpGravityMultiplier - 1) * Time.deltaTime;
 		}
 
 		_rb.velocity += Vector3.right * _inputHorizontal * horizontalSpeed * Time.deltaTime;
