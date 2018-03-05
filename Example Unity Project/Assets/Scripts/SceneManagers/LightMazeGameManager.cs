@@ -14,6 +14,8 @@ public class LightMazeGameManager : MonoBehaviour {
 	[SerializeField]
 	private GameObject _lightMazeWallPrefab;
 	[SerializeField]
+	private GameObject _lightMazeRowPrefab;
+	[SerializeField]
 	private Text _victoryText;
 
 	public bool scrollEnabled = true;
@@ -177,34 +179,73 @@ public class LightMazeGameManager : MonoBehaviour {
 	}
 
 	GameObject AddRow(float y, int gaps) {
-		GameObject row = new GameObject("Row");
+		GameObject row = Instantiate(_lightMazeRowPrefab) as GameObject;
 		BitArray rowMap = new BitArray(mapWidth, true);
+		BitArray prevRowMap = null;
 
-		CreateGaps(rowMap, gaps, 0, rowMap.Length - 1);
+		if (_rows.Count > 0) {
+			prevRowMap = _rows.Last().GetComponent<LightMazeRowData>().rowMap;
+		}
 
-		row.transform.position = new Vector3(0, y, 0);
+		if (prevRowMap == null) {
+			CreateGaps(rowMap, gaps, 0, rowMap.Length - 1);
+		} else { // Do not add gaps where last row had gaps prior
+			int gapsAdded = 0;
+			int gapsRemaining = gaps;
+			List<int[]> prevRowTuples = GetRowMapAsTuples(prevRowMap);
 
-		int wallStart = 0;
-		int wallWidth = 0;
+			while (prevRowTuples.Count > 0 && gapsRemaining > 0) {
+				int randIndex = Random.Range(0, prevRowTuples.Count);
+				int[] randPlatform = prevRowTuples[randIndex];
+				prevRowTuples.RemoveAt(randIndex);
 
-		for (int x = 0; x < mapWidth; x++) {
-			if (rowMap.Get(x)) {
-				wallWidth += 1;
-			}
+				int platformStart = randPlatform[0];
+				int platformWidth = randPlatform[1];
+				int platformEnd = platformStart + platformWidth - 1;
 
-			if (!rowMap.Get(x) || x == mapWidth - 1) {
-				if (wallWidth > 0) {
-					float wallX = wallStart + ((float)wallWidth / 2) - 0.5f;
-					GameObject wall = AddPlatform(wallX, y, width: wallWidth, local: true);
-					wall.AddComponent<CarryRigidBodies>();
-					wall.transform.parent = row.transform;
-				}
-				wallStart = x + 1;
-				wallWidth = 0;
+				gapsAdded = CreateGaps(rowMap, gapsRemaining, platformStart, platformEnd);
+				gapsRemaining -= gapsAdded;
 			}
 		}
 
+		row.transform.position = new Vector3(0, y, 0);
+
+		foreach (int[] platformTuple in GetRowMapAsTuples(rowMap)) {
+			int platformStart = platformTuple[0];
+			int platformWidth = platformTuple[1];
+
+			float platformX = platformStart + ((float)platformWidth / 2) - 0.5f;
+			GameObject platform = AddPlatform(platformX, y, width: platformWidth, local: true);
+			platform.AddComponent<CarryRigidBodies>();
+			platform.transform.parent = row.transform;
+		}
+
+		row.GetComponent<LightMazeRowData>().rowMap = rowMap;
+
 		return row;
+	}
+
+	List<int[]> GetRowMapAsTuples(BitArray rowMap) {
+		List<int[]> tuples = new List<int[]>();
+		int platformStart = 0;
+		int platformWidth = 0;
+
+		for (int x = 0; x < rowMap.Length; x++) {
+			if (rowMap.Get(x)) {
+				platformWidth += 1;
+			}
+
+			if (!rowMap.Get(x) || x == mapWidth - 1) {
+				if (platformWidth > 0) {
+					int[] tuple = {platformStart, platformWidth};
+					tuples.Add(tuple);
+				}
+				platformStart = x + 1;
+				platformWidth = 0;
+			}
+		}
+
+		return tuples;
 	}
 
 	int CreateGaps(BitArray rowMap, int remaining, int start, int end) {
@@ -212,7 +253,12 @@ public class LightMazeGameManager : MonoBehaviour {
 			return 0;
 		}
 
+		// TODO why do we do end - 1 here?
 		int split = Random.Range(start, end - 1);
+		if (end - start + 1 == gapSize) {
+			split = 0;
+		}
+
 		for (int gap = 0; gap < gapSize; gap++) {
 			rowMap.Set(split + gap, false);
 		}
