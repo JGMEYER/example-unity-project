@@ -16,6 +16,8 @@ public class LightMazeGameManager : MonoBehaviour {
 	[SerializeField]
 	private GameObject _lightMazeRowPrefab;
 	[SerializeField]
+	private GameObject _lightMazePistonPrefab;
+	[SerializeField]
 	private Text _victoryText;
 
 	public bool scrollEnabled = true;
@@ -31,6 +33,7 @@ public class LightMazeGameManager : MonoBehaviour {
 	public float minAllowedPlayerHeight = -3f;
 	public float maxAllowedPlayerHeight = 14f;
 	public float pauseBetweenMapShifts = 1f;
+	public float pillarSpawnChance = 0.2f;
 
     private string _gameSelect = "GameSelect";
 	private bool _gameOver = false;
@@ -107,7 +110,7 @@ public class LightMazeGameManager : MonoBehaviour {
 		}
 
 		if (bump) {
-			_mapShiftDistanceRemaining = 1.5f + rowSpacing;
+			_mapShiftDistanceRemaining = 1.5f + rowSpacing;  // arbitrary
 			_mapShiftPauseCounter = pauseBetweenMapShifts;
 		}
 
@@ -184,11 +187,13 @@ public class LightMazeGameManager : MonoBehaviour {
 
 	GameObject AddRow(float y, int gaps) {
 		GameObject row = Instantiate(_lightMazeRowPrefab) as GameObject;
+		GameObject prevRow = null;
 		BitArray rowMap = new BitArray(mapWidth, true);
 		BitArray prevRowMap = null;
 
 		if (_rows.Count > 0) {
-			prevRowMap = _rows.Last().GetComponent<LightMazeRowData>().rowMap;
+			prevRow = _rows.Last();
+			prevRowMap = prevRow.GetComponent<LightMazeRowData>().rowMap;
 		}
 
 		if (prevRowMap == null) {
@@ -224,9 +229,62 @@ public class LightMazeGameManager : MonoBehaviour {
 			platform.transform.parent = row.transform;
 		}
 
+		if (prevRowMap != null && y > rowSpacing) {  // not first row
+			AddEnvironmentObjects(row, prevRow, rowMap, prevRowMap);
+		}
+
 		row.GetComponent<LightMazeRowData>().rowMap = rowMap;
 
 		return row;
+	}
+
+	GameObject AddPiston(float x, float platformY) {
+		GameObject piston = Instantiate(_lightMazePistonPrefab) as GameObject;
+
+		float maxHeight = rowSpacing - (0.5f * 2);
+		piston.GetComponent<LightMazePiston>().maxHeight = maxHeight;
+		piston.transform.localPosition = new Vector3(x, platformY + (maxHeight / 2) + 0.5f, 0);
+
+		return piston;
+	}
+
+	void AddEnvironmentObjects(GameObject row, GameObject prevRow, BitArray rowMap, BitArray prevRowMap) {
+		BitArray matching = new BitArray(rowMap).And(prevRowMap);
+
+		int enclosedLeftEnd = -1;
+		int enclosedRightStart = matching.Count;
+
+		// Two platforms are considered enclosed if they form a 3 sided figure with a wall
+		for (int x = 0; x < matching.Count; x++) {
+			if (matching[x]) {
+				enclosedLeftEnd++;	
+			} else {
+				break;
+			}
+		}
+		for (int x = matching.Count - 1; x >= 0; x--) {
+			if (matching[x]) {
+				enclosedRightStart--;	
+			} else {
+				break;
+			}
+		}
+
+		List<int> pistonOptions = new List<int>();
+
+		for (int x = 1; x < matching.Count - 1; x++) {
+			bool isOnEdge = !matching[x - 1] || !matching[x + 1];
+
+			if (matching[x] && !isOnEdge && x > enclosedLeftEnd && x < enclosedRightStart) {
+				pistonOptions.Add(x);
+			}
+		}
+
+		if (pistonOptions.Count > 0 && Random.value < pillarSpawnChance) {
+			int randomX = pistonOptions[Random.Range(0, pistonOptions.Count)];
+			GameObject piston = AddPiston(randomX, prevRow.transform.position.y);
+			piston.transform.parent = prevRow.transform;
+		}
 	}
 
 	List<int[]> GetRowMapAsTuples(BitArray rowMap) {
