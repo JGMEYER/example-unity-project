@@ -12,7 +12,6 @@ public class LightMazeHatch : MonoBehaviour {
 	private GameObject lazer;
 
 	bool _activated = false;
-	private Vector3 _targetHatchScale;
 
 	private void OnTriggerEnter(Collider other) {
 		if (!_activated) {
