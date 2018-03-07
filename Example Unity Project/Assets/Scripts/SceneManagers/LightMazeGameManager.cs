@@ -18,11 +18,14 @@ public class LightMazeGameManager : MonoBehaviour {
 	[SerializeField]
 	private GameObject _lightMazePistonPrefab;
 	[SerializeField]
+	private GameObject _lightMazeHatchPrefab;
+	[SerializeField]
 	private Text _victoryText;
 
 	public bool scrollEnabled = true;
 	public bool winConditionsEnabled = true;
 	public bool shiftMapWhenPlayerAhead = true;
+	[Range(0f, 10f)]
 	public float rowScrollSpeed = 0.5f;
 	public int mapWidth = 14;
 	public int mapHeight = 10;
@@ -33,7 +36,11 @@ public class LightMazeGameManager : MonoBehaviour {
 	public float minAllowedPlayerHeight = -3f;
 	public float maxAllowedPlayerHeight = 14f;
 	public float pauseBetweenMapShifts = 1f;
-	public float pillarSpawnChance = 0.2f;
+	[Range(0f, 1f)]
+	public float pistonSpawnChance = 0.2f;
+	public bool spawnPistonsOnPlatformEdges = false;
+	[Range(0f, 1f)]
+	public float hatchSpawnChance = 0.2f;
 
     private string _gameSelect = "GameSelect";
 	private bool _gameOver = false;
@@ -201,12 +208,12 @@ public class LightMazeGameManager : MonoBehaviour {
 		} else { // Do not add gaps where last row had gaps prior
 			int gapsAdded = 0;
 			int gapsRemaining = gaps;
-			List<int[]> prevRowTuples = GetRowMapAsTuples(prevRowMap);
+			List<int[]> prevPlatformTuples = GetRowMapAsTuples(prevRowMap);
 
-			while (prevRowTuples.Count > 0 && gapsRemaining > 0) {
-				int randIndex = Random.Range(0, prevRowTuples.Count);
-				int[] randPlatform = prevRowTuples[randIndex];
-				prevRowTuples.RemoveAt(randIndex);
+			while (prevPlatformTuples.Count > 0 && gapsRemaining > 0) {
+				int randIndex = Random.Range(0, prevPlatformTuples.Count);
+				int[] randPlatform = prevPlatformTuples[randIndex];
+				prevPlatformTuples.RemoveAt(randIndex);
 
 				int platformStart = randPlatform[0];
 				int platformWidth = randPlatform[1];
@@ -248,6 +255,18 @@ public class LightMazeGameManager : MonoBehaviour {
 		return piston;
 	}
 
+	GameObject AddHatch(float x, float width, float platformY) {
+		GameObject hatch = Instantiate(_lightMazeHatchPrefab) as GameObject;
+
+		hatch.transform.localPosition = new Vector3(x + width / 2 - 0.5f, platformY, 0);
+
+		Vector3 scale = hatch.transform.localScale;
+		scale.x = width;
+		hatch.transform.localScale = scale;
+
+		return hatch;
+	}
+
 	void AddEnvironmentObjects(GameObject row, GameObject prevRow, BitArray rowMap, BitArray prevRowMap) {
 		BitArray matching = new BitArray(rowMap).And(prevRowMap);
 
@@ -275,35 +294,56 @@ public class LightMazeGameManager : MonoBehaviour {
 		for (int x = 1; x < matching.Count - 1; x++) {
 			bool isOnEdge = !matching[x - 1] || !matching[x + 1];
 
-			if (matching[x] && !isOnEdge && x > enclosedLeftEnd && x < enclosedRightStart) {
-				pistonOptions.Add(x);
+			if (matching[x] && x > enclosedLeftEnd && x < enclosedRightStart) {
+				if (!isOnEdge || spawnPistonsOnPlatformEdges) {
+					pistonOptions.Add(x);
+				}
 			}
 		}
 
-		if (pistonOptions.Count > 0 && Random.value < pillarSpawnChance) {
+		if (pistonOptions.Count > 0 && Random.value <= pistonSpawnChance) {
 			int randomX = pistonOptions[Random.Range(0, pistonOptions.Count)];
 			GameObject piston = AddPiston(randomX, prevRow.transform.position.y);
 			piston.transform.parent = prevRow.transform;
 		}
+
+		List<int[]> gapTuples = GetRowMapAsTuples(rowMap, inverse: true);
+
+		if (gapTuples.Count > 1 && Random.value <= hatchSpawnChance) {
+			int[] randomGap = gapTuples[Random.Range(0, gapTuples.Count)];
+			int gapStart = randomGap[0];
+			int gapWidth = randomGap[1];
+			GameObject hatch = AddHatch(gapStart, gapWidth, row.transform.position.y);
+			hatch.transform.parent = row.transform;
+		}
+
+		foreach (int[] gapTuple in gapTuples) {
+			int gapStart = gapTuple[0];
+			int gapWidth = gapTuple[1];
+			
+
+		}
 	}
 
-	List<int[]> GetRowMapAsTuples(BitArray rowMap) {
+	List<int[]> GetRowMapAsTuples(BitArray rowMap, bool inverse = false) {
 		List<int[]> tuples = new List<int[]>();
-		int platformStart = 0;
-		int platformWidth = 0;
+		int segmentStart = 0;
+		int segmentWidth = 0;
 
 		for (int x = 0; x < rowMap.Length; x++) {
-			if (rowMap.Get(x)) {
-				platformWidth += 1;
+			bool include = (rowMap.Get(x) && !inverse) || (!rowMap.Get(x) && inverse);
+
+			if (include) {
+				segmentWidth += 1;
 			}
 
-			if (!rowMap.Get(x) || x == mapWidth - 1) {
-				if (platformWidth > 0) {
-					int[] tuple = {platformStart, platformWidth};
+			if (!include || x == mapWidth - 1) {
+				if (segmentWidth > 0) {
+					int[] tuple = {segmentStart, segmentWidth};
 					tuples.Add(tuple);
 				}
-				platformStart = x + 1;
-				platformWidth = 0;
+				segmentStart = x + 1;
+				segmentWidth = 0;
 			}
 		}
 
