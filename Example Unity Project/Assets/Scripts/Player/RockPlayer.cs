@@ -4,16 +4,21 @@ using UnityEngine;
 
 public class RockPlayer : MonoBehaviour {
 
-	public KeyCode playerKey;
+	[Header("Prefabs")]
 	public Material defaultMaterial;
 	public Material shieldMaterial;
+	[Header("Controls")]
+	public KeyCode playerKey;
+	[Header("Damage")]
 	public int shieldDamage = 5;
 	public int hurtDamage = 15;
-	public float shieldDuration = 0.2f;
+	[Header("Hurt Animation")]
 	public float hurtDuration = 0.2f;
 	public float hurtShakeSpeed = 50f;
 	public float hurtShakeAmplitude = 0.1f;
 	public float hurtSquashRatio = 0.8f;
+
+	private Renderer _rend;
 	private bool _shieldActive = false;
 	private bool _isHurt = false;
 	private float _hurtTimer = 0f;
@@ -26,22 +31,26 @@ public class RockPlayer : MonoBehaviour {
 	}
 
 	void Start () {
-		GetComponent<Renderer>().material = defaultMaterial;
+		_rend = GetComponent<Renderer>();
+		_rend.material = defaultMaterial;
 	}
 	
 	void Update () {
-		if (Input.GetKeyDown(playerKey) && !_shieldActive && !_isHurt) {
-			StartCoroutine(ActivateShield());
-		}	
-
 		if (_isHurt) {
 			float shakeX = -1 * Mathf.Cos(_hurtTimer * hurtShakeSpeed) * hurtShakeAmplitude;
 			transform.position = new Vector3(_originalPosition.x + shakeX, transform.position.y, _originalPosition.z);
 			_hurtTimer += Time.deltaTime;
 
-            IdleAnim idleAnim = GetComponent<IdleAnim>();
+			IdleAnim idleAnim = GetComponent<IdleAnim>();
 			if (idleAnim) {
 				idleAnim.Restart();
+			}
+		} else {
+			if (Input.GetKey(playerKey)) {
+				SetShieldActive(true);
+				GetComponent<PlayerHealth>().TakeDamage(shieldDamage * Time.deltaTime);
+			}  else {
+				SetShieldActive(false);
 			}
 		}
 	}
@@ -56,16 +65,18 @@ public class RockPlayer : MonoBehaviour {
 		}
 	}
 
-	private IEnumerator ActivateShield() {
-		GetComponent<PlayerHealth>().TakeDamage(shieldDamage);
+	private void SetShieldActive(bool active) {
+		if (active == _shieldActive) {
+			return;
+		}
 
-		_shieldActive = true;
-		GetComponent<Renderer>().material = shieldMaterial;
+		_shieldActive = active;
 
-		yield return new WaitForSeconds(shieldDuration);
-
-		_shieldActive = false;
-		GetComponent<Renderer>().material = defaultMaterial;
+		if (_shieldActive) {
+			_rend.material = shieldMaterial;
+		} else {
+			_rend.material = defaultMaterial;
+		}
 	}
 
 	private IEnumerator Hurt() {

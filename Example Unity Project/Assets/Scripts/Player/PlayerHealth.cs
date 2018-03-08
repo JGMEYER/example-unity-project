@@ -6,26 +6,26 @@ using UnityEngine.UI;
 public class PlayerHealth : MonoBehaviour {
 
 	public Slider healthSlider;
-	public int totalHealth = 100;
-	public int currentHealth;
+	public float totalHealth = 100f;
+	public float currentHealth;
 
 	void Awake() {
 		currentHealth = totalHealth;
 	}
 
-	void Start () {
+	void Start() {
 		healthSlider.value = currentHealth;		
 	}
 
-	public bool isDead () {
-		return currentHealth <= 0;
+	public bool playerIsDead() {
+		return currentHealth <= 0f;
 	}
 
-	public void TakeDamage (int damage) {
+	public void TakeDamage(float damage) {
 		currentHealth -= damage;
 
-		if (currentHealth <= 0) {
-			currentHealth = 0;
+		if (currentHealth <= 0f) {
+			currentHealth = 0f;
 		}
 
 		healthSlider.value = currentHealth;

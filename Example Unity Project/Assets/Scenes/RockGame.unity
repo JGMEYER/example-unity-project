@@ -1008,12 +1008,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 670aca9599888f14bab58d202aed94e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerKey: 275
   defaultMaterial: {fileID: 2100000, guid: a4f19a8c5eeeacf43b3f66f659427f7a, type: 2}
   shieldMaterial: {fileID: 2100000, guid: 3d1eaea3dacb03946869e5a854458ec8, type: 2}
-  shieldDamage: 2
-  hurtDamage: 5
-  shieldDuration: 0.2
+  playerKey: 275
+  shieldDamage: 10
+  hurtDamage: 10
   hurtDuration: 0.2
   hurtShakeSpeed: 70
   hurtShakeAmplitude: 0.1
@@ -1365,12 +1364,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 670aca9599888f14bab58d202aed94e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerKey: 276
   defaultMaterial: {fileID: 2100000, guid: b0e1b9023ecfde447a4d32cd00468c04, type: 2}
   shieldMaterial: {fileID: 2100000, guid: 3d1eaea3dacb03946869e5a854458ec8, type: 2}
-  shieldDamage: 2
-  hurtDamage: 5
-  shieldDuration: 0.2
+  playerKey: 276
+  shieldDamage: 10
+  hurtDamage: 10
   hurtDuration: 0.2
   hurtShakeSpeed: 70
   hurtShakeAmplitude: 0.1
@@ -1617,12 +1615,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 670aca9599888f14bab58d202aed94e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerKey: 273
   defaultMaterial: {fileID: 2100000, guid: 7752643fc36f6fb41b1c7f540761579c, type: 2}
   shieldMaterial: {fileID: 2100000, guid: 3d1eaea3dacb03946869e5a854458ec8, type: 2}
-  shieldDamage: 2
-  hurtDamage: 5
-  shieldDuration: 0.2
+  playerKey: 273
+  shieldDamage: 10
+  hurtDamage: 10
   hurtDuration: 0.2
   hurtShakeSpeed: 70
   hurtShakeAmplitude: 0.1
@@ -2049,12 +2046,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 670aca9599888f14bab58d202aed94e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerKey: 274
   defaultMaterial: {fileID: 2100000, guid: 4d12e24059f8e514cb60c56e8b1f3f9c, type: 2}
   shieldMaterial: {fileID: 2100000, guid: 3d1eaea3dacb03946869e5a854458ec8, type: 2}
-  shieldDamage: 2
-  hurtDamage: 5
-  shieldDuration: 0.2
+  playerKey: 274
+  shieldDamage: 10
+  hurtDamage: 10
   hurtDuration: 0.2
   hurtShakeSpeed: 70
   hurtShakeAmplitude: 0.1
