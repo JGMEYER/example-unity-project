@@ -46,7 +46,12 @@ public class LightMazeGameManager : MonoBehaviour {
 			if (scrollMapWhenPlayerAhead) {
 				ScrollMapIfPlayerAhead(Time.deltaTime);
 			}
-			KillFallenPlayers();
+
+			List<LightMazePlayer> playersKilled = KillFallenPlayers();
+
+			if (winConditionsEnabled) {
+				CheckGameOver(playersKilled);
+			}
 		}
 	}
 
@@ -111,7 +116,7 @@ public class LightMazeGameManager : MonoBehaviour {
 		}
 	}
 
-	void KillFallenPlayers() {
+	List<LightMazePlayer> KillFallenPlayers() {
 		List<LightMazePlayer> playersKilled = new List<LightMazePlayer>();
 
 		foreach (LightMazePlayer player in _players) {
@@ -121,29 +126,47 @@ public class LightMazeGameManager : MonoBehaviour {
 			}
 		}
 
-		if (winConditionsEnabled) {
-			CheckGameOver(playersKilled.ToArray<LightMazePlayer>());
-		}
+		return playersKilled;
 	}
 
-	void CheckGameOver(LightMazePlayer[] playersKilled) {
+	void CheckGameOver(List<LightMazePlayer> playersKilled) {
 		LightMazePlayer[] alivePlayers = _players.Where(player => !player.IsDead()).ToArray();
-		List<string> winners = new List<string>();
+		LightMazePlayer[] jetpackPlayers = _players.Where(player => player.HasJetpack()).ToArray();
 
-		if (alivePlayers.Length == 1) {
-			_victoryText.text = "WINNER!\n";
-			winners.Add(alivePlayers[0].name);
+		List<string> winnerNames = new List<string>();
+		bool jetpackWin = false;
+
+		if (jetpackPlayers.Length == 1) {
+			winnerNames.Add(jetpackPlayers[0].name);
+			jetpackWin = true;
+		} else if (alivePlayers.Length == 1) {
+			winnerNames.Add(alivePlayers[0].name);
 		} else if (alivePlayers.Length == 0) {
-			_victoryText.text = "DRAW!\n";
 			foreach (LightMazePlayer player in playersKilled) {
-				winners.Add(player.name);
+				winnerNames.Add(player.name);
 			}
 		}
 
-		if (winners.Count > 0) {
-			_gameOver = true;
-			_victoryText.text += string.Join(", ", winners.ToArray());
+		if (winnerNames.Count > 0) {
+			StartCoroutine(GameOver(winnerNames, jetpackWin));
 		}
+	}
+
+	IEnumerator GameOver(List<string> winnerNames, bool jetpackWin) {
+		_gameOver = true;
+
+		if (winnerNames.Count == 1) {
+			_victoryText.text = "WINNER!\n";
+		} else {
+			_victoryText.text = "DRAW!\n";
+		}
+		_victoryText.text += string.Join(", ", winnerNames.ToArray());
+
+		// TODO jetpackWin: scroll map quickly without interruption and allow players to explode
+
+		yield return new WaitForSeconds(3f);
+
+		SceneManager.LoadSceneAsync(_gameSelect);
 	}
 
 }

@@ -7,15 +7,20 @@ public class LightMazePlayer : MonoBehaviour {
 	[SerializeField]
 	private ParticleSystem _deathExplosion;
 
+	[Header("Inputs")]
 	public KeyCode upKey;
 	public KeyCode leftKey;
 	public KeyCode rightKey;
 
+	[Header("Movement")]
+	public bool canMove = true;
 	public bool canWallJump = false;
 	public float horizontalSpeed = 8f;
 	public float initialJumpVelocity = 3f;
 	public float maxJumpHoldTime = 0.8f;
 	public float fallGravityMultiplier = 2.5f;
+
+	[Header("Detectors")]
 	public float rayCastDist = 0.27f;
 
 	private Rigidbody _rb;
@@ -24,7 +29,8 @@ public class LightMazePlayer : MonoBehaviour {
 	private float _jumpHoldCounter = 0;
 	private bool _canJump = true;
 	private bool _isDead = false;
-	private bool _isVisible = true;
+
+	private LightMazeJetpack jetpack = null;
 
 	void Start() {
 		_rb = GetComponent<Rigidbody>();
@@ -37,7 +43,13 @@ public class LightMazePlayer : MonoBehaviour {
 	}
 
 	void FixedUpdate() {
-		DoMovement();		
+		if (canMove) {
+			if (HasJetpack()) {
+				DoJetpackMovement();
+			} else {
+				DoMovement();
+			}
+		}
 	}
 
 	void OnDrawGizmos() {
@@ -68,6 +80,7 @@ public class LightMazePlayer : MonoBehaviour {
 			_canJump = false;
 		}
 
+		_inputHorizontal = 0;
 		if (Input.GetKey(leftKey)) {
 			_inputHorizontal = -1;
 		}
@@ -90,6 +103,12 @@ public class LightMazePlayer : MonoBehaviour {
 
 		_inputHorizontal = 0;
 		_inputVertical = 0;
+	}
+
+	void DoJetpackMovement() {
+		// I am sure I will regret this design choice
+		Vector3 jetpackVelocity = jetpack.GetVelocity(_inputHorizontal);
+		_rb.velocity = jetpackVelocity;
 	}
 
 	void OnCollisionEnter(Collision collision) {
@@ -159,22 +178,42 @@ public class LightMazePlayer : MonoBehaviour {
 		}
 	}
 
-	public bool IsVisible() {
-		return _isVisible;
+	void OnTriggerEnter(Collider other) {
+		LightMazeJetpack jetpackItem = other.GetComponent<LightMazeJetpack>();
+
+		if (jetpackItem != null && !jetpackItem.IsEquipped()) {
+			EquipJetpack(jetpackItem);
+		}
 	}
 
-	public void OnBecameVisible() {
-		_isVisible = true;
+	void EquipJetpack(LightMazeJetpack jetpackItem) {
+		jetpack = jetpackItem;
+		jetpack.SetEquipped(true);
+
+		_rb.useGravity = false;
+		_rb.velocity = Vector3.zero;
+		_rb.angularVelocity = Vector3.zero;
+		_rb.transform.rotation = Quaternion.Euler(Vector3.zero);
+
+		// I am sure I will regret this design choice
+		transform.position = jetpack.transform.position;
+		jetpack.transform.parent = transform;
+		jetpack.transform.localPosition = Vector3.zero;
+
+		Vector3 newPosition = transform.position;
+		newPosition.z = -3f; // arbitrary
+		transform.position = newPosition;
 	}
 
-	public void OnBecameInvisible() {
-		_isVisible = false;
+	public bool HasJetpack() {
+		return (jetpack != null);
 	}
 
 	public void Kill(bool explode) {
-		_rb.velocity = new Vector3(0, 0, 0);
+		_rb.velocity = Vector3.zero;
 		_rb.useGravity = false;
 		_isDead = true;
+		canMove = false;
 
 		if (explode) {
 			_deathExplosion.Emit(5);
