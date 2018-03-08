@@ -50,7 +50,7 @@ public class LightMazeGameManager : MonoBehaviour {
 		}
 	}
 
-	private void FixedUpdate() {
+	void FixedUpdate() {
 		if (!_gameOver && scrollEnabled) {
 			ScrollRows(rowScrollSpeed * Time.deltaTime);
 		}
@@ -121,14 +121,13 @@ public class LightMazeGameManager : MonoBehaviour {
 			}
 		}
 
-		LightMazePlayer[] alivePlayers = _players.Where(player => !player.IsDead()).ToArray();
-
 		if (winConditionsEnabled) {
-			CheckGameOver(playersKilled.ToArray<LightMazePlayer>(), alivePlayers);
+			CheckGameOver(playersKilled.ToArray<LightMazePlayer>());
 		}
 	}
 
-	void CheckGameOver(LightMazePlayer[] playersKilled, LightMazePlayer[] alivePlayers) {
+	void CheckGameOver(LightMazePlayer[] playersKilled) {
+		LightMazePlayer[] alivePlayers = _players.Where(player => !player.IsDead()).ToArray();
 		List<string> winners = new List<string>();
 
 		if (alivePlayers.Length == 1) {

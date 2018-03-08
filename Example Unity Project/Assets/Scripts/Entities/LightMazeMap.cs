@@ -162,26 +162,26 @@ public class LightMazeMap : MonoBehaviour {
 		return CreateGaps(rowMap, remaining - 1, start, end);
 	}	
 
-	GameObject AddPiston(float x, float platformY) {
-		GameObject piston = Instantiate(_lightMazePistonPrefab) as GameObject;
-
+	void AddPiston(GameObject row, float x) {
 		float maxHeight = rowSpacing - (0.5f * 2);
-		piston.GetComponent<LightMazePiston>().maxHeight = maxHeight;
-		piston.transform.localPosition = new Vector3(x, platformY + (maxHeight / 2) + 0.5f, 0);
+		float y = row.transform.position.y + (maxHeight / 2) + 0.5f;
 
-		return piston;
+		GameObject piston = Instantiate(_lightMazePistonPrefab) as GameObject;
+		piston.GetComponent<LightMazePiston>().maxHeight = maxHeight;
+		piston.transform.localPosition = new Vector3(x, y, 0);
+		piston.transform.parent = row.transform;
 	}
 
-	GameObject AddHatch(float x, float width, float platformY) {
-		GameObject hatch = Instantiate(_lightMazeHatchPrefab) as GameObject;
+	void AddHatch(GameObject row, float x, float width) {
+		float y = row.transform.position.y;
 
-		hatch.transform.localPosition = new Vector3(x + width / 2 - 0.5f, platformY, 0);
+		GameObject hatch = Instantiate(_lightMazeHatchPrefab) as GameObject;
+		hatch.transform.localPosition = new Vector3(x + (width / 2) - 0.5f, y, 0);
+		hatch.transform.parent = row.transform;
 
 		Vector3 scale = hatch.transform.localScale;
 		scale.x = width;
 		hatch.transform.localScale = scale;
-
-		return hatch;
 	}
 
 	void AddEnvironmentObjects(GameObject row, GameObject prevRow, BitArray rowMap, BitArray prevRowMap) {
@@ -220,8 +220,7 @@ public class LightMazeMap : MonoBehaviour {
 
 		if (pistonOptions.Count > 0 && Random.value <= pistonSpawnChance) {
 			int randomX = pistonOptions[Random.Range(0, pistonOptions.Count)];
-			GameObject piston = AddPiston(randomX, prevRow.transform.position.y);
-			piston.transform.parent = prevRow.transform;
+			AddPiston(prevRow, randomX);
 		}
 
 		List<int[]> gapTuples = GetRowMapAsTuples(rowMap, inverse: true);
@@ -230,8 +229,7 @@ public class LightMazeMap : MonoBehaviour {
 			int[] randomGap = gapTuples[Random.Range(0, gapTuples.Count)];
 			int gapStart = randomGap[0];
 			int gapWidth = randomGap[1];
-			GameObject hatch = AddHatch(gapStart, gapWidth, row.transform.position.y);
-			hatch.transform.parent = row.transform;
+			AddHatch(row, gapStart, gapWidth);
 		}
 	}
 
