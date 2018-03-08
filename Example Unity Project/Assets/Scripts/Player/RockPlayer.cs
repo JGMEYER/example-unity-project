@@ -19,6 +19,7 @@ public class RockPlayer : MonoBehaviour {
 	public float hurtSquashRatio = 0.8f;
 
 	private Renderer _rend;
+	private PlayerHealth _health;
 	private bool _shieldActive = false;
 	private bool _isHurt = false;
 	private float _hurtTimer = 0f;
@@ -26,12 +27,13 @@ public class RockPlayer : MonoBehaviour {
 	private Vector3 _originalScale;
 
 	private void Awake() {
+		_rend = GetComponent<Renderer>();
+		_health = GetComponent<PlayerHealth>();
 		_originalPosition = transform.position;
 		_originalScale = transform.localScale;
 	}
 
 	void Start () {
-		_rend = GetComponent<Renderer>();
 		_rend.material = defaultMaterial;
 	}
 	
@@ -48,14 +50,14 @@ public class RockPlayer : MonoBehaviour {
 		} else {
 			if (Input.GetKey(playerKey)) {
 				SetShieldActive(true);
-				GetComponent<PlayerHealth>().TakeDamage(shieldDamage * Time.deltaTime);
+				_health.TakeDamage(shieldDamage * Time.deltaTime);
 			}  else {
 				SetShieldActive(false);
 			}
 		}
 	}
 
-	private void OnTriggerEnter(Collider other) {
+	void OnTriggerEnter(Collider other) {
 		ThrownItem thrownItem = other.GetComponent<ThrownItem>();
 		if (thrownItem != null) {
 			if (!_shieldActive) {
@@ -65,7 +67,7 @@ public class RockPlayer : MonoBehaviour {
 		}
 	}
 
-	private void SetShieldActive(bool active) {
+	void SetShieldActive(bool active) {
 		if (active == _shieldActive) {
 			return;
 		}
@@ -79,8 +81,8 @@ public class RockPlayer : MonoBehaviour {
 		}
 	}
 
-	private IEnumerator Hurt() {
-		GetComponent<PlayerHealth>().TakeDamage(hurtDamage);
+	IEnumerator Hurt() {
+		_health.TakeDamage(hurtDamage);
         FindObjectOfType<AudioManager>().Play("Hit");
 
         _isHurt = true;
@@ -99,6 +101,10 @@ public class RockPlayer : MonoBehaviour {
 		} else {
 			GetComponent<Renderer>().material.color = defaultMaterial.color;
 		}
+	}
+
+	public bool IsDead() {
+		return _health.playerIsDead();
 	}
 
 }

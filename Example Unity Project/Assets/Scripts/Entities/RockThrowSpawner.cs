@@ -5,7 +5,7 @@ using UnityEngine;
 public class RockThrowSpawner : MonoBehaviour {
 
 	[SerializeField]
-	private GameObject _thrownRockPrefab;
+	private ThrownItem _thrownRockPrefab;
 
 	public float rockThrowDistanceZ = 15f;
 	public float rockThrowAmplitude = 15f;
@@ -20,24 +20,25 @@ public class RockThrowSpawner : MonoBehaviour {
 	void Update() {
 		if (_pattern == null) return;
 
-		_timeSinceLastSpawn += Time.deltaTime;
+		if (!_done) {
+			_timeSinceLastSpawn += Time.deltaTime;
 
-		if (_timeSinceLastSpawn > _nextSpawn) {
-			GameObject thrownRock = Instantiate(_thrownRockPrefab) as GameObject;
-			thrownRock.GetComponent<ThrownItem>().Initialize(transform.position.x, rockThrowDistanceZ, rockThrowAmplitude, rockThrowSpeed);
-            FindObjectOfType<AudioManager>().Play("Throw");
-
-            NextTimer();
+			if (_timeSinceLastSpawn > _nextSpawn) {
+				SpawnRock();
+				NextTimer();
+			}
 		}
 	}
 
-	public void Initialize(float[] pattern) {
-		_pattern = pattern;
-		_done = false;
-		NextTimer();
+	void SpawnRock() {
+		ThrownItem thrownRock = Instantiate(_thrownRockPrefab) as ThrownItem;
+		thrownRock.GetComponent<ThrownItem>().Initialize(transform.position.x, rockThrowDistanceZ, rockThrowAmplitude, rockThrowSpeed);
+		thrownRock.transform.parent = transform;
+
+		FindObjectOfType<AudioManager>().Play("Throw");
 	}
 
-	private void NextTimer() {
+	void NextTimer() {
 		if (_currentPattern + 1 >= _pattern.Length) {
 			_nextSpawn = float.MaxValue;
 			_done = true;
@@ -47,6 +48,19 @@ public class RockThrowSpawner : MonoBehaviour {
 		_timeSinceLastSpawn = 0;
 		_currentPattern += 1;
 		_nextSpawn = _pattern[_currentPattern];
+	}
+
+	public void Initialize(float[] pattern) {
+		_pattern = pattern;
+		NextTimer();
+	}
+
+	public void Stop() {
+		_done = true;
+
+		foreach (ThrownItem activeRock in GetComponentsInChildren<ThrownItem>()) {
+			Destroy(activeRock.gameObject);
+		}
 	}
 
 }
