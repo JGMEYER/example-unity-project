@@ -116,7 +116,7 @@ public class LightMazeMap : MonoBehaviour {
 
 		if (prevRowMap == null) {
 			CreateGaps(rowMap, gaps, 0, rowMap.Length - 1);
-		} else { //Do not add gaps where last row had gaps prior
+		} else { // Do not add gaps where last row had gaps prior
 			int gapsAdded = 0;
 			int gapsRemaining = gaps;
 			List<int[]> prevPlatformTuples = GetRowMapAsTuples(prevRowMap);
@@ -146,7 +146,7 @@ public class LightMazeMap : MonoBehaviour {
 			platform.transform.parent = row.transform;
 		}
 
-		if (prevRowMap != null && y > rowSpacing) {  //Not first row
+		if (prevRowMap != null && y > rowSpacing) {  // Not first row
 			AddEnvironmentObjects(row, prevRow, rowMap, prevRowMap);
 		}
 
@@ -178,7 +178,7 @@ public class LightMazeMap : MonoBehaviour {
 			return 0;
 		}
 
-		//TODO why do we do end - 1 here?
+		// TODO why do we do end - 1 here?
 		int split = Random.Range(start, end - 1);
 		if (end - start + 1 == gapSize) {
 			split = 0;
@@ -234,7 +234,7 @@ public class LightMazeMap : MonoBehaviour {
 		int enclosedLeftEnd = -1;
 		int enclosedRightStart = matching.Count;
 
-		//Two platforms are considered enclosed if they form a 3 sided figure with a wall
+		// Two platforms are considered enclosed if they form a 3 sided figure with a wall
 		for (int x = 0; x < matching.Count; x++) {
 			if (matching[x]) {
 				enclosedLeftEnd++;	
