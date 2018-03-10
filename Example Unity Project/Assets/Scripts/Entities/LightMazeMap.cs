@@ -14,6 +14,8 @@ public class LightMazeMap : MonoBehaviour {
 	private GameObject _lightMazePistonPrefab;
 	[SerializeField]
 	private GameObject _lightMazeHatchPrefab;
+	[SerializeField]
+	private GameObject _lightMazeJetpackPrefab;
 
 	[Header("Map Attributes")]
 	public int mapWidth = 14;
@@ -22,6 +24,7 @@ public class LightMazeMap : MonoBehaviour {
 	public float maxAllowedPlayerHeight = 14f;
 
 	[Header("Row Attributes")]
+	public int totalRows = 20;
 	public float rowSpacing = 2.5f;
 	public int maxGaps = 3;
 	public int gapSize = 3;
@@ -35,8 +38,15 @@ public class LightMazeMap : MonoBehaviour {
 	public float hatchSpawnChance = 0.2f;
 
 	private Queue<GameObject> _rows = new Queue<GameObject>();
+	private int _remainingRows;
 
 	public void Start() {
+		if (mapHeight / rowSpacing >= totalRows) {
+			throw new System.ArgumentException("(mapHeight / rowSpacing) must be < totalRows");
+		}
+
+		_remainingRows = totalRows;
+	
 		int wallHeight = mapHeight + (int)Mathf.Ceil(Mathf.Abs(minAllowedPlayerHeight));
 		int wallY = mapHeight / 2 - (int)Mathf.Ceil(Mathf.Abs(minAllowedPlayerHeight));
 
@@ -47,6 +57,7 @@ public class LightMazeMap : MonoBehaviour {
 			int gaps = (y == 0) ? 0 : maxGaps;
 			GameObject row = AddRow(y, gaps);
 			_rows.Enqueue(row);
+			_remainingRows--;
 		}
 	}
 
@@ -63,10 +74,18 @@ public class LightMazeMap : MonoBehaviour {
 			}
 		}
 
-		if (addNewRow) {
+		if (addNewRow && _remainingRows > 0) {
 			float lastY = _rows.Last().transform.position.y;
-			GameObject row = AddRow(lastY + rowSpacing, maxGaps);
+			GameObject row;
+
+			if (_remainingRows > 1) {
+				row = AddRow(lastY + rowSpacing, maxGaps);
+			} else {
+				row = AddJetpackRow(lastY + rowSpacing);
+			}
+
 			_rows.Enqueue(row);
+			_remainingRows--;
 		}
 	}
 
@@ -137,6 +156,19 @@ public class LightMazeMap : MonoBehaviour {
 		return row;
 	}
 
+	GameObject AddJetpackRow(float y) {
+		GameObject row = Instantiate(_lightMazeRowPrefab) as GameObject;
+		BitArray rowMap = new BitArray(mapWidth, false);
+
+		row.transform.position = new Vector3(0, y, 0);
+
+		AddJetpack(row, (float)mapWidth / 2);
+
+		row.GetComponent<LightMazeRowData>().rowMap = rowMap;
+
+		return row;
+	}
+
 	int CreateGaps(BitArray rowMap, int remaining, int start, int end) {
 		if (remaining == 0 || end - start < gapSize) {
 			return 0;
@@ -166,7 +198,7 @@ public class LightMazeMap : MonoBehaviour {
 		float maxHeight = rowSpacing - (0.5f * 2);
 		float y = row.transform.position.y + (maxHeight / 2) + 0.5f;
 
-		GameObject piston = Instantiate(_lightMazePistonPrefab) as GameObject;
+		GameObject piston = Instantiate(_lightMazePistonPrefab);
 		piston.GetComponent<LightMazePiston>().maxHeight = maxHeight;
 		piston.transform.localPosition = new Vector3(x, y, 0);
 		piston.transform.parent = row.transform;
@@ -175,13 +207,21 @@ public class LightMazeMap : MonoBehaviour {
 	void AddHatch(GameObject row, float x, float width) {
 		float y = row.transform.position.y;
 
-		GameObject hatch = Instantiate(_lightMazeHatchPrefab) as GameObject;
+		GameObject hatch = Instantiate(_lightMazeHatchPrefab);
 		hatch.transform.localPosition = new Vector3(x + (width / 2) - 0.5f, y, 0);
 		hatch.transform.parent = row.transform;
 
 		Vector3 scale = hatch.transform.localScale;
 		scale.x = width;
 		hatch.transform.localScale = scale;
+	}
+
+	void AddJetpack(GameObject row, float x) {
+		float y = row.transform.position.y;
+
+		GameObject jetpack = Instantiate(_lightMazeJetpackPrefab);
+		jetpack.transform.localPosition = new Vector3(x, y, 0);
+		jetpack.transform.parent = row.transform;
 	}
 
 	void AddEnvironmentObjects(GameObject row, GameObject prevRow, BitArray rowMap, BitArray prevRowMap) {
