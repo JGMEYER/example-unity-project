@@ -11,6 +11,8 @@ public class LightMazeMap : MonoBehaviour {
 	[SerializeField]
 	private GameObject _lightMazeWallPrefab;
 	[SerializeField]
+	private GameObject _lightMazePlatformPrefab;
+	[SerializeField]
 	private GameObject _lightMazePistonPrefab;
 	[SerializeField]
 	private GameObject _lightMazeHatchPrefab;
@@ -46,12 +48,6 @@ public class LightMazeMap : MonoBehaviour {
 		}
 
 		_remainingRows = totalRows;
-	
-		int wallHeight = mapHeight + (int)Mathf.Ceil(Mathf.Abs(minAllowedPlayerHeight));
-		int wallY = mapHeight / 2 - (int)Mathf.Ceil(Mathf.Abs(minAllowedPlayerHeight));
-
-		AddPlatform(-1, wallY, height: wallHeight);
-		AddPlatform(mapWidth, wallY, height: wallHeight);
 
 		for (float y = 0; y < mapHeight; y+=rowSpacing) {
 			int gaps = (y == 0) ? 0 : maxGaps;
@@ -89,22 +85,26 @@ public class LightMazeMap : MonoBehaviour {
 		}
 	}
 
-	GameObject AddPlatform(float x, float y, int width = 1, int height = 1, bool local = false) {
-		GameObject wall = Instantiate(_lightMazeWallPrefab) as GameObject;
+	GameObject AddWall(float x, float y) {
+		GameObject wall = Instantiate(_lightMazeWallPrefab);
 
-		if (local) {
-			wall.transform.localPosition = new Vector3(x, y, 0);
-		} else {
-			wall.transform.position = new Vector3(x, y, 0);
-		}
-
-		wall.transform.localScale = new Vector3(width, height, 1);
+		wall.transform.localPosition = new Vector3(x, y - (rowSpacing / 2) + 0.5f, 0);
+		wall.transform.localScale = new Vector3(1, rowSpacing, 1);
 
 		return wall;
 	}
 
+	GameObject AddPlatform(float x, float y, int width = 1, int height = 1) {
+		GameObject platform = Instantiate(_lightMazePlatformPrefab);
+
+		platform.transform.localPosition = new Vector3(x, y, 0);
+		platform.transform.localScale = new Vector3(width, height, 1);
+
+		return platform;
+	}
+
 	GameObject AddRow(float y, int gaps) {
-		GameObject row = Instantiate(_lightMazeRowPrefab) as GameObject;
+		GameObject row = Instantiate(_lightMazeRowPrefab);
 		GameObject prevRow = null;
 		BitArray rowMap = new BitArray(mapWidth, true);
 		BitArray prevRowMap = null;
@@ -116,7 +116,7 @@ public class LightMazeMap : MonoBehaviour {
 
 		if (prevRowMap == null) {
 			CreateGaps(rowMap, gaps, 0, rowMap.Length - 1);
-		} else { // Do not add gaps where last row had gaps prior
+		} else { //Do not add gaps where last row had gaps prior
 			int gapsAdded = 0;
 			int gapsRemaining = gaps;
 			List<int[]> prevPlatformTuples = GetRowMapAsTuples(prevRowMap);
@@ -142,16 +142,20 @@ public class LightMazeMap : MonoBehaviour {
 			int platformWidth = platformTuple[1];
 
 			float platformX = platformStart + ((float)platformWidth / 2) - 0.5f;
-			GameObject platform = AddPlatform(platformX, y, width: platformWidth, local: true);
-			platform.AddComponent<CarryRigidBodies>();
+			GameObject platform = AddPlatform(platformX, y, width: platformWidth);
 			platform.transform.parent = row.transform;
 		}
 
-		if (prevRowMap != null && y > rowSpacing) {  // not first row
+		if (prevRowMap != null && y > rowSpacing) {  //Not first row
 			AddEnvironmentObjects(row, prevRow, rowMap, prevRowMap);
 		}
 
 		row.GetComponent<LightMazeRowData>().rowMap = rowMap;
+
+		GameObject leftWall = AddWall(-1, y);
+		GameObject rightWall = AddWall(mapWidth, y);
+		leftWall.transform.parent = row.transform;
+		rightWall.transform.parent = row.transform;
 
 		return row;
 	}
@@ -174,7 +178,7 @@ public class LightMazeMap : MonoBehaviour {
 			return 0;
 		}
 
-		// TODO why do we do end - 1 here?
+		//TODO why do we do end - 1 here?
 		int split = Random.Range(start, end - 1);
 		if (end - start + 1 == gapSize) {
 			split = 0;
@@ -230,7 +234,7 @@ public class LightMazeMap : MonoBehaviour {
 		int enclosedLeftEnd = -1;
 		int enclosedRightStart = matching.Count;
 
-		// Two platforms are considered enclosed if they form a 3 sided figure with a wall
+		//Two platforms are considered enclosed if they form a 3 sided figure with a wall
 		for (int x = 0; x < matching.Count; x++) {
 			if (matching[x]) {
 				enclosedLeftEnd++;	
