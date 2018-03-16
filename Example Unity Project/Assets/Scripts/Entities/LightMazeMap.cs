@@ -129,6 +129,14 @@ public class LightMazeMap : MonoBehaviour {
 			GameObject row = rows[i];
 			int gaps = (i == 0) ? 0 : maxGaps;
 
+			if (prevRow) {
+				Vector3 newPosition = row.transform.position;
+				float newY = prevRow.transform.position.y + rowSpacing;
+
+				newPosition.y = newY;
+				row.transform.position = newPosition;
+			}
+
 			ClearRow(row);
 
 			if (_remainingRows == 0 && i == rows.Length - 1) {
