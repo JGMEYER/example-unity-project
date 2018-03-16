@@ -39,22 +39,56 @@ public class LightMazeMap : MonoBehaviour {
 	[Range(0f, 1f)]
 	public float hatchSpawnChance = 0.2f;
 
+	// TODO find better object type with fast front pop and can be indexed
 	private Queue<GameObject> _rows = new Queue<GameObject>();
 	private int _remainingRows;
+	private bool _valuesChanged;
 
 	public void Start() {
+		_remainingRows = totalRows;
+
+		for (float y = 0; y < mapHeight; y+=rowSpacing) {
+			GameObject row = AddRow(y);
+			_rows.Enqueue(row);
+			_remainingRows--;
+		}
+	}
+
+	public void Update() {
+		if (_valuesChanged) { // Should be true after Start() to trigger original gen
+			RepopulateRows();
+			_valuesChanged = false;
+		}
+	}
+
+	void OnValidate() {
+		// TODO is there an "assert" equivalent in C# for these checks?
+
+		if (rowSpacing < 1) {
+			rowSpacing = 1;
+			throw new System.ArgumentException("rowSpacing cannot be < 1");
+		}
 		if (mapHeight / rowSpacing >= totalRows) {
 			throw new System.ArgumentException("(mapHeight / rowSpacing) must be < totalRows");
 		}
 
-		_remainingRows = totalRows;
-
-		for (float y = 0; y < mapHeight; y+=rowSpacing) {
-			int gaps = (y == 0) ? 0 : maxGaps;
-			GameObject row = AddRow(y, gaps);
-			_rows.Enqueue(row);
-			_remainingRows--;
+		if (gapSize < 1) {
+			gapSize = 1;
+			throw new System.ArgumentException("gapSize cannot be < 1");
 		}
+		if (gapSize > mapWidth) {
+			gapSize = mapWidth;
+			throw new System.ArgumentException("gapSize cannot be > mapWidth");
+		}
+		if (minPlatformSize < 1) {
+			minPlatformSize = 1;
+			throw new System.ArgumentException("minPlatformSize cannot be < 1");
+		}
+		if (minPlatformSize + gapSize > mapWidth) {
+			throw new System.ArgumentException("(minPlatformSize + gapSize) cannot be > mapWidth");
+		}
+
+		_valuesChanged = true;
 	}
 
 	public void ScrollRows(float changeY) {
@@ -71,17 +105,39 @@ public class LightMazeMap : MonoBehaviour {
 		}
 
 		if (addNewRow && _remainingRows > 0) {
-			float lastY = _rows.Last().transform.position.y;
-			GameObject row;
+			GameObject prevRow = _rows.Last();
+			float prevY = prevRow.transform.position.y;
+
+			GameObject row = AddRow(prevY + rowSpacing);
 
 			if (_remainingRows > 1) {
-				row = AddRow(lastY + rowSpacing, maxGaps);
+				PopulateRow(row, prevRow, _rows.Count, maxGaps);
 			} else {
-				row = AddJetpackRow(lastY + rowSpacing);
+				PopulateJetpackRow(row);
 			}
 
 			_rows.Enqueue(row);
 			_remainingRows--;
+		}
+	}
+
+	public void RepopulateRows() {
+		GameObject[] rows = _rows.ToArray();
+		GameObject prevRow = null;
+
+		for (int i = 0; i < rows.Length; i++) {
+			GameObject row = rows[i];
+			int gaps = (i == 0) ? 0 : maxGaps;
+
+			ClearRow(row);
+
+			if (_remainingRows == 0 && i == rows.Length - 1) {
+				PopulateJetpackRow(row);
+			} else {
+				PopulateRow(row, prevRow, i, gaps);
+			}
+			
+			prevRow = row;
 		}
 	}
 
@@ -103,22 +159,38 @@ public class LightMazeMap : MonoBehaviour {
 		return platform;
 	}
 
-	GameObject AddRow(float y, int gaps) {
+	GameObject AddRow(float y) {
 		GameObject row = Instantiate(_lightMazeRowPrefab);
-		GameObject prevRow = null;
-		BitArray rowMap = new BitArray(mapWidth, true);
+
+		row.transform.position = new Vector3(0, y, 0);
+		row.GetComponent<LightMazeRowData>().rowMap = new BitArray(mapWidth, false);
+
+		return row;
+	}
+
+	void ClearRow(GameObject row) {
+		row.GetComponent<LightMazeRowData>().rowMap = new BitArray(mapWidth, false);
+
+		Transform[] children = row.GetComponentsInChildren<Transform>(includeInactive: true);
+		foreach (Transform child in children) {
+			if (child.gameObject != row) {
+				Destroy(child.gameObject);
+			}
+		}
+	}
+
+	void PopulateRow(GameObject row, GameObject prevRow, int index, int gaps) {
+		float y = row.transform.position.y;
+
+		BitArray rowMap = row.GetComponent<LightMazeRowData>().rowMap = new BitArray(mapWidth, true);
 		BitArray prevRowMap = null;
 
-		if (_rows.Count > 0) {
-			prevRow = _rows.Last();
-			prevRowMap = prevRow.GetComponent<LightMazeRowData>().rowMap;
-		}
-
-		if (prevRowMap == null) {
+		if (prevRow == null) {
 			CreateGaps(rowMap, gaps, 0, rowMap.Length - 1);
 		} else { // Do not add gaps where last row had gaps prior
 			int gapsAdded = 0;
 			int gapsRemaining = gaps;
+			prevRowMap = prevRow.GetComponent<LightMazeRowData>().rowMap;
 			List<int[]> prevPlatformTuples = GetRowMapAsTuples(prevRowMap);
 
 			while (prevPlatformTuples.Count > 0 && gapsRemaining > 0) {
@@ -135,8 +207,6 @@ public class LightMazeMap : MonoBehaviour {
 			}
 		}
 
-		row.transform.position = new Vector3(0, y, 0);
-
 		foreach (int[] platformTuple in GetRowMapAsTuples(rowMap)) {
 			int platformStart = platformTuple[0];
 			int platformWidth = platformTuple[1];
@@ -150,25 +220,17 @@ public class LightMazeMap : MonoBehaviour {
 			AddEnvironmentObjects(row, prevRow, rowMap, prevRowMap);
 		}
 
-		row.GetComponent<LightMazeRowData>().rowMap = rowMap;
-
 		GameObject leftWall = AddWall(-1, y);
 		GameObject rightWall = AddWall(mapWidth, y);
 		leftWall.transform.parent = row.transform;
 		rightWall.transform.parent = row.transform;
-
-		return row;
 	}
 
-	GameObject AddJetpackRow(float y) {
-		GameObject row = Instantiate(_lightMazeRowPrefab) as GameObject;
-		BitArray rowMap = new BitArray(mapWidth, false);
-
-		row.transform.position = new Vector3(0, y, 0);
+	GameObject PopulateJetpackRow(GameObject row) {
+		float y = row.transform.position.y;
+		row.GetComponent<LightMazeRowData>().rowMap = new BitArray(mapWidth, false);
 
 		AddJetpack(row, (float)mapWidth / 2);
-
-		row.GetComponent<LightMazeRowData>().rowMap = rowMap;
 
 		return row;
 	}
