@@ -4,7 +4,7 @@ using System.Collections;
 public class LightMazeCamera : MonoBehaviour {
 
     [SerializeField]
-    private readonly LightMazeMap _map;
+    private LightMazeMap _map;
     private Camera _camera;
 
     void Start() {

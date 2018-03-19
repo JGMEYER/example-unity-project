@@ -82,10 +82,10 @@ public class LightMazePlayer : MonoBehaviour {
 
 		_inputHorizontal = 0;
 		if (Input.GetKey(leftKey)) {
-			_inputHorizontal = -1;
+			_inputHorizontal += -1;
 		}
 		if (Input.GetKey(rightKey)) {
-			_inputHorizontal = 1;
+			_inputHorizontal += 1;
 		}
 	}
 
@@ -128,14 +128,10 @@ public class LightMazePlayer : MonoBehaviour {
 
 		bool collisionBelow = false;
 		if (Physics.Raycast(transform.position, Vector3.down, out hit)) {
-			if (hit.distance <= rayCastDist) {
-				collisionBelow = true;
-			}
+			collisionBelow |= hit.distance <= rayCastDist;
 		}
 
-		if (!collisionBelow) {
-			_canJump = false;
-		}
+		_canJump &= collisionBelow;
 	}
 
 	void CheckCanJump(Collision collision) {
@@ -148,33 +144,23 @@ public class LightMazePlayer : MonoBehaviour {
 
 		bool collisionBelow = false;
 		if (Physics.Raycast(transform.position, Vector3.down, out hit)) {
-			if (hit.distance <= rayCastDist) {
-				collisionBelow = true;
-			}
+			collisionBelow |= hit.distance <= rayCastDist;
 		}
 
-		if (collisionBelow) {
-			_canJump = true;
-		}
+		_canJump |= collisionBelow;
 
 		if (canWallJump) {
 			bool collisionLeft = false;
 			if (Physics.Raycast(transform.position, Vector3.left, out hit)) {
-				if (hit.distance <= rayCastDist) {
-					collisionLeft = true;
-				}
+				collisionLeft |= hit.distance <= rayCastDist;
 			}
 
 			bool collisionRight = false;
 			if (Physics.Raycast(transform.position, Vector3.right, out hit)) {
-				if (hit.distance <= rayCastDist) {
-					collisionRight = true;
-				}
+				collisionRight |= hit.distance <= rayCastDist;
 			}
 
-			if (collisionLeft || collisionRight) {
-				_canJump = true;
-			}
+			_canJump |= (collisionLeft || collisionRight);
 		}
 	}
 
