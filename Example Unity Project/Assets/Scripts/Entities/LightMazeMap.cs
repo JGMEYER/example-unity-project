@@ -26,11 +26,15 @@ public class LightMazeMap : MonoBehaviour {
 	public float maxAllowedPlayerHeight = 14f;
 
 	[Header("Row Attributes")]
-	public int totalRows = 20;
+	[SerializeField]
+	private int _totalRows = 20;
 	public float rowSpacing = 2.5f;
-	public int maxGaps = 3;
-	public int gapSize = 3;
-	public int minPlatformSize = 3;
+	[SerializeField]
+	private int _maxGaps = 3;
+	[SerializeField]
+	private int _gapSize = 3;
+	[SerializeField]
+	private int _minPlatformSize = 3;
 
 	[Header("Environmental Obstacles")]
 	public bool spawnPistonsOnPlatformEdges = false;
@@ -45,7 +49,7 @@ public class LightMazeMap : MonoBehaviour {
 	private bool _valuesChanged;
 
 	public void Start() {
-		_remainingRows = totalRows;
+		_remainingRows = _totalRows;
 
 		for (float y = 0; y < mapHeight; y+=rowSpacing) {
 			GameObject row = AddRow(y);
@@ -68,23 +72,23 @@ public class LightMazeMap : MonoBehaviour {
 			rowSpacing = 1;
 			throw new System.ArgumentException("rowSpacing cannot be < 1");
 		}
-		if (mapHeight / rowSpacing >= totalRows) {
+		if (mapHeight / rowSpacing >= _totalRows) {
 			throw new System.ArgumentException("(mapHeight / rowSpacing) must be < totalRows");
 		}
 
-		if (gapSize < 1) {
-			gapSize = 1;
+		if (_gapSize < 1) {
+			_gapSize = 1;
 			throw new System.ArgumentException("gapSize cannot be < 1");
 		}
-		if (gapSize > mapWidth) {
-			gapSize = mapWidth;
+		if (_gapSize > mapWidth) {
+			_gapSize = mapWidth;
 			throw new System.ArgumentException("gapSize cannot be > mapWidth");
 		}
-		if (minPlatformSize < 1) {
-			minPlatformSize = 1;
+		if (_minPlatformSize < 1) {
+			_minPlatformSize = 1;
 			throw new System.ArgumentException("minPlatformSize cannot be < 1");
 		}
-		if (minPlatformSize + gapSize > mapWidth) {
+		if (_minPlatformSize + _gapSize > mapWidth) {
 			throw new System.ArgumentException("(minPlatformSize + gapSize) cannot be > mapWidth");
 		}
 
@@ -111,7 +115,7 @@ public class LightMazeMap : MonoBehaviour {
 			GameObject row = AddRow(prevY + rowSpacing);
 
 			if (_remainingRows > 1) {
-				PopulateRow(row, prevRow, _rows.Count, maxGaps);
+				PopulateRow(row, prevRow, _rows.Count, _maxGaps);
 			} else {
 				PopulateJetpackRow(row);
 			}
@@ -127,7 +131,7 @@ public class LightMazeMap : MonoBehaviour {
 
 		for (int i = 0; i < rows.Length; i++) {
 			GameObject row = rows[i];
-			int gaps = (i == 0) ? 0 : maxGaps;
+			int gaps = (i == 0) ? 0 : _maxGaps;
 
 			if (prevRow) {
 				Vector3 newPosition = row.transform.position;
@@ -195,7 +199,8 @@ public class LightMazeMap : MonoBehaviour {
 
 		if (prevRow == null) {
 			CreateGaps(rowMap, gaps, 0, rowMap.Length - 1);
-		} else { // Do not add gaps where last row had gaps prior
+		// Do not add gaps where last row had gaps prior
+		} else {
 			int gapsAdded = 0;
 			int gapsRemaining = gaps;
 			prevRowMap = prevRow.GetComponent<LightMazeRowData>().rowMap;
@@ -235,7 +240,6 @@ public class LightMazeMap : MonoBehaviour {
 	}
 
 	GameObject PopulateJetpackRow(GameObject row) {
-		float y = row.transform.position.y;
 		row.GetComponent<LightMazeRowData>().rowMap = new BitArray(mapWidth, false);
 
 		AddJetpack(row, (float)mapWidth / 2);
@@ -244,25 +248,25 @@ public class LightMazeMap : MonoBehaviour {
 	}
 
 	int CreateGaps(BitArray rowMap, int remaining, int start, int end) {
-		if (remaining == 0 || end - start < gapSize) {
+		if (remaining == 0 || end - start < _gapSize) {
 			return 0;
 		}
 
 		// TODO why do we do end - 1 here?
 		int split = Random.Range(start, end - 1);
-		if (end - start + 1 == gapSize) {
+		if (end - start + 1 == _gapSize) {
 			split = 0;
 		}
 
-		for (int gap = 0; gap < gapSize; gap++) {
+		for (int gap = 0; gap < _gapSize; gap++) {
 			rowMap.Set(split + gap, false);
 		}
 
 		bool splitLeft = (Random.value < 0.5);
 		if (splitLeft) {
-			end = split - (minPlatformSize + gapSize - 1);
+			end = split - (_minPlatformSize + _gapSize - 1);
 		} else {
-			start = split + (minPlatformSize + gapSize);
+			start = split + (_minPlatformSize + _gapSize);
 		}
 
 		return CreateGaps(rowMap, remaining - 1, start, end);
