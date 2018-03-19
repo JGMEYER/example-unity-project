@@ -37,7 +37,7 @@ public class LightMazeMap : MonoBehaviour {
 	private int _minPlatformSize = 3;
 
 	[Header("Environmental Obstacles")]
-	public bool spawnPistonsOnPlatformEdges = false;
+	public bool spawnPistonsOnPlatformEdges;
 	[Range(0f, 1f)]
 	public float pistonSpawnChance = 0.2f;
 	[Range(0f, 1f)]
@@ -115,7 +115,7 @@ public class LightMazeMap : MonoBehaviour {
 			GameObject row = AddRow(prevY + rowSpacing);
 
 			if (_remainingRows > 1) {
-				PopulateRow(row, prevRow, _rows.Count, _maxGaps);
+				PopulateRow(row, prevRow, _maxGaps);
 			} else {
 				PopulateJetpackRow(row);
 			}
@@ -146,7 +146,7 @@ public class LightMazeMap : MonoBehaviour {
 			if (_remainingRows == 0 && i == rows.Length - 1) {
 				PopulateJetpackRow(row);
 			} else {
-				PopulateRow(row, prevRow, i, gaps);
+				PopulateRow(row, prevRow, gaps);
 			}
 			
 			prevRow = row;
@@ -191,7 +191,7 @@ public class LightMazeMap : MonoBehaviour {
 		}
 	}
 
-	void PopulateRow(GameObject row, GameObject prevRow, int index, int gaps) {
+	void PopulateRow(GameObject row, GameObject prevRow, int gaps) {
 		float y = row.transform.position.y;
 
 		BitArray rowMap = row.GetComponent<LightMazeRowData>().rowMap = new BitArray(mapWidth, true);

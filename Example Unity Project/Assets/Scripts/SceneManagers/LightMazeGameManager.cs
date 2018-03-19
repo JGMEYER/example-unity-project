@@ -18,7 +18,7 @@ public class LightMazeGameManager : MonoBehaviour {
 	private Text _victoryText;
 
 	[Header("Debug Settings")]
-	public bool scrollEnabled = false;
+	public bool scrollEnabled;
 	[Range(0f, 10f)]
 	public float rowScrollSpeed = 5f;
 	public bool winConditionsEnabled = true;
@@ -28,7 +28,7 @@ public class LightMazeGameManager : MonoBehaviour {
 	public float pauseBetweenMapShifts = 1f;
 
 	private string _gameSelect = "GameSelect";
-	private bool _gameOver = false;
+	private bool _gameOver;
 	private LightMazePlayer[] _players;
 	private float _mapShiftPauseCounter = 0f;
 	private float _mapShiftDistanceRemaining = 0f;
@@ -42,7 +42,7 @@ public class LightMazeGameManager : MonoBehaviour {
 
 		if (!_gameOver) {
 			if (scrollMapWhenPlayerAhead) {
-				ScrollMapIfPlayerAhead(Time.deltaTime);
+				ScrollMapIfPlayerAhead();
 			}
 
 			List<LightMazePlayer> playersKilled = KillFallenPlayers();
@@ -89,16 +89,14 @@ public class LightMazeGameManager : MonoBehaviour {
 		_map.ScrollRows(changeY);
 	}
 
-	void ScrollMapIfPlayerAhead(float deltaTime) {
+	void ScrollMapIfPlayerAhead() {
 		_mapShiftPauseCounter -= Time.deltaTime;
 
 		bool bump = false;
 
 		if (_mapShiftPauseCounter <= 0f) {
 			foreach (LightMazePlayer player in _players) {
-				if (player.transform.position.y > _map.maxAllowedPlayerHeight) {
-					bump = true;
-				}
+				bump |= player.transform.position.y > _map.maxAllowedPlayerHeight;
 			}
 		}
 
