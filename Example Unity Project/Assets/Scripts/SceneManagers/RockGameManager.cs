@@ -11,7 +11,7 @@ public class RockGameManager : MonoBehaviour {
 	[SerializeField]
 	private RockThrowSpawner _rockSpawnerPrefab;
 	[SerializeField]
-	private PlayerControlsController _playerControlsController;
+	private DEPRECATEDPlayerControlsController _playerControlsController;
 	[SerializeField]
 	private Text _victoryText;
 

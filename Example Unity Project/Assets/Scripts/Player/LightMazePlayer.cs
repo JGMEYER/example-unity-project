@@ -2,15 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LightMazePlayer : MonoBehaviour {
+public class LightMazePlayer : Player {
 
 	[SerializeField]
 	private ParticleSystem _deathExplosion;
-
-	[Header("Inputs")]
-	public KeyCode upKey;
-	public KeyCode leftKey;
-	public KeyCode rightKey;
 
 	[Header("Movement")]
 	public bool canMove = true;
@@ -24,8 +19,10 @@ public class LightMazePlayer : MonoBehaviour {
 	public float rayCastDist = 0.27f;
 
 	private Rigidbody _rb;
-	private int _inputHorizontal = 0;
+
+	private float _inputHorizontal = 0;
 	private int _inputVertical = 0;
+
 	private float _jumpHoldCounter = 0;
 	private bool _canJump = true;
 	private bool _isDead = false;
@@ -70,23 +67,17 @@ public class LightMazePlayer : MonoBehaviour {
 	}
 
 	void DoInput() {
-		if (Input.GetKey(upKey)) {
+		if (_controls.GetJump()) {
 			_jumpHoldCounter -= Time.deltaTime;
 		}
 
-		if (Input.GetKey(upKey) && _canJump) {
+		if (_controls.GetJump() && _canJump) {
 			_inputVertical = 1;
 			_jumpHoldCounter = maxJumpHoldTime;
 			_canJump = false;
 		}
 
-		_inputHorizontal = 0;
-		if (Input.GetKey(leftKey)) {
-			_inputHorizontal += -1;
-		}
-		if (Input.GetKey(rightKey)) {
-			_inputHorizontal += 1;
-		}
+		_inputHorizontal = _controls.GetHorizontal();
 	}
 
 	void DoMovement() {
@@ -95,7 +86,7 @@ public class LightMazePlayer : MonoBehaviour {
 
 		_rb.velocity += Vector3.up * _inputVertical * initialJumpVelocity * Time.deltaTime;
 
-		if (_rb.velocity.y < 0 || !Input.GetKey(upKey) || _jumpHoldCounter <= 0) {
+		if (_rb.velocity.y < 0 || !_controls.GetJump() || _jumpHoldCounter <= 0) {
 			_rb.velocity += Vector3.up * Physics.gravity.y * (fallGravityMultiplier - 1) * Time.deltaTime;
 		}
 

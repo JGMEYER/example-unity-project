@@ -4,7 +4,7 @@ using SharpConfig;
 using System.IO;
 using UnityEngine;
 
-public class PlayerControlsController : MonoBehaviour {
+public class DEPRECATEDPlayerControlsController : MonoBehaviour {
 
 	public string FileName = "cfg/controls.cfg";
 	public Configuration cfg = new Configuration();

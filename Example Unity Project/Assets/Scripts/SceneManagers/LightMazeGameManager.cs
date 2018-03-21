@@ -9,8 +9,6 @@ public class LightMazeGameManager : MonoBehaviour {
 
 	[Header("GameObjects")]
 	[SerializeField]
-	private PlayerControlsController _playerControlsController;
-	[SerializeField]
 	private LightMazeMap _map;
 	[SerializeField]
 	private Camera _camera;
@@ -27,11 +25,16 @@ public class LightMazeGameManager : MonoBehaviour {
 	public bool scrollMapWhenPlayerAhead = true;
 	public float pauseBetweenMapShifts = 1f;
 
+	private GlobalControls _globalControls;
 	private string _gameSelect = "GameSelect";
 	private bool _gameOver;
 	private LightMazePlayer[] _players;
 	private float _mapShiftPauseCounter = 0f;
 	private float _mapShiftDistanceRemaining = 0f;
+
+	private void Awake() {
+		_globalControls = GameControlsManager.Instance.GlobalControls();
+	}
 
 	private void Start() {
 		InitializePlayers();
@@ -60,7 +63,7 @@ public class LightMazeGameManager : MonoBehaviour {
 	}
 
 	void DoInput() {
-		if (Input.GetKeyDown(KeyCode.Escape)) {
+		if (_globalControls.GetExit()) {
 			SceneManager.LoadSceneAsync(_gameSelect);
 		}
 	}
@@ -68,18 +71,6 @@ public class LightMazeGameManager : MonoBehaviour {
 	private void InitializePlayers() {
 		LightMazePlayer[] players = Object.FindObjectsOfType(typeof(LightMazePlayer)) as LightMazePlayer[];
 		_players = players;
-
-		// TODO FIX!
-		foreach (LightMazePlayer player in players) {
-			// Using player name here is a hack because I don't know how to get a proper
-			// player object from a tag. Make sure the object name matches the config.
-			string playerUp = _playerControlsController.cfg[player.name]["Up"].StringValue;
-			string playerLeft = _playerControlsController.cfg[player.name]["Left"].StringValue;
-			string playerRight = _playerControlsController.cfg[player.name]["Right"].StringValue;
-			player.upKey = (KeyCode)System.Enum.Parse(typeof(KeyCode), playerUp);
-			player.leftKey = (KeyCode)System.Enum.Parse(typeof(KeyCode), playerLeft);
-			player.rightKey = (KeyCode)System.Enum.Parse(typeof(KeyCode), playerRight);
-		}
 	}
 
 	void ScrollRows(float changeY) {

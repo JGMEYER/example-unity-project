@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class IceGameManager : MonoBehaviour {
 
 	[SerializeField]
-	private PlayerControlsController _playerControlsController;
+	private DEPRECATEDPlayerControlsController _playerControlsController;
 
 	public int numPlayers;
 	public int playersDead = 0;

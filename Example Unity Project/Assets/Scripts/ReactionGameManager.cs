@@ -5,7 +5,7 @@ using UnityEngine;
 public class ReactionGameManager : MonoBehaviour {
 
     [SerializeField]
-    private PlayerControlsController _playerControlsController;
+    private DEPRECATEDPlayerControlsController _playerControlsController;
 
     void Start() {
         InitializePlayers();
