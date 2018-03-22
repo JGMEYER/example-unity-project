@@ -104,9 +104,11 @@ public class LightMazeGameManager : GameManager<LightMazePlayer> {
 		if (jetpackPlayers.Length == 1) {
 			winnerNames.Add(jetpackPlayers[0].name);
 			jetpackWin = true;
-		} else if (alivePlayers.Length == 1) {
+		}
+		else if (alivePlayers.Length == 1) {
 			winnerNames.Add(alivePlayers[0].name);
-		} else if (alivePlayers.Length == 0) {
+		}
+		else if (alivePlayers.Length == 0) {
 			foreach (LightMazePlayer player in playersKilled) {
 				winnerNames.Add(player.name);
 			}
@@ -122,7 +124,8 @@ public class LightMazeGameManager : GameManager<LightMazePlayer> {
 
 		if (winnerNames.Count == 1) {
 			_victoryText.text = "WINNER!\n";
-		} else {
+		}
+		else {
 			_victoryText.text = "DRAW!\n";
 		}
 		_victoryText.text += string.Join(", ", winnerNames.ToArray());
