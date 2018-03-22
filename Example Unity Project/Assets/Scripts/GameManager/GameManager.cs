@@ -8,13 +8,10 @@ public class GameManager<P> : MonoBehaviour where P : Player {
 	private static GameManager<P> _instance;
 	public static GameManager<P> Instance { get { return _instance; } }
 
-	[SerializeField]
-	protected Player _playerPrefab;
+	private const string _gameSelect = "GameSelect";
 
 	protected GlobalControls _globalControls;
 	protected P[] _players;
-
-	private const string _gameSelect = "GameSelect";
 
 	protected void Awake() {
 		// GameManager is a singleton, load only one per scene
@@ -47,7 +44,7 @@ public class GameManager<P> : MonoBehaviour where P : Player {
 	}
 
 	protected IEnumerator EndGameAfterDelay() {
-		yield return new WaitForSeconds(3f);
+		yield return new WaitForSeconds(5f);
 		SceneManager.LoadSceneAsync(_gameSelect);	
 	}
 

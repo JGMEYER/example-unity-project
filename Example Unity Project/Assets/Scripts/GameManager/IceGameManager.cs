@@ -4,45 +4,46 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class IceGameManager : MonoBehaviour {
+public class IceGameManager : GameManager<IcePlayer> {
 
 	public int numPlayers;
-	public int playersDead = 0;
-	public Text victoryText;
-    private bool gameOver;
 
-	void Start() {
-		InitializePlayers();
-        gameOver = false;
-    }
+	[SerializeField]
+	private Text _victoryText;
+
+	private bool _gameOver;
+	private int _playersDead = 0;
+
+	new void Start() {
+		base.Start();
+
+		RemoveExtraPlayersFromScene();
+		_victoryText.text = "";
+	}
 
 	public void HandlePlayerDeath(string playerName) {
-		playersDead++;
-		if (playersDead >= numPlayers - 1) {
-			victoryText.text = "Game Over! Press ENTER to continue";
-            gameOver = true;
+		_playersDead++;
+
+		if (_playersDead >= numPlayers - 1) {
+			_victoryText.text = "Game Over!";
+			_gameOver = true;
+
+			StartCoroutine(EndGameAfterDelay());
 		}
 	}
 
-	private void InitializePlayers() {
-		IcePlayer[] players = FindObjectsOfType(typeof(IcePlayer)) as IcePlayer[];
+	// This logic (or similar) should move to GameManager once we have a proper
+	// player join screen and a system to track number of players.
+	void RemoveExtraPlayersFromScene() {
+		List<IcePlayer> players = new List<IcePlayer>(_players);
+
 		for (int i = 3; i >= numPlayers; i--) {
+			IcePlayer playerToRemove = players[i];
+			players.RemoveAt(i);
 			Destroy(players[i]);
 		}
-		victoryText.text = "";
 
-		players = FindObjectsOfType(typeof(IcePlayer)) as IcePlayer[];
+		_players = players.ToArray();
 	}
-
-    void Update() {
-
-		if (Input.GetKeyDown(KeyCode.Escape)) {
-            SceneManager.LoadScene("GameSelect");
-		}	
-
-		if (gameOver && Input.GetKeyDown(KeyCode.KeypadEnter)) {
-            SceneManager.LoadScene("GameSelect");
-        }
-    }
 
 }

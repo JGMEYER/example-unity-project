@@ -6,11 +6,13 @@ using UnityEngine;
 
 public class IcePlayer : Player {
 
+	[SerializeField]
+	private Text _lifeText;
+
 	public float acceleration;
 	public Vector3 spawnPoint;
 	public float collisionForce;
 	public int numLife = 3;
-	public Text lifeText;
 	public float maxSpeed = 8;
 
 	private Rigidbody _rb;
@@ -88,7 +90,7 @@ public class IcePlayer : Player {
 	}
 
 	void UpdateLifeText() {
-		lifeText.text = this.name + " Lives: " + numLife.ToString();
+		_lifeText.text = this.name + " Lives: " + numLife.ToString();
 	}
 
 }

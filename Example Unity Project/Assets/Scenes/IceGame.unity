@@ -522,8 +522,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   numPlayers: 4
-  playersDead: 0
-  victoryText: {fileID: 293601619}
+  _victoryText: {fileID: 293601619}
 --- !u!4 &474522716
 Transform:
   m_ObjectHideFlags: 0
@@ -761,6 +760,11 @@ Prefab:
       propertyPath: _playerNumber
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114693274307606072, guid: d233eaf1248c3b24da9ed138e2452d81,
+        type: 2}
+      propertyPath: _lifeText
+      value: 
+      objectReference: {fileID: 274087773}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d233eaf1248c3b24da9ed138e2452d81, type: 2}
   m_IsPrefabParent: 0
@@ -1540,11 +1544,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerNumber: 4
+  _lifeText: {fileID: 1484245707}
   acceleration: 10
   spawnPoint: {x: -4, y: 3, z: 0}
   collisionForce: 300
   numLife: 3
-  lifeText: {fileID: 1484245707}
   maxSpeed: 8
 --- !u!136 &1248080157
 CapsuleCollider:
@@ -1697,11 +1701,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerNumber: 1
+  _lifeText: {fileID: 274087773}
   acceleration: 10
   spawnPoint: {x: 0, y: 2, z: 0}
   collisionForce: 300
   numLife: 3
-  lifeText: {fileID: 274087773}
   maxSpeed: 8
 --- !u!33 &1254779446
 MeshFilter:
@@ -1788,11 +1792,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerNumber: 3
+  _lifeText: {fileID: 2072039158}
   acceleration: 10
   spawnPoint: {x: 4, y: 3, z: 0}
   collisionForce: 300
   numLife: 3
-  lifeText: {fileID: 2072039158}
   maxSpeed: 8
 --- !u!136 &1260307633
 CapsuleCollider:
@@ -2722,11 +2726,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerNumber: 2
+  _lifeText: {fileID: 1596665073}
   acceleration: 10
   spawnPoint: {x: -3, y: 2, z: -3}
   collisionForce: 300
   numLife: 3
-  lifeText: {fileID: 1596665073}
   maxSpeed: 8
 --- !u!136 &2118579908
 CapsuleCollider:
