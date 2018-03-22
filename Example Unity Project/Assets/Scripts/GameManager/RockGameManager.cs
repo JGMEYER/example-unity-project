@@ -11,8 +11,6 @@ public class RockGameManager : MonoBehaviour {
 	[SerializeField]
 	private RockThrowSpawner _rockSpawnerPrefab;
 	[SerializeField]
-	private DEPRECATEDPlayerControlsController _playerControlsController;
-	[SerializeField]
 	private Text _victoryText;
 
 	[Header("Gameplay")]
@@ -44,13 +42,6 @@ public class RockGameManager : MonoBehaviour {
 
 	void InitializePlayers() {
 		_players = (FindObjectsOfType(typeof(RockPlayer)) as RockPlayer[]).ToList();
-
-		foreach (RockPlayer player in _players) {
-			// Using player name here is a hack because I don't know how to get a proper
-			// player object from a tag. Make sure the object name matches the config.
-			string playerDown = _playerControlsController.cfg[player.name]["Down"].StringValue;
-			player.playerKey = (KeyCode)System.Enum.Parse(typeof(KeyCode), playerDown);
-		}
 	}
 
 	void InitializeSpawners() {

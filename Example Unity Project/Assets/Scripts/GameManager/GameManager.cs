@@ -29,14 +29,14 @@ public class GameManager<P> : MonoBehaviour where P : Player {
 	}
 
 	protected void Start() {
-		InitializePlayers();
+		FetchPlayersFromScene();
 	}
 
 	protected void Update() {
 		DoInput();
 	}
 
-	protected void InitializePlayers() {
+	protected void FetchPlayersFromScene() {
 		_players = FindObjectsOfType(typeof(P)) as P[];
 	}
 

@@ -49,10 +49,20 @@ public class PlayerControls : Object {
 		return Input.GetKey(UpKey);
 	}
 
-    //feel free to rename this
-    public bool GetKeyDownForUpKey()
-    {
-        return Input.GetKeyDown(UpKey);
-    }
+	public bool GetUpKey() {
+		return Input.GetKey(UpKey);
+	}
+
+	public bool GetUpKeyDown() {
+		return Input.GetKeyDown(UpKey);
+	}
+
+	public bool GetDownKey() {
+		return Input.GetKey(DownKey);	
+	}
+
+	public bool GetDownKeyDown() {
+		return Input.GetKeyDown(DownKey);
+	}
 
 }

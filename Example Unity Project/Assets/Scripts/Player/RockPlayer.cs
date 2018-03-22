@@ -2,13 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RockPlayer : MonoBehaviour {
+public class RockPlayer : Player {
 
 	[Header("Prefabs")]
 	public Material defaultMaterial;
 	public Material shieldMaterial;
-	[Header("Controls")]
-	public KeyCode playerKey;
 	[Header("Damage")]
 	public int shieldDamage = 5;
 	public int hurtDamage = 15;
@@ -26,7 +24,9 @@ public class RockPlayer : MonoBehaviour {
 	private Vector3 _originalPosition;
 	private Vector3 _originalScale;
 
-	private void Awake() {
+	new void Awake() {
+		base.Awake();
+
 		_rend = GetComponent<Renderer>();
 		_health = GetComponent<PlayerHealth>();
 		_originalPosition = transform.position;
@@ -47,11 +47,13 @@ public class RockPlayer : MonoBehaviour {
 			if (idleAnim) {
 				idleAnim.Restart();
 			}
-		} else {
-			if (Input.GetKey(playerKey)) {
+		}
+		else {
+			if (_controls.GetDownKey()) {
 				SetShieldActive(true);
 				_health.TakeDamage(shieldDamage * Time.deltaTime);
-			}  else {
+			} 
+			else {
 				SetShieldActive(false);
 			}
 		}
@@ -76,7 +78,8 @@ public class RockPlayer : MonoBehaviour {
 
 		if (_shieldActive) {
 			_rend.material = shieldMaterial;
-		} else {
+		}
+		else {
 			_rend.material = defaultMaterial;
 		}
 	}
@@ -98,7 +101,8 @@ public class RockPlayer : MonoBehaviour {
 		transform.position = _originalPosition;
 		if (_shieldActive) {
 			GetComponent<Renderer>().material.color = shieldMaterial.color;
-		} else {
+		}
+		else {
 			GetComponent<Renderer>().material.color = defaultMaterial.color;
 		}
 	}
