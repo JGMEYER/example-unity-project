@@ -1,8 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-public class ReactionGameManager : MonoBehaviour {
 
+public class ReactionGameManager : GameManager<ReactionPlayer> {
 
     public int numPlayers;
     private bool gameOver;
@@ -12,13 +12,32 @@ public class ReactionGameManager : MonoBehaviour {
     public float minWait;
     public float maxWait;
 
-    void Start() {
-        gameOver = false;
-        allowGrab = false;
-        roundActive = false;
-        playerTimes = new Dictionary<PlayerNumber, float>();
+	new void Awake() {
+		base.Awake();
+
+		gameOver = false;
+		allowGrab = false;
+		roundActive = false;
+		playerTimes = new Dictionary<PlayerNumber, float>();
+	}
+
+	new void Start() {
+		base.Start();
+
         StartRound();
     }
+
+	new void Update() {
+		base.Update();
+
+		if (!roundActive) {
+			StartRound();
+		}
+		if (playerTimes.Count == numPlayers) {
+			allowGrab = false;
+			EndRound();
+		}
+	}
 
     public void Grab(PlayerNumber playerNumber, float timePressed) {
         if (allowGrab && (!playerTimes.ContainsKey(playerNumber))) {
@@ -27,24 +46,14 @@ public class ReactionGameManager : MonoBehaviour {
         }
     }
 
-    void Update() {
-        if (!roundActive) {
-            StartRound();
-        }
-        if (playerTimes.Count == numPlayers) {
-            allowGrab = false;
-            EndRound();
-        }
-    }
-
-    private void StartRound() {
+    void StartRound() {
         Debug.Log("Round started");
         roundActive = true;
         //reset screen elements here
         StartCoroutine(Wait());
     }
 
-    private void EndRound() {
+    void EndRound() {
         float minTime = float.MaxValue;
         PlayerNumber player = PlayerNumber.ONE;
         foreach (KeyValuePair<PlayerNumber, float> pair in playerTimes) {
@@ -60,8 +69,7 @@ public class ReactionGameManager : MonoBehaviour {
     }
 
 
-    IEnumerator Wait()
-    {
+    IEnumerator Wait() {
         float waitTime = Random.Range(minWait, maxWait);
         Debug.Log("Waiting for " + waitTime + " seconds");
         yield return new WaitForSeconds(waitTime);
@@ -70,8 +78,9 @@ public class ReactionGameManager : MonoBehaviour {
         Debug.Log("Grab allowed");
     }
 
-    private void EndGame(PlayerNumber playerNumber) {
+    void EndGame(PlayerNumber playerNumber) {
         Debug.Log("Player " + playerNumber + "has won the game!");
         gameOver = true;
+		StartCoroutine(EndGameAfterDelay());
     }
 }
