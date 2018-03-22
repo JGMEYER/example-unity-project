@@ -4,106 +4,91 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine;
 
-public class IcePlayer : MonoBehaviour {
+public class IcePlayer : Player {
 
-    public KeyCode upKey;
-	public KeyCode leftKey;
-    public KeyCode downKey;
-    public KeyCode rightKey;
-    public float acceleration;
-    public Vector3 spawnPoint;
-    public float collisionForce;
-    public int numLife = 3;
-    public Text lifeText;
-    public float maxSpeed = 8;
+	public float acceleration;
+	public Vector3 spawnPoint;
+	public float collisionForce;
+	public int numLife = 3;
+	public Text lifeText;
+	public float maxSpeed = 8;
 
-    private Rigidbody rb;
-    private Vector3 currentPosition;
-    private int fallFloor = 20;
-    private int floorHeight = 2;
-    private int resetHeight = -20;
+	private Rigidbody _rb;
 
-    private string SceneSelect = "GameSelect";
+	private Vector3 _currentPosition;
+	private float _inputHorizontal;
+	private float _inputVertical;
 
-    void Start() {
-        rb = GetComponent<Rigidbody>();
-        transform.position = spawnPoint;
+	private int _floorHeight = 2;
+	private int _resetHeight = -20;
 
-        updateLifeText();
-    }
+	void Start() {
+		_rb = GetComponent<Rigidbody>();
+		transform.position = spawnPoint;
 
-    void FixedUpdate() {
-    }
+		UpdateLifeText();
+	}
 
-    void OnCollisionEnter(Collision collision) {
-        if (collision.gameObject.name.StartsWith("Player")) {
-            Vector3 dir = collision.contacts[0].point - transform.position;
-            dir = -dir.normalized;
-            dir.y = 0;
-            GetComponent<Rigidbody>().AddForce(dir * collisionForce);
-            FindObjectOfType<AudioManager>().Play("Bump");
-        }
-    }
+	void Update() {
+		_currentPosition = transform.position;
 
-    void Update() {
-        currentPosition = transform.position;
-        if (currentPosition.y < resetHeight) {
-            HandleDeath();
-        }
+		if (_currentPosition.y < _resetHeight) {
+			HandleDeath();
+		}
 
-        if (currentPosition.y > floorHeight) {
-            HandleInput();
-        }
-    }
+		if (_currentPosition.y > _floorHeight) {
+			DoInput();
+		}
+	}
 
-    public Rigidbody GetRigidBody() {
-        return rb;
-    }
+	void FixedUpdate() {
+		DoMovement();
+	}
 
-    private void HandleInput() {
+	void DoInput() {
+		_inputHorizontal = _controls.GetHorizontal();
+		_inputVertical = _controls.GetVertical();
+	}
 
-        float moveHorizontal = 0;
-        float moveVertical = 0;
+	void DoMovement() {
+		Vector3 movement = new Vector3(_inputHorizontal, 0f, _inputVertical);
 
-        if (Input.GetKey(upKey)) {
-            moveVertical += 1;
-        }
-        if (Input.GetKey(leftKey)) {
-            moveHorizontal -= 1;
-        }
-        if (Input.GetKey(downKey)) {
-            moveVertical -= 1;
-        }
-        if (Input.GetKey(rightKey)) {
-            moveHorizontal += 1;
-        }
+		_rb.AddForce(movement * acceleration);
 
-        Vector3 movement = new Vector3(moveHorizontal, 0f, moveVertical);
+		if (_rb.velocity.magnitude > maxSpeed) {
+			_rb.velocity = _rb.velocity.normalized * maxSpeed;
+		}
+	}
 
-        rb.AddForce(movement * acceleration);
+	void OnCollisionEnter(Collision collision) {
+		if (collision.gameObject.name.StartsWith("Player")) {
+			Vector3 dir = collision.contacts[0].point - transform.position;
+			dir = -dir.normalized;
+			dir.y = 0;
+			GetComponent<Rigidbody>().AddForce(dir * collisionForce);
+			FindObjectOfType<AudioManager>().Play("Bump");
+		}
+	}
 
-        if (rb.velocity.magnitude > maxSpeed) {
-            rb.velocity = rb.velocity.normalized * maxSpeed;
-        }
-    }
+	void HandleDeath() {
+		numLife--;
+		UpdateLifeText();
 
-    private void HandleDeath() {
-        numLife--;
-        updateLifeText();
+		if (numLife > 0) {
+			transform.position = spawnPoint;
+			_rb.velocity = Vector3.zero;
+			_rb.angularVelocity = Vector3.zero;
+		}
+		else {
+			GameObject manager = GameObject.Find("IceGameManager");
+			IceGameManager iceManager = (IceGameManager)manager.GetComponent(typeof(IceGameManager));
+			iceManager.HandlePlayerDeath(this.name);
+			Destroy(this.gameObject);
+		}
+	}
 
-        if (numLife > 0) {
-            transform.position = spawnPoint;
-            rb.velocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
-        } else {
-            GameObject manager = GameObject.Find("IceGameManager");
-            IceGameManager iceManager = (IceGameManager)manager.GetComponent(typeof(IceGameManager));
-            iceManager.HandlePlayerDeath(this.name);
-            Destroy(this.gameObject);
-        }
-    }
+	void UpdateLifeText() {
+		lifeText.text = this.name + " Lives: " + numLife.ToString();
+	}
 
-    private void updateLifeText() {
-        lifeText.text = this.name + " Lives: " + numLife.ToString();
-    }
 }
