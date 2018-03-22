@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641258, b: 0.5748172, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -153,10 +153,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 805865b2aca358843919ca57ef089430, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  upKey: 101
-  leftKey: 0
-  downKey: 0
-  rightKey: 0
+  _playerNumber: 3
+  reactionGameManager: {fileID: 136922345}
+  numPlayers: 0
 --- !u!1 &136922343
 GameObject:
   m_ObjectHideFlags: 0
@@ -182,8 +181,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -2.49, y: 2.37, z: 0.88399994}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 654864482}
+  m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -198,7 +196,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e02afc0d2ae197459a3b4cef52f6931, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerControlsController: {fileID: 654864481}
+  numRounds: 1
+  numPlayers: 4
+  minWait: 1
+  maxWait: 5
 --- !u!1 &223971989
 GameObject:
   m_ObjectHideFlags: 0
@@ -239,10 +240,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 805865b2aca358843919ca57ef089430, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  upKey: 114
-  leftKey: 0
-  downKey: 0
-  rightKey: 0
+  _playerNumber: 4
+  reactionGameManager: {fileID: 136922345}
+  numPlayers: 0
 --- !u!1 &278788767
 GameObject:
   m_ObjectHideFlags: 0
@@ -324,47 +324,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &654864480
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 654864482}
-  - component: {fileID: 654864481}
-  m_Layer: 0
-  m_Name: PlayerControlsController
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &654864481
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 654864480}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e9e2190d91f8f7e4c8013f18b48550e8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  FileName: cfg/controls.cfg
---- !u!4 &654864482
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 654864480}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 136922344}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &910359421
 GameObject:
   m_ObjectHideFlags: 0
@@ -405,10 +364,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 805865b2aca358843919ca57ef089430, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  upKey: 119
-  leftKey: 0
-  downKey: 0
-  rightKey: 0
+  _playerNumber: 2
+  reactionGameManager: {fileID: 136922345}
+  numPlayers: 0
 --- !u!1 &1309462249
 GameObject:
   m_ObjectHideFlags: 0
@@ -546,7 +504,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 805865b2aca358843919ca57ef089430, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  upKey: 113
-  leftKey: 0
-  downKey: 0
-  rightKey: 0
+  _playerNumber: 1
+  reactionGameManager: {fileID: 136922345}
+  numPlayers: 0

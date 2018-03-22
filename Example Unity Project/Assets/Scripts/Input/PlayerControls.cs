@@ -49,4 +49,10 @@ public class PlayerControls : Object {
 		return Input.GetKey(UpKey);
 	}
 
+    //feel free to rename this
+    public bool GetKeyDownForUpKey()
+    {
+        return Input.GetKeyDown(UpKey);
+    }
+
 }
