@@ -129,7 +129,7 @@ public class LightMazeGameManager : GameManager<LightMazePlayer> {
 
 		// TODO jetpackWin: scroll map quickly without interruption and allow players to explode
 
-		StartCoroutine(WaitAndExit());
+		StartCoroutine(EndGameAfterDelay());
 	}
 
 }

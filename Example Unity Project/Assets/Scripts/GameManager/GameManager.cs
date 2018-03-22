@@ -46,7 +46,7 @@ public class GameManager<P> : MonoBehaviour where P : Player {
 		}	
 	}
 
-	protected IEnumerator WaitAndExit() {
+	protected IEnumerator EndGameAfterDelay() {
 		yield return new WaitForSeconds(3f);
 		SceneManager.LoadSceneAsync(_gameSelect);	
 	}

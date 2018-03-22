@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 
-public class RockGameManager : MonoBehaviour {
+public class RockGameManager : GameManager<RockPlayer> {
 
 	[Header("GameObjects")]
 	[SerializeField]
@@ -19,29 +19,25 @@ public class RockGameManager : MonoBehaviour {
 	public float maxSpawnDelaySec = 1.5f;
 	public float spawnDelayInterval = 0.5f;
 
+	private RockPlayer[] _alivePlayers;
 	private string _gameSelect = "GameSelect";
 	private bool _gameOver = false;
-	private List<RockPlayer> _players;
 	private List<RockThrowSpawner> _spawners;
 
-	void Start() {
-		InitializePlayers();
+	new void Start() {
+		base.Start();
+
+		_alivePlayers = (RockPlayer[])_players.Clone();
 		InitializeSpawners();
 	}
 
-	void Update() {
-		if (Input.GetKeyDown(KeyCode.Escape)) {
-			SceneManager.LoadSceneAsync(_gameSelect);
-		}
+	new void Update() {
+		base.Update();
 
 		if (!_gameOver) {
-			List<RockPlayer> removedPlayers = RemoveDeadPlayers();
-			CheckGameOver(removedPlayers);
+			RockPlayer[] killedPlayers = RemoveKilledPlayers();
+			CheckGameOver(killedPlayers);
 		}
-	}
-
-	void InitializePlayers() {
-		_players = (FindObjectsOfType(typeof(RockPlayer)) as RockPlayer[]).ToList();
 	}
 
 	void InitializeSpawners() {
@@ -68,37 +64,38 @@ public class RockGameManager : MonoBehaviour {
 		}
 	}
 
-	List<RockPlayer> RemoveDeadPlayers() {
-		List<RockPlayer> alivePlayers = _players.Where(player => !player.IsDead()).ToList();
-		List<RockPlayer> deadPlayers = _players.Where(player => player.IsDead()).ToList();
+	RockPlayer[] RemoveKilledPlayers() {
+		RockPlayer[] killedPlayers = _alivePlayers.Where(player => player.IsDead()).ToArray();
+		_alivePlayers = _players.Where(player => !player.IsDead()).ToArray();
 
-		_players = alivePlayers;
-
-		return deadPlayers;
+		return killedPlayers;
 	}
 
-	void CheckGameOver(List<RockPlayer> removedPlayers) {
-		List<RockPlayer> alivePlayers = _players;
+	void CheckGameOver(RockPlayer[] killedPlayers) {
 		List<string> winners = new List<string>();
 
-		if (alivePlayers.Count == 1) {
+		if (_alivePlayers.Length == 1) {
 			_victoryText.text = "WINNER!\n";
-			winners.Add(alivePlayers[0].name);
-		} else if (alivePlayers.Count == 0) {
+
+			winners.Add(_alivePlayers[0].name);
+		}
+		else if (_alivePlayers.Length == 0) {
 			_victoryText.text = "DRAW!\n";
-			foreach (RockPlayer player in removedPlayers) {
+
+			foreach (RockPlayer player in killedPlayers) {
 				winners.Add(player.name);
 			}
 		}
 
 		if (winners.Count > 0) {
 			_gameOver = true;
+			_victoryText.text += string.Join(", ", winners.ToArray());
 
 			foreach (RockThrowSpawner spawner in _spawners) {
 				spawner.Stop();
 			}
 
-			_victoryText.text += string.Join(", ", winners.ToArray());
+			StartCoroutine(EndGameAfterDelay());
 		}
 	}
 
