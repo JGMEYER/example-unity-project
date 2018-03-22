@@ -10,8 +10,8 @@ public class GlobalControls : Object {
 		ExitKey = exitKey;
 	}
 
-	public bool GetExit() {
-		return Input.GetKey(ExitKey);
+	public bool GetExitKeyDown() {
+		return Input.GetKeyDown(ExitKey);
 	}
 
 }

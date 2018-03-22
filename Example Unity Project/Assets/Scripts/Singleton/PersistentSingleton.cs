@@ -3,7 +3,7 @@
 // Be aware this will not prevent a non singleton constructor such as
 // `T myT = new T();` To prevent that, add `protected T () {}` to your singleton
 // class. Create as MonoBehavior to support Coroutines.
-public class Singleton<T> : MonoBehaviour where T : MonoBehaviour {
+public class PersistentSingleton<T> : MonoBehaviour where T : MonoBehaviour {
 	private static T _instance;
 
 	private static object _lock = new object();

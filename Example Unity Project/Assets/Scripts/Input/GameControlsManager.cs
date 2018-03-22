@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameControlsManager : Singleton<GameControlsManager> {
+public class GameControlsManager : PersistentSingleton<GameControlsManager> {
 
 	// Keep singleton-only by disabling constructor
 	protected GameControlsManager() {}

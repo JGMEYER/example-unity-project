@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine;
 using System.Linq;
 
-public class LightMazeGameManager : MonoBehaviour {
+public class LightMazeGameManager : GameManager<LightMazePlayer> {
 
 	[Header("GameObjects")]
 	[SerializeField]
@@ -25,23 +25,12 @@ public class LightMazeGameManager : MonoBehaviour {
 	public bool scrollMapWhenPlayerAhead = true;
 	public float pauseBetweenMapShifts = 1f;
 
-	private GlobalControls _globalControls;
-	private string _gameSelect = "GameSelect";
 	private bool _gameOver;
-	private LightMazePlayer[] _players;
 	private float _mapShiftPauseCounter = 0f;
 	private float _mapShiftDistanceRemaining = 0f;
 
-	private void Awake() {
-		_globalControls = GameControlsManager.Instance.GlobalControls();
-	}
-
-	private void Start() {
-		InitializePlayers();
-	}
-
-	void Update() {
-		DoInput();
+	new void Update() {
+		base.Update();
 
 		if (!_gameOver) {
 			if (scrollMapWhenPlayerAhead) {
@@ -60,17 +49,6 @@ public class LightMazeGameManager : MonoBehaviour {
 		if (!_gameOver && scrollEnabled) {
 			ScrollRows(rowScrollSpeed * Time.deltaTime);
 		}
-	}
-
-	void DoInput() {
-		if (_globalControls.GetExit()) {
-			SceneManager.LoadSceneAsync(_gameSelect);
-		}
-	}
-
-	private void InitializePlayers() {
-		LightMazePlayer[] players = Object.FindObjectsOfType(typeof(LightMazePlayer)) as LightMazePlayer[];
-		_players = players;
 	}
 
 	void ScrollRows(float changeY) {
@@ -135,11 +113,11 @@ public class LightMazeGameManager : MonoBehaviour {
 		}
 
 		if (winnerNames.Count > 0) {
-			StartCoroutine(GameOver(winnerNames, jetpackWin));
+			GameOver(winnerNames, jetpackWin);
 		}
 	}
 
-	IEnumerator GameOver(List<string> winnerNames, bool jetpackWin) {
+	void GameOver(List<string> winnerNames, bool jetpackWin) {
 		_gameOver = true;
 
 		if (winnerNames.Count == 1) {
@@ -151,9 +129,7 @@ public class LightMazeGameManager : MonoBehaviour {
 
 		// TODO jetpackWin: scroll map quickly without interruption and allow players to explode
 
-		yield return new WaitForSeconds(3f);
-
-		SceneManager.LoadSceneAsync(_gameSelect);
+		StartCoroutine(WaitAndExit());
 	}
 
 }
