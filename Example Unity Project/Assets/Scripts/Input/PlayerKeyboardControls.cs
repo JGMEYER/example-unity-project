@@ -1,8 +1,9 @@
-﻿using System.Collections;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerControls : Object {
+public class PlayerKeyboardControls : IPlayerControls {
 
 	// Only UI should pull these values. Players should call included methods
 	// in order to keep all player input logic controller agnostic.
@@ -11,7 +12,7 @@ public class PlayerControls : Object {
 	public KeyCode DownKey { get; private set; }
 	public KeyCode RightKey { get; private set; }
 
-	public PlayerControls(KeyCode upKey, KeyCode leftKey, KeyCode downKey,
+	public PlayerKeyboardControls(KeyCode upKey, KeyCode leftKey, KeyCode downKey,
 						  KeyCode rightKey) {
 		UpKey = upKey;
 		LeftKey = leftKey;
@@ -19,7 +20,7 @@ public class PlayerControls : Object {
 		RightKey = rightKey;
 	}
 
-	public float GetHorizontal() {
+	float IPlayerControls.GetMovementHorizontal() {
 		float horizontal = 0f;
 
 		if (Input.GetKey(LeftKey)) {
@@ -32,7 +33,7 @@ public class PlayerControls : Object {
 		return horizontal;
 	}
 
-	public float GetVertical() {
+	float IPlayerControls.GetMovementVertical() {
 		float vertical = 0f;
 
 		if (Input.GetKey(UpKey)) {
@@ -45,23 +46,27 @@ public class PlayerControls : Object {
 		return vertical;
 	}
 
-	public bool GetJump() {
+	bool IPlayerControls.GetSubmitDown() {
+		return Input.GetKeyDown(KeyCode.Return);
+	}
+
+	bool IPlayerControls.GetJump() {
 		return Input.GetKey(UpKey);
 	}
 
-	public bool GetUpKey() {
+	bool IPlayerControls.GetUpKey() {
 		return Input.GetKey(UpKey);
 	}
 
-	public bool GetUpKeyDown() {
+	bool IPlayerControls.GetUpKeyDown() {
 		return Input.GetKeyDown(UpKey);
 	}
 
-	public bool GetDownKey() {
-		return Input.GetKey(DownKey);	
+	bool IPlayerControls.GetDownKey() {
+		return Input.GetKey(DownKey);
 	}
 
-	public bool GetDownKeyDown() {
+	bool IPlayerControls.GetDownKeyDown() {
 		return Input.GetKeyDown(DownKey);
 	}
 

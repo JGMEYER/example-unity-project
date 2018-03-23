@@ -77,7 +77,7 @@ public class LightMazePlayer : Player {
 			_canJump = false;
 		}
 
-		_inputHorizontal = _controls.GetHorizontal();
+		_inputHorizontal = _controls.GetMovementHorizontal();
 	}
 
 	void DoMovement() {

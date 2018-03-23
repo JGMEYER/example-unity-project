@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,7 +7,7 @@ public class Player : MonoBehaviour {
 	[SerializeField]
 	protected PlayerNumber _playerNumber;
 
-	protected PlayerControls _controls { get; private set; }
+	protected IPlayerControls _controls { get; private set; }
 
 	public void Awake() {
 		_controls = GameControlsManager.Instance.PlayerControls(_playerNumber);

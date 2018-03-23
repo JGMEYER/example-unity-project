@@ -108,13 +108,14 @@ public class GameControlsManager : PersistentSingleton<GameControlsManager> {
 	}
 
 	// Snapshot of player's controls. Does not keep sync with PlayerPrefs.
-	public PlayerControls PlayerControls(PlayerNumber playerNumber) {
+	public IPlayerControls PlayerControls(PlayerNumber playerNumber) {
 		KeyCode upKey = GetPlayerCommandKey(playerNumber, InputCommand.UP);
 		KeyCode leftKey = GetPlayerCommandKey(playerNumber, InputCommand.LEFT);
 		KeyCode downKey = GetPlayerCommandKey(playerNumber, InputCommand.DOWN);
 		KeyCode rightKey = GetPlayerCommandKey(playerNumber, InputCommand.RIGHT);
 
-		return new PlayerControls(upKey, leftKey, downKey, rightKey);
+		// Eventually we can choose to return joystick controls here, too
+		return new PlayerKeyboardControls(upKey, leftKey, downKey, rightKey);
 	}
 
 	bool PlayerCommandKeySet(PlayerNumber playerNumber, InputCommand command) {

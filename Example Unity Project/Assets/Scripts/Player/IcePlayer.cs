@@ -48,8 +48,8 @@ public class IcePlayer : Player {
 	}
 
 	void DoInput() {
-		_inputHorizontal = _controls.GetHorizontal();
-		_inputVertical = _controls.GetVertical();
+		_inputHorizontal = _controls.GetMovementHorizontal();
+		_inputVertical = _controls.GetMovementVertical();
 	}
 
 	void DoMovement() {
