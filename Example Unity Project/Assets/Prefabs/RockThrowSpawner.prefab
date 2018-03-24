@@ -51,8 +51,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56870be8b3380f5498a4de14e7ffa29c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _thrownRockPrefab: {fileID: 114841048846277868, guid: c3b71b7720f553c44b8e4e1f45673655,
+  thrownRockPrefab: {fileID: 114841048846277868, guid: c3b71b7720f553c44b8e4e1f45673655,
     type: 2}
-  rockThrowDistanceZ: 15
-  rockThrowAmplitude: 10
-  rockThrowSpeed: 9.5
+  RockThrowDistanceZ: 15
+  RockThrowAmplitude: 10
+  RockThrowSpeed: 9.5

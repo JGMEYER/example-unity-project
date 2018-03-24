@@ -6,7 +6,7 @@ public class LightMazePlayer : Player
 {
 
     [SerializeField]
-    private ParticleSystem _deathExplosion;
+    private ParticleSystem deathExplosion;
 
     [Header("Movement")]
     public bool CanMove = true;
@@ -228,7 +228,7 @@ public class LightMazePlayer : Player
 
         if (explode)
         {
-            _deathExplosion.Emit(5);
+            deathExplosion.Emit(5);
         }
     }
 

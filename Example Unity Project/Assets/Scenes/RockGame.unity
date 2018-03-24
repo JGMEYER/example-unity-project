@@ -1041,14 +1041,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerNumber: 3
-  defaultMaterial: {fileID: 2100000, guid: a4f19a8c5eeeacf43b3f66f659427f7a, type: 2}
-  shieldMaterial: {fileID: 2100000, guid: 3d1eaea3dacb03946869e5a854458ec8, type: 2}
-  shieldDamage: 20
-  hurtDamage: 10
-  hurtDuration: 0.2
-  hurtShakeSpeed: 70
-  hurtShakeAmplitude: 0.1
-  hurtSquashRatio: 0.8
+  DefaultMaterial: {fileID: 2100000, guid: a4f19a8c5eeeacf43b3f66f659427f7a, type: 2}
+  ShieldMaterial: {fileID: 2100000, guid: 3d1eaea3dacb03946869e5a854458ec8, type: 2}
+  ShieldDamage: 20
+  HurtDamage: 10
+  HurtDuration: 0.2
+  HurtShakeSpeed: 70
+  HurtShakeAmplitude: 0.1
+  HurtSquashRatio: 0.8
 --- !u!54 &983020493
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1397,14 +1397,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerNumber: 1
-  defaultMaterial: {fileID: 2100000, guid: b0e1b9023ecfde447a4d32cd00468c04, type: 2}
-  shieldMaterial: {fileID: 2100000, guid: 3d1eaea3dacb03946869e5a854458ec8, type: 2}
-  shieldDamage: 20
-  hurtDamage: 10
-  hurtDuration: 0.2
-  hurtShakeSpeed: 70
-  hurtShakeAmplitude: 0.1
-  hurtSquashRatio: 0.8
+  DefaultMaterial: {fileID: 2100000, guid: b0e1b9023ecfde447a4d32cd00468c04, type: 2}
+  ShieldMaterial: {fileID: 2100000, guid: 3d1eaea3dacb03946869e5a854458ec8, type: 2}
+  ShieldDamage: 20
+  HurtDamage: 10
+  HurtDuration: 0.2
+  HurtShakeSpeed: 70
+  HurtShakeAmplitude: 0.1
+  HurtSquashRatio: 0.8
 --- !u!54 &1188937514
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1648,14 +1648,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerNumber: 4
-  defaultMaterial: {fileID: 2100000, guid: 7752643fc36f6fb41b1c7f540761579c, type: 2}
-  shieldMaterial: {fileID: 2100000, guid: 3d1eaea3dacb03946869e5a854458ec8, type: 2}
-  shieldDamage: 20
-  hurtDamage: 10
-  hurtDuration: 0.2
-  hurtShakeSpeed: 70
-  hurtShakeAmplitude: 0.1
-  hurtSquashRatio: 0.8
+  DefaultMaterial: {fileID: 2100000, guid: 7752643fc36f6fb41b1c7f540761579c, type: 2}
+  ShieldMaterial: {fileID: 2100000, guid: 3d1eaea3dacb03946869e5a854458ec8, type: 2}
+  ShieldDamage: 20
+  HurtDamage: 10
+  HurtDuration: 0.2
+  HurtShakeSpeed: 70
+  HurtShakeAmplitude: 0.1
+  HurtSquashRatio: 0.8
 --- !u!54 &1584481699
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2173,14 +2173,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerNumber: 2
-  defaultMaterial: {fileID: 2100000, guid: 4d12e24059f8e514cb60c56e8b1f3f9c, type: 2}
-  shieldMaterial: {fileID: 2100000, guid: 3d1eaea3dacb03946869e5a854458ec8, type: 2}
-  shieldDamage: 20
-  hurtDamage: 10
-  hurtDuration: 0.2
-  hurtShakeSpeed: 70
-  hurtShakeAmplitude: 0.1
-  hurtSquashRatio: 0.8
+  DefaultMaterial: {fileID: 2100000, guid: 4d12e24059f8e514cb60c56e8b1f3f9c, type: 2}
+  ShieldMaterial: {fileID: 2100000, guid: 3d1eaea3dacb03946869e5a854458ec8, type: 2}
+  ShieldDamage: 20
+  HurtDamage: 10
+  HurtDuration: 0.2
+  HurtShakeSpeed: 70
+  HurtShakeAmplitude: 0.1
+  HurtSquashRatio: 0.8
 --- !u!54 &1923678578
 Rigidbody:
   m_ObjectHideFlags: 0

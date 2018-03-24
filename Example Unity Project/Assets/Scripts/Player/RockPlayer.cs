@@ -6,47 +6,47 @@ public class RockPlayer : Player
 {
 
     [Header("Prefabs")]
-    public Material defaultMaterial;
-    public Material shieldMaterial;
+    public Material DefaultMaterial;
+    public Material ShieldMaterial;
     [Header("Damage")]
-    public int shieldDamage = 5;
-    public int hurtDamage = 15;
+    public int ShieldDamage = 5;
+    public int HurtDamage = 15;
     [Header("Hurt Animation")]
-    public float hurtDuration = 0.2f;
-    public float hurtShakeSpeed = 50f;
-    public float hurtShakeAmplitude = 0.1f;
-    public float hurtSquashRatio = 0.8f;
+    public float HurtDuration = 0.2f;
+    public float HurtShakeSpeed = 50f;
+    public float HurtShakeAmplitude = 0.1f;
+    public float HurtSquashRatio = 0.8f;
 
-    private Renderer _rend;
-    private PlayerHealth _health;
-    private bool _shieldActive = false;
-    private bool _isHurt = false;
-    private float _hurtTimer = 0f;
-    private Vector3 _originalPosition;
-    private Vector3 _originalScale;
+    private Renderer rend;
+    private PlayerHealth health;
+    private bool shieldActive = false;
+    private bool isHurt = false;
+    private float hurtTimer = 0f;
+    private Vector3 originalPosition;
+    private Vector3 originalScale;
 
     new void Awake()
     {
         base.Awake();
 
-        _rend = GetComponent<Renderer>();
-        _health = GetComponent<PlayerHealth>();
-        _originalPosition = transform.position;
-        _originalScale = transform.localScale;
+        rend = GetComponent<Renderer>();
+        health = GetComponent<PlayerHealth>();
+        originalPosition = transform.position;
+        originalScale = transform.localScale;
     }
 
     void Start()
     {
-        _rend.material = defaultMaterial;
+        rend.material = DefaultMaterial;
     }
 
     void Update()
     {
-        if (_isHurt)
+        if (isHurt)
         {
-            float shakeX = -1 * Mathf.Cos(_hurtTimer * hurtShakeSpeed) * hurtShakeAmplitude;
-            transform.position = new Vector3(_originalPosition.x + shakeX, transform.position.y, _originalPosition.z);
-            _hurtTimer += Time.deltaTime;
+            float shakeX = -1 * Mathf.Cos(hurtTimer * HurtShakeSpeed) * HurtShakeAmplitude;
+            transform.position = new Vector3(originalPosition.x + shakeX, transform.position.y, originalPosition.z);
+            hurtTimer += Time.deltaTime;
 
             IdleAnim idleAnim = GetComponent<IdleAnim>();
             if (idleAnim)
@@ -59,7 +59,7 @@ public class RockPlayer : Player
             if (controls.GetDownKey())
             {
                 SetShieldActive(true);
-                _health.TakeDamage(shieldDamage * Time.deltaTime);
+                health.TakeDamage(ShieldDamage * Time.deltaTime);
             }
             else
             {
@@ -73,7 +73,7 @@ public class RockPlayer : Player
         ThrownItem thrownItem = other.GetComponent<ThrownItem>();
         if (thrownItem != null)
         {
-            if (!_shieldActive)
+            if (!shieldActive)
             {
                 StartCoroutine(Hurt());
             }
@@ -83,52 +83,52 @@ public class RockPlayer : Player
 
     void SetShieldActive(bool active)
     {
-        if (active == _shieldActive)
+        if (active == shieldActive)
         {
             return;
         }
 
-        _shieldActive = active;
+        shieldActive = active;
 
-        if (_shieldActive)
+        if (shieldActive)
         {
-            _rend.material = shieldMaterial;
+            rend.material = ShieldMaterial;
         }
         else
         {
-            _rend.material = defaultMaterial;
+            rend.material = DefaultMaterial;
         }
     }
 
     IEnumerator Hurt()
     {
-        _health.TakeDamage(hurtDamage);
+        health.TakeDamage(HurtDamage);
         FindObjectOfType<AudioManager>().Play("Hit");
 
-        _isHurt = true;
-        _hurtTimer = 0f;
-        transform.localScale = new Vector3(_originalScale.x, _originalScale.y * hurtSquashRatio, _originalScale.z);
-        transform.position = new Vector3(_originalPosition.x, _originalPosition.y - _originalScale.y * (1 - hurtSquashRatio) / 2, _originalPosition.z);
+        isHurt = true;
+        hurtTimer = 0f;
+        transform.localScale = new Vector3(originalScale.x, originalScale.y * HurtSquashRatio, originalScale.z);
+        transform.position = new Vector3(originalPosition.x, originalPosition.y - originalScale.y * (1 - HurtSquashRatio) / 2, originalPosition.z);
         GetComponent<Renderer>().material.color = Color.red;
 
-        yield return new WaitForSeconds(hurtDuration);
+        yield return new WaitForSeconds(HurtDuration);
 
-        _isHurt = false;
-        transform.localScale = _originalScale;
-        transform.position = _originalPosition;
-        if (_shieldActive)
+        isHurt = false;
+        transform.localScale = originalScale;
+        transform.position = originalPosition;
+        if (shieldActive)
         {
-            GetComponent<Renderer>().material.color = shieldMaterial.color;
+            GetComponent<Renderer>().material.color = ShieldMaterial.color;
         }
         else
         {
-            GetComponent<Renderer>().material.color = defaultMaterial.color;
+            GetComponent<Renderer>().material.color = DefaultMaterial.color;
         }
     }
 
     public bool IsDead()
     {
-        return _health.playerIsDead();
+        return health.playerIsDead();
     }
 
 }

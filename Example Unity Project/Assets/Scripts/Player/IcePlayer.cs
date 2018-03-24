@@ -8,41 +8,41 @@ public class IcePlayer : Player
 {
 
     [SerializeField]
-    private Text _lifeText;
+    private Text lifeText;
 
-    public float acceleration;
-    public Vector3 spawnPoint;
-    public float collisionForce;
-    public int numLife = 3;
-    public float maxSpeed = 8;
+    public float Acceleration;
+    public Vector3 SpawnPoint;
+    public float CollisionForce;
+    public int NumLife = 3;
+    public float MaxSpeed = 8;
 
-    private Rigidbody _rb;
+    private Rigidbody rb;
 
-    private Vector3 _currentPosition;
-    private float _inputHorizontal;
-    private float _inputVertical;
+    private Vector3 currentPosition;
+    private float inputHorizontal;
+    private float inputVertical;
 
-    private int _floorHeight = 2;
-    private int _resetHeight = -20;
+    private int floorHeight = 2;
+    private int resetHeight = -20;
 
     void Start()
     {
-        _rb = GetComponent<Rigidbody>();
-        transform.position = spawnPoint;
+        rb = GetComponent<Rigidbody>();
+        transform.position = SpawnPoint;
 
         UpdateLifeText();
     }
 
     void Update()
     {
-        _currentPosition = transform.position;
+        currentPosition = transform.position;
 
-        if (_currentPosition.y < _resetHeight)
+        if (currentPosition.y < resetHeight)
         {
             HandleDeath();
         }
 
-        if (_currentPosition.y > _floorHeight)
+        if (currentPosition.y > floorHeight)
         {
             DoInput();
         }
@@ -55,19 +55,19 @@ public class IcePlayer : Player
 
     void DoInput()
     {
-        _inputHorizontal = controls.GetMovementHorizontal();
-        _inputVertical = controls.GetMovementVertical();
+        inputHorizontal = controls.GetMovementHorizontal();
+        inputVertical = controls.GetMovementVertical();
     }
 
     void DoMovement()
     {
-        Vector3 movement = new Vector3(_inputHorizontal, 0f, _inputVertical);
+        Vector3 movement = new Vector3(inputHorizontal, 0f, inputVertical);
 
-        _rb.AddForce(movement * acceleration);
+        rb.AddForce(movement * Acceleration);
 
-        if (_rb.velocity.magnitude > maxSpeed)
+        if (rb.velocity.magnitude > MaxSpeed)
         {
-            _rb.velocity = _rb.velocity.normalized * maxSpeed;
+            rb.velocity = rb.velocity.normalized * MaxSpeed;
         }
     }
 
@@ -78,21 +78,21 @@ public class IcePlayer : Player
             Vector3 dir = collision.contacts[0].point - transform.position;
             dir = -dir.normalized;
             dir.y = 0;
-            GetComponent<Rigidbody>().AddForce(dir * collisionForce);
+            GetComponent<Rigidbody>().AddForce(dir * CollisionForce);
             FindObjectOfType<AudioManager>().Play("Bump");
         }
     }
 
     void HandleDeath()
     {
-        numLife--;
+        NumLife--;
         UpdateLifeText();
 
-        if (numLife > 0)
+        if (NumLife > 0)
         {
-            transform.position = spawnPoint;
-            _rb.velocity = Vector3.zero;
-            _rb.angularVelocity = Vector3.zero;
+            transform.position = SpawnPoint;
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
         }
         else
         {
@@ -105,7 +105,7 @@ public class IcePlayer : Player
 
     void UpdateLifeText()
     {
-        _lifeText.text = this.name + " Lives: " + numLife.ToString();
+        lifeText.text = this.name + " Lives: " + NumLife.ToString();
     }
 
 }
