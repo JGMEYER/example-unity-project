@@ -10,26 +10,27 @@ public class RockGameManager : GameManager<RockPlayer>
 
     [Header("GameObjects")]
     [SerializeField]
-    private RockThrowSpawner _rockSpawnerPrefab;
+    private RockThrowSpawner RockSpawnerPrefab;
     [SerializeField]
-    private Text _victoryText;
+    private Text VictoryText;
 
     [Header("Gameplay")]
-    public int numRocks = 6;
-    public float minSpawnDelaySec = 1f;
-    public float maxSpawnDelaySec = 1.5f;
-    public float spawnDelayInterval = 0.5f;
+    public int NumRocks = 6;
+    [Tooltip("seconds")]
+    public float MinSpawnDelay = 1f;
+    [Tooltip("seconds")]
+    public float MaxSpawnDelay = 1.5f;
+    public float SpawnDelayInterval = 0.5f;
 
-    private RockPlayer[] _alivePlayers;
-    private string _gameSelect = "GameSelect";
-    private bool _gameOver = false;
-    private List<RockThrowSpawner> _spawners;
+    private RockPlayer[] alivePlayers;
+    private bool gameOver = false;
+    private List<RockThrowSpawner> spawners;
 
     new void Start()
     {
         base.Start();
 
-        _alivePlayers = (RockPlayer[])players.Clone();
+        alivePlayers = (RockPlayer[])players.Clone();
         InitializeSpawners();
     }
 
@@ -37,7 +38,7 @@ public class RockGameManager : GameManager<RockPlayer>
     {
         base.Update();
 
-        if (!_gameOver)
+        if (!gameOver)
         {
             RockPlayer[] killedPlayers = RemoveKilledPlayers();
             CheckGameOver(killedPlayers);
@@ -46,16 +47,16 @@ public class RockGameManager : GameManager<RockPlayer>
 
     void InitializeSpawners()
     {
-        _spawners = new List<RockThrowSpawner>();
+        spawners = new List<RockThrowSpawner>();
 
-        float[] pattern = new float[numRocks];
+        float[] pattern = new float[NumRocks];
 
-        for (int i = 0; i < numRocks; i++)
+        for (int i = 0; i < NumRocks; i++)
         {
             // Generate delays within bounds at specified intervals
             // e.g. If min is 1 and max in 3, we can expect values of [1, 1.5, 2, 2.5, 3]
             // with an interval of 0.5f.
-            float delay = Mathf.Floor(Random.Range(0, (maxSpawnDelaySec - minSpawnDelaySec) / spawnDelayInterval + 1)) * spawnDelayInterval + minSpawnDelaySec;
+            float delay = Mathf.Floor(Random.Range(0, (MaxSpawnDelay - MinSpawnDelay) / SpawnDelayInterval + 1)) * SpawnDelayInterval + MinSpawnDelay;
             pattern[i] = delay;
         }
 
@@ -63,18 +64,18 @@ public class RockGameManager : GameManager<RockPlayer>
         {
             Vector3 playerPos = player.transform.position;
 
-            RockThrowSpawner spawner = Instantiate(_rockSpawnerPrefab) as RockThrowSpawner;
+            RockThrowSpawner spawner = Instantiate(RockSpawnerPrefab) as RockThrowSpawner;
             spawner.transform.position = new Vector3(playerPos.x, 2, playerPos.z);
             spawner.Initialize(pattern);
 
-            _spawners.Add(spawner);
+            spawners.Add(spawner);
         }
     }
 
     RockPlayer[] RemoveKilledPlayers()
     {
-        RockPlayer[] killedPlayers = _alivePlayers.Where(player => player.IsDead()).ToArray();
-        _alivePlayers = players.Where(player => !player.IsDead()).ToArray();
+        RockPlayer[] killedPlayers = alivePlayers.Where(player => player.IsDead()).ToArray();
+        alivePlayers = players.Where(player => !player.IsDead()).ToArray();
 
         return killedPlayers;
     }
@@ -83,16 +84,14 @@ public class RockGameManager : GameManager<RockPlayer>
     {
         List<string> winners = new List<string>();
 
-        if (_alivePlayers.Length == 1)
+        if (alivePlayers.Length == 1)
         {
-            _victoryText.text = "WINNER!\n";
-
-            winners.Add(_alivePlayers[0].name);
+            VictoryText.text = "WINNER!\n";
+            winners.Add(alivePlayers[0].name);
         }
-        else if (_alivePlayers.Length == 0)
+        else if (alivePlayers.Length == 0)
         {
-            _victoryText.text = "DRAW!\n";
-
+            VictoryText.text = "DRAW!\n";
             foreach (RockPlayer player in killedPlayers)
             {
                 winners.Add(player.name);
@@ -101,10 +100,10 @@ public class RockGameManager : GameManager<RockPlayer>
 
         if (winners.Count > 0)
         {
-            _gameOver = true;
-            _victoryText.text += string.Join(", ", winners.ToArray());
+            gameOver = true;
+            VictoryText.text += string.Join(", ", winners.ToArray());
 
-            foreach (RockThrowSpawner spawner in _spawners)
+            foreach (RockThrowSpawner spawner in spawners)
             {
                 spawner.Stop();
             }

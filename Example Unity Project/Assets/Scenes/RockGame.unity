@@ -801,13 +801,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f2f91b9357c28c4caa64fa2e93bde7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _rockSpawnerPrefab: {fileID: 114104536586402724, guid: 28d33f8296021d64aa8c19a9346ec3a8,
+  RockSpawnerPrefab: {fileID: 114104536586402724, guid: 28d33f8296021d64aa8c19a9346ec3a8,
     type: 2}
-  _victoryText: {fileID: 512217521}
-  numRocks: 100
-  minSpawnDelaySec: 0.5
-  maxSpawnDelaySec: 1.5
-  spawnDelayInterval: 0.25
+  VictoryText: {fileID: 512217521}
+  NumRocks: 100
+  MinSpawnDelay: 0.5
+  MaxSpawnDelay: 1.5
+  SpawnDelayInterval: 0.25
 --- !u!1 &670351346
 GameObject:
   m_ObjectHideFlags: 0

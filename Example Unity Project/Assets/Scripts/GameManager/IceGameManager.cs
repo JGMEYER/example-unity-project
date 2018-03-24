@@ -7,30 +7,30 @@ using UnityEngine.SceneManagement;
 public class IceGameManager : GameManager<IcePlayer>
 {
 
-    public int numPlayers;
-
     [SerializeField]
-    private Text _victoryText;
+    private Text victoryText;
 
-    private bool _gameOver;
-    private int _playersDead = 0;
+    public int NumPlayers;
+
+    private bool gameOver;
+    private int playersDead = 0;
 
     new void Start()
     {
         base.Start();
 
         RemoveExtraPlayersFromScene();
-        _victoryText.text = "";
+        victoryText.text = "";
     }
 
     public void HandlePlayerDeath(string playerName)
     {
-        _playersDead++;
+        playersDead++;
 
-        if (_playersDead >= numPlayers - 1)
+        if (playersDead >= NumPlayers - 1)
         {
-            _victoryText.text = "Game Over!";
-            _gameOver = true;
+            victoryText.text = "Game Over!";
+            gameOver = true;
 
             StartCoroutine(EndGameAfterDelay());
         }
@@ -42,7 +42,7 @@ public class IceGameManager : GameManager<IcePlayer>
     {
         List<IcePlayer> activePlayers = new List<IcePlayer>(players);
 
-        for (int i = 3; i >= numPlayers; i--)
+        for (int i = 3; i >= NumPlayers; i--)
         {
             IcePlayer playerToRemove = players[i];
             activePlayers.RemoveAt(i);

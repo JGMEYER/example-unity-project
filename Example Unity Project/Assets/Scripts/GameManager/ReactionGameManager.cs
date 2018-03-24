@@ -6,19 +6,21 @@ using UnityEngine.UI;
 public class ReactionGameManager : GameManager<ReactionPlayer>
 {
 
-    public int numPlayers;
+    [SerializeField]
+    private ReactionSphere ReactionSphere;
+    [SerializeField]
+    private Text WinningPlayerText;
+
+    public int NumPlayers;
+    public float MinWait;
+    public float MaxWait;
+    public float BetweenRoundTime;
+
     private bool gameOver;
     private bool roundActive;
     private bool allowGrab;
     private Dictionary<PlayerNumber, float> playerTimes;
-    public float minWait;
-    public float maxWait;
     private float currentTime;
-    public float betweenRoundTime;
-    [SerializeField]
-    private ReactionSphere reactionSphere;
-    [SerializeField]
-    private Text winningPlayerText;
 
     new void Awake()
     {
@@ -33,7 +35,7 @@ public class ReactionGameManager : GameManager<ReactionPlayer>
     new void Start()
     {
         base.Start();
-        winningPlayerText.text = "";
+        WinningPlayerText.text = "";
         StartRound();
     }
 
@@ -46,7 +48,7 @@ public class ReactionGameManager : GameManager<ReactionPlayer>
             StartRound();
         }
 
-        if (playerTimes.Count == numPlayers)
+        if (playerTimes.Count == NumPlayers)
         {
             allowGrab = false;
             EndRound();
@@ -66,7 +68,7 @@ public class ReactionGameManager : GameManager<ReactionPlayer>
     {
         Debug.Log("Round started");
         roundActive = true;
-        reactionSphere.SetAsWaitColor();
+        ReactionSphere.SetAsWaitColor();
         StartCoroutine(WaitForGrab());
     }
 
@@ -84,21 +86,21 @@ public class ReactionGameManager : GameManager<ReactionPlayer>
         }
         float timeTaken = minTime - currentTime;
         Debug.Log("Winner is player: " + player + " with time: " + timeTaken);
-        winningPlayerText.text = "Winner: " + player + " time: " + timeTaken;
+        WinningPlayerText.text = "Winner: " + player + " time: " + timeTaken;
         playerTimes.Clear();
-        reactionSphere.SetAsEndColor();
+        ReactionSphere.SetAsEndColor();
         StartCoroutine(WaitBetweenRounds());
     }
 
 
     IEnumerator WaitForGrab()
     {
-        float waitTime = Random.Range(minWait, maxWait);
+        float waitTime = Random.Range(MinWait, MaxWait);
         Debug.Log("Waiting for " + waitTime + " seconds");
         yield return new WaitForSeconds(waitTime);
         allowGrab = true;
         currentTime = Time.timeSinceLevelLoad;
-        reactionSphere.SetAsStartColor();
+        ReactionSphere.SetAsStartColor();
         Debug.Log("Grab allowed");
     }
 
@@ -111,7 +113,7 @@ public class ReactionGameManager : GameManager<ReactionPlayer>
 
     IEnumerator WaitBetweenRounds()
     {
-        yield return new WaitForSeconds(betweenRoundTime);
+        yield return new WaitForSeconds(BetweenRoundTime);
         roundActive = false;
     }
 }

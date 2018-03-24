@@ -521,8 +521,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 929ede99606cef847bbb69520e02fe73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numPlayers: 4
-  _victoryText: {fileID: 293601619}
+  victoryText: {fileID: 293601619}
+  NumPlayers: 4
 --- !u!4 &474522716
 Transform:
   m_ObjectHideFlags: 0

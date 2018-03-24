@@ -196,12 +196,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e02afc0d2ae197459a3b4cef52f6931, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numPlayers: 2
-  minWait: 1
-  maxWait: 5
-  betweenRoundTime: 3
-  reactionSphere: {fileID: 1186675079}
-  winningPlayerText: {fileID: 861228575}
+  ReactionSphere: {fileID: 1186675079}
+  WinningPlayerText: {fileID: 861228575}
+  NumPlayers: 4
+  MinWait: 1
+  MaxWait: 5
+  BetweenRoundTime: 3
 --- !u!1 &223971989
 GameObject:
   m_ObjectHideFlags: 0
@@ -633,9 +633,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1f001fff291f0a42837b16207fcb937, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startColor: {r: 0, g: 1, b: 0, a: 1}
-  endColor: {r: 1, g: 0, b: 0, a: 1}
-  waitColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  StartColor: {r: 0, g: 1, b: 0, a: 1}
+  EndColor: {r: 1, g: 0, b: 0, a: 1}
+  WaitColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!1 &1309462249
 GameObject:
   m_ObjectHideFlags: 0
