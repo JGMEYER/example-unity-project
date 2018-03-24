@@ -8,7 +8,7 @@ public class Follower : MonoBehaviour
     public GameObject TargetObject;
     public Vector3 OffsetFromObject;
 
-    void Update()
+    private void Update()
     {
         Vector3 targetPosition = TargetObject.transform.position;
         transform.position = targetPosition + OffsetFromObject;

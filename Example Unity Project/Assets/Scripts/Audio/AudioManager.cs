@@ -14,7 +14,7 @@ public class AudioManager : MonoBehaviour
     [UnityEngine.Serialization.FormerlySerializedAs("sounds")]
     public Sound[] Sounds;
 
-    void Awake()
+    private void Awake()
     {
         foreach (Sound s in Sounds)
         {
@@ -27,7 +27,7 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    void Start()
+    private void Start()
     {
         FindObjectOfType<AudioManager>().Play("Theme");
     }

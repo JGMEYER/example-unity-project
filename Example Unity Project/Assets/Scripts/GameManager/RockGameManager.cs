@@ -26,7 +26,7 @@ public class RockGameManager : GameManager<RockPlayer>
     private bool gameOver = false;
     private List<RockThrowSpawner> spawners;
 
-    new void Start()
+    private new void Start()
     {
         base.Start();
 
@@ -34,7 +34,7 @@ public class RockGameManager : GameManager<RockPlayer>
         InitializeSpawners();
     }
 
-    new void Update()
+    private new void Update()
     {
         base.Update();
 
@@ -45,7 +45,7 @@ public class RockGameManager : GameManager<RockPlayer>
         }
     }
 
-    void InitializeSpawners()
+    private void InitializeSpawners()
     {
         spawners = new List<RockThrowSpawner>();
 
@@ -72,7 +72,7 @@ public class RockGameManager : GameManager<RockPlayer>
         }
     }
 
-    RockPlayer[] RemoveKilledPlayers()
+    private RockPlayer[] RemoveKilledPlayers()
     {
         RockPlayer[] killedPlayers = alivePlayers.Where(player => player.IsDead()).ToArray();
         alivePlayers = players.Where(player => !player.IsDead()).ToArray();
@@ -80,7 +80,7 @@ public class RockGameManager : GameManager<RockPlayer>
         return killedPlayers;
     }
 
-    void CheckGameOver(RockPlayer[] killedPlayers)
+    private void CheckGameOver(RockPlayer[] killedPlayers)
     {
         List<string> winners = new List<string>();
 

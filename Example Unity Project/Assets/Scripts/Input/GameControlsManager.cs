@@ -8,7 +8,7 @@ public class GameControlsManager : PersistentSingleton<GameControlsManager>
     // Keep singleton-only by disabling constructor
     protected GameControlsManager() { }
 
-    void Awake()
+    private void Awake()
     {
         SetupGlobalDefaults();
         SetupPlayerDefaults();
@@ -18,12 +18,12 @@ public class GameControlsManager : PersistentSingleton<GameControlsManager>
     // Global Controls
     // =================
 
-    string GlobalConfigKey(InputCommand command)
+    private string GlobalConfigKey(InputCommand command)
     {
         return "BUTTON_" + command;
     }
 
-    void SetupGlobalDefaults()
+    private void SetupGlobalDefaults()
     {
         if (!PlayerPrefs.HasKey("BUTTON_" + InputCommand.EXIT))
         {
@@ -42,7 +42,7 @@ public class GameControlsManager : PersistentSingleton<GameControlsManager>
     }
 
     // Game components should not use these directly. Use GlobalControls object.
-    KeyCode GetGlobalCommandKey(InputCommand command)
+    private KeyCode GetGlobalCommandKey(InputCommand command)
     {
         string configKey = GlobalConfigKey(command);
         string keyCodeString = PlayerPrefs.GetString(configKey);
@@ -54,12 +54,12 @@ public class GameControlsManager : PersistentSingleton<GameControlsManager>
     // Player Controls
     // =================
 
-    string PlayerConfigKey(PlayerNumber playerNumber, InputCommand command)
+    private string PlayerConfigKey(PlayerNumber playerNumber, InputCommand command)
     {
         return "BUTTON_" + "PLAYER" + (int)playerNumber + "_" + command;
     }
 
-    void SetupPlayerDefaults()
+    private void SetupPlayerDefaults()
     {
         if (!PlayerCommandKeySet(PlayerNumber.ONE, InputCommand.UP))
         {
@@ -144,7 +144,7 @@ public class GameControlsManager : PersistentSingleton<GameControlsManager>
         return new PlayerKeyboardControls(upKey, leftKey, downKey, rightKey);
     }
 
-    bool PlayerCommandKeySet(PlayerNumber playerNumber, InputCommand command)
+    private bool PlayerCommandKeySet(PlayerNumber playerNumber, InputCommand command)
     {
         return PlayerPrefs.HasKey(PlayerConfigKey(playerNumber, command));
     }
@@ -156,7 +156,7 @@ public class GameControlsManager : PersistentSingleton<GameControlsManager>
     }
 
     // Game components should not use these directly. Use PlayerControls object.
-    KeyCode GetPlayerCommandKey(PlayerNumber playerNumber, InputCommand command)
+    private KeyCode GetPlayerCommandKey(PlayerNumber playerNumber, InputCommand command)
     {
         string configKey = PlayerConfigKey(playerNumber, command);
         string keyCodeString = PlayerPrefs.GetString(configKey);

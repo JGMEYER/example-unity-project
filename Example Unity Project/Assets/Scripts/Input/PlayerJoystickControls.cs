@@ -68,7 +68,6 @@ public class PlayerJoystickControls : IPlayerControls
 
     float IPlayerControls.GetMovementVertical()
     {
-        Debug.Log(GetAxisRaw("LeftVertical"));
         float leftAxis = GetAxisRaw("LeftVertical");
         float dPadAxis = GetAxisRaw("DPadVertical");
 

@@ -12,13 +12,13 @@ public class ToggleOverTime : MonoBehaviour
     private float interval;
     private float timer;
 
-    void Start()
+    private void Start()
     {
         timer = ToggleDuration;
         interval = ToggleDuration / ToggleCount / 2;
     }
 
-    void Update()
+    private void Update()
     {
         if (started && timer > 0f)
         {

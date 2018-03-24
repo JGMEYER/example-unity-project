@@ -15,7 +15,7 @@ public class IceGameManager : GameManager<IcePlayer>
     private bool gameOver;
     private int playersDead = 0;
 
-    new void Start()
+    private new void Start()
     {
         base.Start();
 
@@ -38,7 +38,7 @@ public class IceGameManager : GameManager<IcePlayer>
 
     // This logic (or similar) should move to GameManager once we have a proper
     // player join screen and a system to track number of players.
-    void RemoveExtraPlayersFromScene()
+    private void RemoveExtraPlayersFromScene()
     {
         List<IcePlayer> activePlayers = new List<IcePlayer>(players);
 

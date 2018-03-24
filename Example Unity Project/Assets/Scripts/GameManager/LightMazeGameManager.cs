@@ -28,7 +28,7 @@ public class LightMazeGameManager : GameManager<LightMazePlayer>
     private float mapShiftPauseCounter = 0f;
     private float mapShiftDistanceRemaining = 0f;
 
-    new void Update()
+    private new void Update()
     {
         base.Update();
 
@@ -48,7 +48,7 @@ public class LightMazeGameManager : GameManager<LightMazePlayer>
         }
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
         if (!gameOver && AutoScrollEnabled)
         {
@@ -56,7 +56,7 @@ public class LightMazeGameManager : GameManager<LightMazePlayer>
         }
     }
 
-    void ScrollRows(float changeY)
+    private void ScrollRows(float changeY)
     {
         foreach (LightMazePlayer player in players)
         {
@@ -65,7 +65,7 @@ public class LightMazeGameManager : GameManager<LightMazePlayer>
         map.ScrollRows(changeY);
     }
 
-    void ScrollMapIfPlayerAhead()
+    private void ScrollMapIfPlayerAhead()
     {
         mapShiftPauseCounter -= Time.deltaTime;
 
@@ -93,7 +93,7 @@ public class LightMazeGameManager : GameManager<LightMazePlayer>
         }
     }
 
-    List<LightMazePlayer> KillFallenPlayers()
+    private List<LightMazePlayer> KillFallenPlayers()
     {
         List<LightMazePlayer> playersKilled = new List<LightMazePlayer>();
 
@@ -109,7 +109,7 @@ public class LightMazeGameManager : GameManager<LightMazePlayer>
         return playersKilled;
     }
 
-    void CheckGameOver(List<LightMazePlayer> playersKilled)
+    private void CheckGameOver(List<LightMazePlayer> playersKilled)
     {
         LightMazePlayer[] alivePlayers = players.Where(player => !player.IsDead()).ToArray();
         LightMazePlayer[] jetpackPlayers = players.Where(player => player.HasJetpack()).ToArray();
@@ -140,7 +140,7 @@ public class LightMazeGameManager : GameManager<LightMazePlayer>
         }
     }
 
-    void GameOver(List<string> winnerNames, bool jetpackWin)
+    private void GameOver(List<string> winnerNames, bool jetpackWin)
     {
         gameOver = true;
 

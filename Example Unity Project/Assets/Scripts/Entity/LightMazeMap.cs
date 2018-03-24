@@ -46,7 +46,7 @@ public class LightMazeMap : MonoBehaviour
     private int remainingRows;
     private bool valuesChanged;
 
-    public void Start()
+    private void Start()
     {
         remainingRows = totalRows;
 
@@ -58,7 +58,7 @@ public class LightMazeMap : MonoBehaviour
         }
     }
 
-    public void Update()
+    private void Update()
     {
         if (valuesChanged)
         { // Should be true after Start() to trigger original gen
@@ -67,7 +67,7 @@ public class LightMazeMap : MonoBehaviour
         }
     }
 
-    void OnValidate()
+    private void OnValidate()
     {
         // TODO is there an "assert" equivalent in C# for these checks?
 
@@ -175,7 +175,7 @@ public class LightMazeMap : MonoBehaviour
         }
     }
 
-    GameObject AddWall(float x, float y)
+    private GameObject AddWall(float x, float y)
     {
         GameObject wall = Instantiate(lightMazeWallPrefab);
 
@@ -185,7 +185,7 @@ public class LightMazeMap : MonoBehaviour
         return wall;
     }
 
-    GameObject AddPlatform(float x, float y, int width = 1, int height = 1)
+    private GameObject AddPlatform(float x, float y, int width = 1, int height = 1)
     {
         GameObject platform = Instantiate(lightMazePlatformPrefab);
 
@@ -195,7 +195,7 @@ public class LightMazeMap : MonoBehaviour
         return platform;
     }
 
-    GameObject AddRow(float y)
+    private GameObject AddRow(float y)
     {
         GameObject row = Instantiate(lightMazeRowPrefab);
 
@@ -205,7 +205,7 @@ public class LightMazeMap : MonoBehaviour
         return row;
     }
 
-    void ClearRow(GameObject row)
+    private void ClearRow(GameObject row)
     {
         row.GetComponent<LightMazeRowData>().RowMap = new BitArray(MapWidth, false);
 
@@ -219,7 +219,7 @@ public class LightMazeMap : MonoBehaviour
         }
     }
 
-    void PopulateRow(GameObject row, GameObject prevRow, int gaps)
+    private void PopulateRow(GameObject row, GameObject prevRow, int gaps)
     {
         float y = row.transform.position.y;
 
@@ -274,7 +274,7 @@ public class LightMazeMap : MonoBehaviour
         rightWall.transform.parent = row.transform;
     }
 
-    GameObject PopulateJetpackRow(GameObject row)
+    private GameObject PopulateJetpackRow(GameObject row)
     {
         row.GetComponent<LightMazeRowData>().RowMap = new BitArray(MapWidth, false);
 
@@ -283,7 +283,7 @@ public class LightMazeMap : MonoBehaviour
         return row;
     }
 
-    int CreateGaps(BitArray rowMap, int remaining, int start, int end)
+    private int CreateGaps(BitArray rowMap, int remaining, int start, int end)
     {
         if (remaining == 0 || end - start < GapSize)
         {
@@ -315,7 +315,7 @@ public class LightMazeMap : MonoBehaviour
         return CreateGaps(rowMap, remaining - 1, start, end);
     }
 
-    void AddPiston(GameObject row, float x)
+    private void AddPiston(GameObject row, float x)
     {
         float maxHeight = RowSpacing - (0.5f * 2);
         float y = row.transform.position.y + (maxHeight / 2) + 0.5f;
@@ -326,7 +326,7 @@ public class LightMazeMap : MonoBehaviour
         piston.transform.parent = row.transform;
     }
 
-    void AddHatch(GameObject row, float x, float width)
+    private void AddHatch(GameObject row, float x, float width)
     {
         float y = row.transform.position.y;
 
@@ -339,7 +339,7 @@ public class LightMazeMap : MonoBehaviour
         hatch.transform.localScale = scale;
     }
 
-    void AddJetpack(GameObject row, float x)
+    private void AddJetpack(GameObject row, float x)
     {
         float y = row.transform.position.y;
 
@@ -348,7 +348,7 @@ public class LightMazeMap : MonoBehaviour
         jetpack.transform.parent = row.transform;
     }
 
-    void AddEnvironmentObjects(GameObject row, GameObject prevRow, BitArray rowMap, BitArray prevRowMap)
+    private void AddEnvironmentObjects(GameObject row, GameObject prevRow, BitArray rowMap, BitArray prevRowMap)
     {
         BitArray matching = new BitArray(rowMap).And(prevRowMap);
 
@@ -411,7 +411,7 @@ public class LightMazeMap : MonoBehaviour
         }
     }
 
-    List<int[]> GetRowMapAsTuples(BitArray rowMap, bool inverse = false)
+    private List<int[]> GetRowMapAsTuples(BitArray rowMap, bool inverse = false)
     {
         List<int[]> tuples = new List<int[]>();
         int segmentStart = 0;

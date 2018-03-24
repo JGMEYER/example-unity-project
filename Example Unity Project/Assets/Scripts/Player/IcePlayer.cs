@@ -25,7 +25,7 @@ public class IcePlayer : Player
     private int floorHeight = 2;
     private int resetHeight = -20;
 
-    void Start()
+    private void Start()
     {
         rb = GetComponent<Rigidbody>();
         transform.position = SpawnPoint;
@@ -33,7 +33,7 @@ public class IcePlayer : Player
         UpdateLifeText();
     }
 
-    void Update()
+    private void Update()
     {
         currentPosition = transform.position;
 
@@ -48,18 +48,18 @@ public class IcePlayer : Player
         }
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
         DoMovement();
     }
 
-    void DoInput()
+    private void DoInput()
     {
         inputHorizontal = controls.GetMovementHorizontal();
         inputVertical = controls.GetMovementVertical();
     }
 
-    void DoMovement()
+    private void DoMovement()
     {
         Vector3 movement = new Vector3(inputHorizontal, 0f, inputVertical);
 
@@ -71,7 +71,7 @@ public class IcePlayer : Player
         }
     }
 
-    void OnCollisionEnter(Collision collision)
+    private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.name.StartsWith("Player"))
         {
@@ -83,7 +83,7 @@ public class IcePlayer : Player
         }
     }
 
-    void HandleDeath()
+    private void HandleDeath()
     {
         NumLife--;
         UpdateLifeText();
@@ -103,7 +103,7 @@ public class IcePlayer : Player
         }
     }
 
-    void UpdateLifeText()
+    private void UpdateLifeText()
     {
         lifeText.text = this.name + " Lives: " + NumLife.ToString();
     }

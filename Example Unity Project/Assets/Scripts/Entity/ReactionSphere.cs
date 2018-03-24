@@ -11,7 +11,7 @@ public class ReactionSphere : MonoBehaviour
 
     private Material material;
 
-    void Start()
+    private void Start()
     {
         material = GetComponent<Renderer>().material;
         material.color = WaitColor;

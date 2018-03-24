@@ -13,7 +13,7 @@ public class LightMazeHatch : MonoBehaviour
     private bool triggered = false;
     private bool activated = false;
 
-    public void Update()
+    private void Update()
     {
         if (triggered && !activated)
         {

@@ -10,12 +10,12 @@ public class Player : MonoBehaviour
 
     protected IPlayerControls controls { get; private set; }
 
-    public void Awake()
+    protected void Awake()
     {
         controls = GameControlsManager.Instance.PlayerControls(playerNumber);
     }
 
-    public void OnValidate()
+    protected void OnValidate()
     {
         if (playerNumber == 0)
         {

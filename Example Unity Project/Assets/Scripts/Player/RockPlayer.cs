@@ -25,7 +25,7 @@ public class RockPlayer : Player
     private Vector3 originalPosition;
     private Vector3 originalScale;
 
-    new void Awake()
+    private new void Awake()
     {
         base.Awake();
 
@@ -35,12 +35,12 @@ public class RockPlayer : Player
         originalScale = transform.localScale;
     }
 
-    void Start()
+    private void Start()
     {
         rend.material = DefaultMaterial;
     }
 
-    void Update()
+    private void Update()
     {
         if (isHurt)
         {
@@ -68,7 +68,7 @@ public class RockPlayer : Player
         }
     }
 
-    void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         ThrownItem thrownItem = other.GetComponent<ThrownItem>();
         if (thrownItem != null)
@@ -81,7 +81,7 @@ public class RockPlayer : Player
         }
     }
 
-    void SetShieldActive(bool active)
+    private void SetShieldActive(bool active)
     {
         if (active == shieldActive)
         {
@@ -100,7 +100,7 @@ public class RockPlayer : Player
         }
     }
 
-    IEnumerator Hurt()
+    private IEnumerator Hurt()
     {
         health.TakeDamage(HurtDamage);
         FindObjectOfType<AudioManager>().Play("Hit");

@@ -9,7 +9,7 @@ public class GameSpeedController : MonoBehaviour
     [Range(0.25f, 4f)]
     public float TimeScale = 1f;
 
-    void OnValidate()
+    private void OnValidate()
     {
         if (ControlSpeed)
         {

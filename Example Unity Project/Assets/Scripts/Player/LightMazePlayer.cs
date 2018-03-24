@@ -30,12 +30,12 @@ public class LightMazePlayer : Player
 
     private LightMazeJetpack jetpack = null;
 
-    void Start()
+    private void Start()
     {
         rb = GetComponent<Rigidbody>();
     }
 
-    void Update()
+    private void Update()
     {
         if (!isDead)
         {
@@ -43,7 +43,7 @@ public class LightMazePlayer : Player
         }
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
         if (CanMove)
         {
@@ -58,7 +58,7 @@ public class LightMazePlayer : Player
         }
     }
 
-    void OnDrawGizmos()
+    private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
         Gizmos.DrawRay(transform.position, Vector3.down * RayCastDist);
@@ -78,7 +78,7 @@ public class LightMazePlayer : Player
         }
     }
 
-    void DoInput()
+    private void DoInput()
     {
         if (controls.GetJump())
         {
@@ -95,7 +95,7 @@ public class LightMazePlayer : Player
         inputHorizontal = controls.GetMovementHorizontal();
     }
 
-    void DoMovement()
+    private void DoMovement()
     {
         Vector3 resetHorizontalVelocity = new Vector3(0, rb.velocity.y, 0);
         rb.velocity = resetHorizontalVelocity;
@@ -113,24 +113,24 @@ public class LightMazePlayer : Player
         inputVertical = 0;
     }
 
-    void DoJetpackMovement()
+    private void DoJetpackMovement()
     {
         // I am sure I will regret this design choice
         Vector3 jetpackVelocity = jetpack.GetVelocity(inputHorizontal);
         rb.velocity = jetpackVelocity;
     }
 
-    void OnCollisionEnter(Collision collision)
+    private void OnCollisionEnter(Collision collision)
     {
         CheckCanJump(collision);
     }
 
-    void OnCollisionStay(Collision collision)
+    private void OnCollisionStay(Collision collision)
     {
         CheckCanJump(collision);
     }
 
-    void OnCollisionExit(Collision collision)
+    private void OnCollisionExit(Collision collision)
     {
         if (!canJump)
         {
@@ -148,7 +148,7 @@ public class LightMazePlayer : Player
         canJump &= collisionBelow;
     }
 
-    void CheckCanJump(Collision collision)
+    private void CheckCanJump(Collision collision)
     {
         if (collision.gameObject.name.StartsWith("Player"))
         {
@@ -184,7 +184,7 @@ public class LightMazePlayer : Player
         }
     }
 
-    void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         LightMazeJetpack jetpackItem = other.GetComponent<LightMazeJetpack>();
 
@@ -194,7 +194,7 @@ public class LightMazePlayer : Player
         }
     }
 
-    void EquipJetpack(LightMazeJetpack jetpackItem)
+    private void EquipJetpack(LightMazeJetpack jetpackItem)
     {
         jetpack = jetpackItem;
         jetpack.SetEquipped(true);

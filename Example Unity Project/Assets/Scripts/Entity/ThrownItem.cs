@@ -12,7 +12,7 @@ public class ThrownItem : MonoBehaviour
     private float A;  // width modifier for parabola
     private float CurrentZ;
 
-    void Update()
+    private void Update()
     {
         CurrentZ -= Time.deltaTime * Speed;
 

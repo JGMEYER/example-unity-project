@@ -18,7 +18,7 @@ public class RockThrowSpawner : MonoBehaviour
     private float nextSpawn;
     private bool done = false;
 
-    void Update()
+    private void Update()
     {
         if (pattern == null) return;
 
@@ -34,7 +34,7 @@ public class RockThrowSpawner : MonoBehaviour
         }
     }
 
-    void SpawnRock()
+    private void SpawnRock()
     {
         ThrownItem thrownRock = Instantiate(thrownRockPrefab) as ThrownItem;
         thrownRock.GetComponent<ThrownItem>().Initialize(transform.position.x, RockThrowDistanceZ, RockThrowAmplitude, RockThrowSpeed);
@@ -43,7 +43,7 @@ public class RockThrowSpawner : MonoBehaviour
         FindObjectOfType<AudioManager>().Play("Throw");
     }
 
-    void NextTimer()
+    private void NextTimer()
     {
         if (currentPattern + 1 >= pattern.Length)
         {

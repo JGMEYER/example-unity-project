@@ -10,7 +10,7 @@ public class ReactionPlayer : Player
 
     private int roundWins;
 
-    void Update()
+    private void Update()
     {
         HandleInput();
     }

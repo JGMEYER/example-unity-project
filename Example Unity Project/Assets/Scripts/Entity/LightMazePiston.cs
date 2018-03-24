@@ -13,7 +13,7 @@ public class LightMazePiston : MonoBehaviour
     private Vector3 maxScale;
     private Vector3 targetScale;
 
-    void Start()
+    private void Start()
     {
         Vector3 startScale = transform.localScale;
 
@@ -24,7 +24,7 @@ public class LightMazePiston : MonoBehaviour
         transform.localScale = maxScale;
     }
 
-    void Update()
+    private void Update()
     {
         CheckTarget();
         Vector3 newScale = Vector3.Lerp(transform.localScale, targetScale, Smooth * Time.deltaTime);
@@ -32,7 +32,7 @@ public class LightMazePiston : MonoBehaviour
         transform.localScale = newScale;
     }
 
-    void CheckTarget()
+    private void CheckTarget()
     {
         if (transform.localScale == minScale)
         {

@@ -13,12 +13,12 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField]
     private float currentHealth;
 
-    void Awake()
+    private void Awake()
     {
         currentHealth = totalHealth;
     }
 
-    void Start()
+    private void Start()
     {
         healthSlider.value = currentHealth;
     }

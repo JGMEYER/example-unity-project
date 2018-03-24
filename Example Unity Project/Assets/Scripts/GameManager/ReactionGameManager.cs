@@ -22,7 +22,7 @@ public class ReactionGameManager : GameManager<ReactionPlayer>
     private Dictionary<PlayerNumber, float> playerTimes;
     private float currentTime;
 
-    new void Awake()
+    private new void Awake()
     {
         base.Awake();
 
@@ -32,14 +32,14 @@ public class ReactionGameManager : GameManager<ReactionPlayer>
         playerTimes = new Dictionary<PlayerNumber, float>();
     }
 
-    new void Start()
+    private new void Start()
     {
         base.Start();
         WinningPlayerText.text = "";
         StartRound();
     }
 
-    new void Update()
+    private new void Update()
     {
         base.Update();
 
@@ -64,7 +64,7 @@ public class ReactionGameManager : GameManager<ReactionPlayer>
         }
     }
 
-    void StartRound()
+    private void StartRound()
     {
         Debug.Log("Round started");
         roundActive = true;
@@ -72,7 +72,7 @@ public class ReactionGameManager : GameManager<ReactionPlayer>
         StartCoroutine(WaitForGrab());
     }
 
-    void EndRound()
+    private void EndRound()
     {
         float minTime = float.MaxValue;
         PlayerNumber player = PlayerNumber.ONE;
@@ -93,7 +93,7 @@ public class ReactionGameManager : GameManager<ReactionPlayer>
     }
 
 
-    IEnumerator WaitForGrab()
+    private IEnumerator WaitForGrab()
     {
         float waitTime = Random.Range(MinWait, MaxWait);
         Debug.Log("Waiting for " + waitTime + " seconds");
@@ -104,14 +104,14 @@ public class ReactionGameManager : GameManager<ReactionPlayer>
         Debug.Log("Grab allowed");
     }
 
-    void EndGame(PlayerNumber playerNumber)
+    private void EndGame(PlayerNumber playerNumber)
     {
         Debug.Log("Player " + playerNumber + "has won the game!");
         gameOver = true;
         StartCoroutine(EndGameAfterDelay());
     }
 
-    IEnumerator WaitBetweenRounds()
+    private IEnumerator WaitBetweenRounds()
     {
         yield return new WaitForSeconds(BetweenRoundTime);
         roundActive = false;

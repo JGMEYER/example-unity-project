@@ -8,12 +8,12 @@ public class LightMazeCamera : MonoBehaviour
     private LightMazeMap map;
     private Camera mainCamera;
 
-    void Start()
+    private void Start()
     {
         mainCamera = GetComponent<Camera>();
     }
 
-    void Update()
+    private void Update()
     {
         Vector3 cameraPos = mainCamera.transform.position;
         mainCamera.transform.position = new Vector3((float)map.MapWidth / 2 - 0.5f, cameraPos.y, cameraPos.z);

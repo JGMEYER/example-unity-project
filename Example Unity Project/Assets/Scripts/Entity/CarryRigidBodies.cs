@@ -10,13 +10,13 @@ public class CarryRigidBodies : MonoBehaviour
     private Vector3 lastPosition;
     new private Transform transform;
 
-    void Start()
+    private void Start()
     {
         transform = GetComponent<Transform>();
         lastPosition = transform.position;
     }
 
-    void LateUpdate()
+    private void LateUpdate()
     {
         foreach (Rigidbody rb in RigidBodies)
         {
@@ -27,7 +27,7 @@ public class CarryRigidBodies : MonoBehaviour
         lastPosition = transform.position;
     }
 
-    void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         Rigidbody rb = other.GetComponent<Collider>().GetComponent<Rigidbody>();
         if (rb != null)
@@ -36,7 +36,7 @@ public class CarryRigidBodies : MonoBehaviour
         }
     }
 
-    void OnTriggerExit(Collider other)
+    private void OnTriggerExit(Collider other)
     {
         Rigidbody rb = other.GetComponent<Collider>().GetComponent<Rigidbody>();
         if (rb != null)
@@ -45,7 +45,7 @@ public class CarryRigidBodies : MonoBehaviour
         }
     }
 
-    void Add(Rigidbody rb)
+    private void Add(Rigidbody rb)
     {
         if (!RigidBodies.Contains(rb))
         {
@@ -53,7 +53,7 @@ public class CarryRigidBodies : MonoBehaviour
         }
     }
 
-    void Remove(Rigidbody rb)
+    private void Remove(Rigidbody rb)
     {
         if (RigidBodies.Contains(rb))
         {
