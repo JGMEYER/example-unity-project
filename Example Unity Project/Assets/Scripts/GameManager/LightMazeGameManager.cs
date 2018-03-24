@@ -10,40 +10,38 @@ public class LightMazeGameManager : GameManager<LightMazePlayer>
 
     [Header("GameObjects")]
     [SerializeField]
-    private LightMazeMap _map;
+    private LightMazeMap map;
     [SerializeField]
-    private Camera _camera;
-    [SerializeField]
-    private Text _victoryText;
+    private Text victoryText;
 
     [Header("Debug Settings")]
-    public bool scrollEnabled;
+    public bool AutoScrollEnabled;
     [Range(0f, 10f)]
-    public float rowScrollSpeed = 5f;
-    public bool winConditionsEnabled = true;
+    public float AutoScrollSpeed = 5f;
+    public bool WinConditionsEnabled = true;
 
     [Header("Map Movement")]
-    public bool scrollMapWhenPlayerAhead = true;
-    public float pauseBetweenMapShifts = 1f;
+    public bool ScrollMapWhenPlayerAhead = true;
+    public float PauseBetweenMapShifts = 1f;
 
-    private bool _gameOver;
-    private float _mapShiftPauseCounter = 0f;
-    private float _mapShiftDistanceRemaining = 0f;
+    private bool gameOver;
+    private float mapShiftPauseCounter = 0f;
+    private float mapShiftDistanceRemaining = 0f;
 
     new void Update()
     {
         base.Update();
 
-        if (!_gameOver)
+        if (!gameOver)
         {
-            if (scrollMapWhenPlayerAhead)
+            if (ScrollMapWhenPlayerAhead)
             {
                 ScrollMapIfPlayerAhead();
             }
 
             List<LightMazePlayer> playersKilled = KillFallenPlayers();
 
-            if (winConditionsEnabled)
+            if (WinConditionsEnabled)
             {
                 CheckGameOver(playersKilled);
             }
@@ -52,46 +50,46 @@ public class LightMazeGameManager : GameManager<LightMazePlayer>
 
     void FixedUpdate()
     {
-        if (!_gameOver && scrollEnabled)
+        if (!gameOver && AutoScrollEnabled)
         {
-            ScrollRows(rowScrollSpeed * Time.deltaTime);
+            ScrollRows(AutoScrollSpeed * Time.deltaTime);
         }
     }
 
     void ScrollRows(float changeY)
     {
-        foreach (LightMazePlayer player in _players)
+        foreach (LightMazePlayer player in players)
         {
             player.transform.Translate(0, -1 * changeY, 0, Space.World);
         }
-        _map.ScrollRows(changeY);
+        map.ScrollRows(changeY);
     }
 
     void ScrollMapIfPlayerAhead()
     {
-        _mapShiftPauseCounter -= Time.deltaTime;
+        mapShiftPauseCounter -= Time.deltaTime;
 
         bool bump = false;
 
-        if (_mapShiftPauseCounter <= 0f)
+        if (mapShiftPauseCounter <= 0f)
         {
-            foreach (LightMazePlayer player in _players)
+            foreach (LightMazePlayer player in players)
             {
-                bump |= player.transform.position.y > _map.maxAllowedPlayerHeight;
+                bump |= player.transform.position.y > map.MaxAllowedPlayerHeight;
             }
         }
 
         if (bump)
         {
-            _mapShiftDistanceRemaining = 1.5f + _map.rowSpacing;  // arbitrary
-            _mapShiftPauseCounter = pauseBetweenMapShifts;
+            mapShiftDistanceRemaining = 1.5f + map.RowSpacing;  // arbitrary
+            mapShiftPauseCounter = PauseBetweenMapShifts;
         }
 
-        if (_mapShiftDistanceRemaining > 0f)
+        if (mapShiftDistanceRemaining > 0f)
         {
-            float changeY = _mapShiftDistanceRemaining * Time.deltaTime;
+            float changeY = mapShiftDistanceRemaining * Time.deltaTime;
             ScrollRows(changeY);
-            _mapShiftDistanceRemaining -= changeY;
+            mapShiftDistanceRemaining -= changeY;
         }
     }
 
@@ -99,9 +97,9 @@ public class LightMazeGameManager : GameManager<LightMazePlayer>
     {
         List<LightMazePlayer> playersKilled = new List<LightMazePlayer>();
 
-        foreach (LightMazePlayer player in _players)
+        foreach (LightMazePlayer player in players)
         {
-            if (!player.IsDead() && player.transform.position.y < _map.minAllowedPlayerHeight)
+            if (!player.IsDead() && player.transform.position.y < map.MinAllowedPlayerHeight)
             {
                 player.Kill(explode: true);
                 playersKilled.Add(player);
@@ -113,8 +111,8 @@ public class LightMazeGameManager : GameManager<LightMazePlayer>
 
     void CheckGameOver(List<LightMazePlayer> playersKilled)
     {
-        LightMazePlayer[] alivePlayers = _players.Where(player => !player.IsDead()).ToArray();
-        LightMazePlayer[] jetpackPlayers = _players.Where(player => player.HasJetpack()).ToArray();
+        LightMazePlayer[] alivePlayers = players.Where(player => !player.IsDead()).ToArray();
+        LightMazePlayer[] jetpackPlayers = players.Where(player => player.HasJetpack()).ToArray();
 
         List<string> winnerNames = new List<string>();
         bool jetpackWin = false;
@@ -144,17 +142,17 @@ public class LightMazeGameManager : GameManager<LightMazePlayer>
 
     void GameOver(List<string> winnerNames, bool jetpackWin)
     {
-        _gameOver = true;
+        gameOver = true;
 
         if (winnerNames.Count == 1)
         {
-            _victoryText.text = "WINNER!\n";
+            victoryText.text = "WINNER!\n";
         }
         else
         {
-            _victoryText.text = "DRAW!\n";
+            victoryText.text = "DRAW!\n";
         }
-        _victoryText.text += string.Join(", ", winnerNames.ToArray());
+        victoryText.text += string.Join(", ", winnerNames.ToArray());
 
         // TODO jetpackWin: scroll map quickly without interruption and allow players to explode
 

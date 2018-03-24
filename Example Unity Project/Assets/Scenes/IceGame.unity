@@ -765,6 +765,11 @@ Prefab:
       propertyPath: _lifeText
       value: 
       objectReference: {fileID: 274087773}
+    - target: {fileID: 114693274307606072, guid: d233eaf1248c3b24da9ed138e2452d81,
+        type: 2}
+      propertyPath: playerNumber
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d233eaf1248c3b24da9ed138e2452d81, type: 2}
   m_IsPrefabParent: 0
@@ -1543,7 +1548,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f225d5dc3ee0244aaf72a89568c5bc7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerNumber: 4
+  playerNumber: 4
   _lifeText: {fileID: 1484245707}
   acceleration: 10
   spawnPoint: {x: -4, y: 3, z: 0}
@@ -1700,7 +1705,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f225d5dc3ee0244aaf72a89568c5bc7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerNumber: 1
+  playerNumber: 1
   _lifeText: {fileID: 274087773}
   acceleration: 10
   spawnPoint: {x: 0, y: 2, z: 0}
@@ -1791,7 +1796,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f225d5dc3ee0244aaf72a89568c5bc7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerNumber: 3
+  playerNumber: 3
   _lifeText: {fileID: 2072039158}
   acceleration: 10
   spawnPoint: {x: 4, y: 3, z: 0}
@@ -2725,7 +2730,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f225d5dc3ee0244aaf72a89568c5bc7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerNumber: 2
+  playerNumber: 2
   _lifeText: {fileID: 1596665073}
   acceleration: 10
   spawnPoint: {x: -3, y: 2, z: -3}

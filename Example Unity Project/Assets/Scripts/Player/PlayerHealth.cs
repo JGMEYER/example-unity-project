@@ -6,9 +6,12 @@ using UnityEngine.UI;
 public class PlayerHealth : MonoBehaviour
 {
 
-    public Slider healthSlider;
-    public float totalHealth = 100f;
-    public float currentHealth;
+    [SerializeField]
+    private Slider healthSlider;
+    [SerializeField]
+    private float totalHealth = 100f;
+    [SerializeField]
+    private float currentHealth;
 
     void Awake()
     {

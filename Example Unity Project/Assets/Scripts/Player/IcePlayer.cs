@@ -55,8 +55,8 @@ public class IcePlayer : Player
 
     void DoInput()
     {
-        _inputHorizontal = _controls.GetMovementHorizontal();
-        _inputVertical = _controls.GetMovementVertical();
+        _inputHorizontal = controls.GetMovementHorizontal();
+        _inputVertical = controls.GetMovementVertical();
     }
 
     void DoMovement()

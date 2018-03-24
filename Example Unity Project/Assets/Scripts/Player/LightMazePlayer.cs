@@ -9,35 +9,35 @@ public class LightMazePlayer : Player
     private ParticleSystem _deathExplosion;
 
     [Header("Movement")]
-    public bool canMove = true;
-    public bool canWallJump = false;
-    public float horizontalSpeed = 8f;
-    public float initialJumpVelocity = 3f;
-    public float maxJumpHoldTime = 0.8f;
-    public float fallGravityMultiplier = 2.5f;
+    public bool CanMove = true;
+    public bool CanWallJump = false;
+    public float HorizontalSpeed = 8f;
+    public float InitialJumpVelocity = 3f;
+    public float MaxJumpHoldTime = 0.8f;
+    public float FallGravityMultiplier = 2.5f;
 
     [Header("Detectors")]
-    public float rayCastDist = 0.27f;
+    public float RayCastDist = 0.27f;
 
-    private Rigidbody _rb;
+    private Rigidbody rb;
 
-    private float _inputHorizontal = 0;
-    private int _inputVertical = 0;
+    private float inputHorizontal = 0;
+    private int inputVertical = 0;
 
-    private float _jumpHoldCounter = 0;
-    private bool _canJump = true;
-    private bool _isDead = false;
+    private float jumpHoldCounter = 0;
+    private bool canJump = true;
+    private bool isDead = false;
 
     private LightMazeJetpack jetpack = null;
 
     void Start()
     {
-        _rb = GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody>();
     }
 
     void Update()
     {
-        if (!_isDead)
+        if (!isDead)
         {
             DoInput();
         }
@@ -45,7 +45,7 @@ public class LightMazePlayer : Player
 
     void FixedUpdate()
     {
-        if (canMove)
+        if (CanMove)
         {
             if (HasJetpack())
             {
@@ -61,11 +61,11 @@ public class LightMazePlayer : Player
     void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawRay(transform.position, Vector3.down * rayCastDist);
-        Gizmos.DrawRay(transform.position, Vector3.left * rayCastDist);
-        Gizmos.DrawRay(transform.position, Vector3.right * rayCastDist);
+        Gizmos.DrawRay(transform.position, Vector3.down * RayCastDist);
+        Gizmos.DrawRay(transform.position, Vector3.left * RayCastDist);
+        Gizmos.DrawRay(transform.position, Vector3.right * RayCastDist);
 
-        if (_canJump)
+        if (canJump)
         {
             Gizmos.color = Color.yellow;
             Gizmos.DrawSphere(transform.position, 0.1f);
@@ -74,50 +74,50 @@ public class LightMazePlayer : Player
         if (Application.isPlaying)
         {
             Gizmos.color = Color.cyan;
-            Gizmos.DrawRay(transform.position, _rb.velocity);
+            Gizmos.DrawRay(transform.position, rb.velocity);
         }
     }
 
     void DoInput()
     {
-        if (_controls.GetJump())
+        if (controls.GetJump())
         {
-            _jumpHoldCounter -= Time.deltaTime;
+            jumpHoldCounter -= Time.deltaTime;
         }
 
-        if (_controls.GetJump() && _canJump)
+        if (controls.GetJump() && canJump)
         {
-            _inputVertical = 1;
-            _jumpHoldCounter = maxJumpHoldTime;
-            _canJump = false;
+            inputVertical = 1;
+            jumpHoldCounter = MaxJumpHoldTime;
+            canJump = false;
         }
 
-        _inputHorizontal = _controls.GetMovementHorizontal();
+        inputHorizontal = controls.GetMovementHorizontal();
     }
 
     void DoMovement()
     {
-        Vector3 resetHorizontalVelocity = new Vector3(0, _rb.velocity.y, 0);
-        _rb.velocity = resetHorizontalVelocity;
+        Vector3 resetHorizontalVelocity = new Vector3(0, rb.velocity.y, 0);
+        rb.velocity = resetHorizontalVelocity;
 
-        _rb.velocity += Vector3.up * _inputVertical * initialJumpVelocity * Time.deltaTime;
+        rb.velocity += Vector3.up * inputVertical * InitialJumpVelocity * Time.deltaTime;
 
-        if (_rb.velocity.y < 0 || !_controls.GetJump() || _jumpHoldCounter <= 0)
+        if (rb.velocity.y < 0 || !controls.GetJump() || jumpHoldCounter <= 0)
         {
-            _rb.velocity += Vector3.up * Physics.gravity.y * (fallGravityMultiplier - 1) * Time.deltaTime;
+            rb.velocity += Vector3.up * Physics.gravity.y * (FallGravityMultiplier - 1) * Time.deltaTime;
         }
 
-        _rb.velocity += Vector3.right * _inputHorizontal * horizontalSpeed * Time.deltaTime;
+        rb.velocity += Vector3.right * inputHorizontal * HorizontalSpeed * Time.deltaTime;
 
-        _inputHorizontal = 0;
-        _inputVertical = 0;
+        inputHorizontal = 0;
+        inputVertical = 0;
     }
 
     void DoJetpackMovement()
     {
         // I am sure I will regret this design choice
-        Vector3 jetpackVelocity = jetpack.GetVelocity(_inputHorizontal);
-        _rb.velocity = jetpackVelocity;
+        Vector3 jetpackVelocity = jetpack.GetVelocity(inputHorizontal);
+        rb.velocity = jetpackVelocity;
     }
 
     void OnCollisionEnter(Collision collision)
@@ -132,7 +132,7 @@ public class LightMazePlayer : Player
 
     void OnCollisionExit(Collision collision)
     {
-        if (!_canJump)
+        if (!canJump)
         {
             return;
         }
@@ -142,10 +142,10 @@ public class LightMazePlayer : Player
         bool collisionBelow = false;
         if (Physics.Raycast(transform.position, Vector3.down, out hit))
         {
-            collisionBelow |= hit.distance <= rayCastDist;
+            collisionBelow |= hit.distance <= RayCastDist;
         }
 
-        _canJump &= collisionBelow;
+        canJump &= collisionBelow;
     }
 
     void CheckCanJump(Collision collision)
@@ -161,26 +161,26 @@ public class LightMazePlayer : Player
         bool collisionBelow = false;
         if (Physics.Raycast(transform.position, Vector3.down, out hit))
         {
-            collisionBelow |= hit.distance <= rayCastDist;
+            collisionBelow |= hit.distance <= RayCastDist;
         }
 
-        _canJump |= collisionBelow;
+        canJump |= collisionBelow;
 
-        if (canWallJump)
+        if (CanWallJump)
         {
             bool collisionLeft = false;
             if (Physics.Raycast(transform.position, Vector3.left, out hit))
             {
-                collisionLeft |= hit.distance <= rayCastDist;
+                collisionLeft |= hit.distance <= RayCastDist;
             }
 
             bool collisionRight = false;
             if (Physics.Raycast(transform.position, Vector3.right, out hit))
             {
-                collisionRight |= hit.distance <= rayCastDist;
+                collisionRight |= hit.distance <= RayCastDist;
             }
 
-            _canJump |= (collisionLeft || collisionRight);
+            canJump |= (collisionLeft || collisionRight);
         }
     }
 
@@ -199,10 +199,10 @@ public class LightMazePlayer : Player
         jetpack = jetpackItem;
         jetpack.SetEquipped(true);
 
-        _rb.useGravity = false;
-        _rb.velocity = Vector3.zero;
-        _rb.angularVelocity = Vector3.zero;
-        _rb.transform.rotation = Quaternion.Euler(Vector3.zero);
+        rb.useGravity = false;
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+        rb.transform.rotation = Quaternion.Euler(Vector3.zero);
 
         // I am sure I will regret this design choice
         transform.position = jetpack.transform.position;
@@ -221,10 +221,10 @@ public class LightMazePlayer : Player
 
     public void Kill(bool explode)
     {
-        _rb.velocity = Vector3.zero;
-        _rb.useGravity = false;
-        _isDead = true;
-        canMove = false;
+        rb.velocity = Vector3.zero;
+        rb.useGravity = false;
+        isDead = true;
+        CanMove = false;
 
         if (explode)
         {
@@ -234,7 +234,7 @@ public class LightMazePlayer : Player
 
     public bool IsDead()
     {
-        return _isDead;
+        return isDead;
     }
 
 }

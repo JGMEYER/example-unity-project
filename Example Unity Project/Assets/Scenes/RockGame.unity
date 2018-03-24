@@ -801,7 +801,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f2f91b9357c28c4caa64fa2e93bde7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerPrefab: {fileID: 0}
   _rockSpawnerPrefab: {fileID: 114104536586402724, guid: 28d33f8296021d64aa8c19a9346ec3a8,
     type: 2}
   _victoryText: {fileID: 512217521}
@@ -1041,7 +1040,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 670aca9599888f14bab58d202aed94e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerNumber: 3
+  playerNumber: 3
   defaultMaterial: {fileID: 2100000, guid: a4f19a8c5eeeacf43b3f66f659427f7a, type: 2}
   shieldMaterial: {fileID: 2100000, guid: 3d1eaea3dacb03946869e5a854458ec8, type: 2}
   shieldDamage: 20
@@ -1397,7 +1396,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 670aca9599888f14bab58d202aed94e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerNumber: 1
+  playerNumber: 1
   defaultMaterial: {fileID: 2100000, guid: b0e1b9023ecfde447a4d32cd00468c04, type: 2}
   shieldMaterial: {fileID: 2100000, guid: 3d1eaea3dacb03946869e5a854458ec8, type: 2}
   shieldDamage: 20
@@ -1648,7 +1647,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 670aca9599888f14bab58d202aed94e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerNumber: 4
+  playerNumber: 4
   defaultMaterial: {fileID: 2100000, guid: 7752643fc36f6fb41b1c7f540761579c, type: 2}
   shieldMaterial: {fileID: 2100000, guid: 3d1eaea3dacb03946869e5a854458ec8, type: 2}
   shieldDamage: 20
@@ -2173,7 +2172,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 670aca9599888f14bab58d202aed94e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerNumber: 2
+  playerNumber: 2
   defaultMaterial: {fileID: 2100000, guid: 4d12e24059f8e514cb60c56e8b1f3f9c, type: 2}
   shieldMaterial: {fileID: 2100000, guid: 3d1eaea3dacb03946869e5a854458ec8, type: 2}
   shieldDamage: 20

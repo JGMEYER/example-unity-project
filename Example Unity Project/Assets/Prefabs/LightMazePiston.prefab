@@ -133,6 +133,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b944d66f15786d2469ff1362c396497a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  smooth: 5
-  minHeight: 0
-  maxHeight: 1
+  Smooth: 5
+  MinHeight: 0
+  MaxHeight: 1

@@ -5,19 +5,17 @@ using UnityEngine;
 public class LightMazeHatch : MonoBehaviour
 {
 
-    public float smooth = 0.5f;
-
     [SerializeField]
     private GameObject hatch;
     [SerializeField]
     private GameObject lazer;
 
-    bool _triggered = false;
-    bool _activated = false;
+    private bool triggered = false;
+    private bool activated = false;
 
     public void Update()
     {
-        if (_triggered && !_activated)
+        if (triggered && !activated)
         {
             Renderer lazerRenderer = lazer.GetComponent<Renderer>();
             ToggleOverTime tot = lazer.GetComponent<ToggleOverTime>();
@@ -31,7 +29,7 @@ public class LightMazeHatch : MonoBehaviour
                 hatch.transform.localScale = activatedHatchScale;
                 hatch.gameObject.SetActive(true);
 
-                _activated = true;
+                activated = true;
             }
             else
             {
@@ -44,10 +42,10 @@ public class LightMazeHatch : MonoBehaviour
     {
         ToggleOverTime tot = lazer.GetComponent<ToggleOverTime>();
 
-        if (!_triggered)
+        if (!triggered)
         {
             tot.BeginToggle();
-            _triggered = true;
+            triggered = true;
         }
     }
 

@@ -40,16 +40,16 @@ public class IceGameManager : GameManager<IcePlayer>
     // player join screen and a system to track number of players.
     void RemoveExtraPlayersFromScene()
     {
-        List<IcePlayer> players = new List<IcePlayer>(_players);
+        List<IcePlayer> activePlayers = new List<IcePlayer>(players);
 
         for (int i = 3; i >= numPlayers; i--)
         {
             IcePlayer playerToRemove = players[i];
-            players.RemoveAt(i);
+            activePlayers.RemoveAt(i);
             Destroy(players[i]);
         }
 
-        _players = players.ToArray();
+        players = activePlayers.ToArray();
     }
 
 }

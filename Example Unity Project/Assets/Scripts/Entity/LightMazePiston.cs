@@ -5,42 +5,42 @@ using UnityEngine;
 public class LightMazePiston : MonoBehaviour
 {
 
-    public float smooth = 1f;
-    public float minHeight = 0f;
-    public float maxHeight = 1f;
+    public float Smooth = 1f;
+    public float MinHeight = 0f;
+    public float MaxHeight = 1f;
 
-    private Vector3 _minScale;
-    private Vector3 _maxScale;
-    private Vector3 _targetScale;
+    private Vector3 minScale;
+    private Vector3 maxScale;
+    private Vector3 targetScale;
 
     void Start()
     {
         Vector3 startScale = transform.localScale;
 
         // Cylinder scales are weird
-        _minScale = new Vector3(startScale.x, minHeight / 2, startScale.z);
-        _maxScale = new Vector3(startScale.x, maxHeight / 2, startScale.z);
+        minScale = new Vector3(startScale.x, MinHeight / 2, startScale.z);
+        maxScale = new Vector3(startScale.x, MaxHeight / 2, startScale.z);
 
-        transform.localScale = _maxScale;
+        transform.localScale = maxScale;
     }
 
     void Update()
     {
         CheckTarget();
-        Vector3 newScale = Vector3.Lerp(transform.localScale, _targetScale, smooth * Time.deltaTime);
+        Vector3 newScale = Vector3.Lerp(transform.localScale, targetScale, Smooth * Time.deltaTime);
         transform.position += newScale - transform.localScale;
         transform.localScale = newScale;
     }
 
     void CheckTarget()
     {
-        if (transform.localScale == _minScale)
+        if (transform.localScale == minScale)
         {
-            _targetScale = _maxScale;
+            targetScale = maxScale;
         }
-        else if (transform.localScale == _maxScale)
+        else if (transform.localScale == maxScale)
         {
-            _targetScale = _minScale;
+            targetScale = minScale;
         }
     }
 

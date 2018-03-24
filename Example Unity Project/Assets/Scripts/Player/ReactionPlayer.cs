@@ -24,10 +24,10 @@ public class ReactionPlayer : Player
 
     private void HandleInput()
     {
-        if (_controls.GetUpKeyDown())
+        if (controls.GetUpKeyDown())
         {
             float pressTime = Time.timeSinceLevelLoad;
-            reactionGameManager.Grab(_playerNumber, pressTime);
+            reactionGameManager.Grab(playerNumber, pressTime);
         }
     }
 

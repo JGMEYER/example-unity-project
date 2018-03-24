@@ -13,8 +13,7 @@ public class PlayerKeyboardControls : IPlayerControls
     public KeyCode DownKey { get; private set; }
     public KeyCode RightKey { get; private set; }
 
-    public PlayerKeyboardControls(KeyCode upKey, KeyCode leftKey, KeyCode downKey,
-                          KeyCode rightKey)
+    public PlayerKeyboardControls(KeyCode upKey, KeyCode leftKey, KeyCode downKey, KeyCode rightKey)
     {
         UpKey = upKey;
         LeftKey = leftKey;

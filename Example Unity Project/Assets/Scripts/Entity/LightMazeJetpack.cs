@@ -5,31 +5,25 @@ using UnityEngine;
 public class LightMazeJetpack : MonoBehaviour
 {
 
-    [Header("Inputs")]
-    public KeyCode upKey;
-    public KeyCode leftKey;
-    public KeyCode rightKey;
-
     [Header("Movement")]
-    public float translationZ = -3f;
-    public float horizontalSpeed = 3f;
-    public float verticalSpeed = 3f;
+    public float HorizontalSpeed = 3f;
+    public float VerticalSpeed = 3f;
 
-    private bool _equipped = false;
+    private bool equipped = false;
 
     public Vector3 GetVelocity(float inputHorizontal)
     {
-        return new Vector3(inputHorizontal * horizontalSpeed, verticalSpeed, 0);
+        return new Vector3(inputHorizontal * HorizontalSpeed, VerticalSpeed, 0);
     }
 
     public void SetEquipped(bool equipped)
     {
-        _equipped = equipped;
+        this.equipped = equipped;
     }
 
     public bool IsEquipped()
     {
-        return _equipped;
+        return equipped;
     }
 
 }

@@ -6,11 +6,11 @@ using UnityEngine;
 public class PlayerJoystickControls : IPlayerControls
 {
 
-    private int _joystickNumber;
+    private int joystickNumber;
 
     public PlayerJoystickControls(int joystickNumber)
     {
-        _joystickNumber = joystickNumber;
+        this.joystickNumber = joystickNumber;
     }
 
     // ==============
@@ -19,7 +19,7 @@ public class PlayerJoystickControls : IPlayerControls
 
     private String GetJoystickAxisName(String axisName)
     {
-        return "Joystick" + _joystickNumber + axisName;
+        return "Joystick" + joystickNumber + axisName;
     }
 
     private float GetAxis(String axisName)
@@ -38,7 +38,7 @@ public class PlayerJoystickControls : IPlayerControls
 
     private KeyCode GetJoystickButtonKeyCode(int buttonNum)
     {
-        String keyName = "Joystick" + _joystickNumber + "Button" + buttonNum;
+        String keyName = "Joystick" + joystickNumber + "Button" + buttonNum;
         return (KeyCode)System.Enum.Parse(typeof(KeyCode), keyName);
     }
 

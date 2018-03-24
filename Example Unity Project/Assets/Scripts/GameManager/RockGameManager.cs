@@ -29,7 +29,7 @@ public class RockGameManager : GameManager<RockPlayer>
     {
         base.Start();
 
-        _alivePlayers = (RockPlayer[])_players.Clone();
+        _alivePlayers = (RockPlayer[])players.Clone();
         InitializeSpawners();
     }
 
@@ -59,7 +59,7 @@ public class RockGameManager : GameManager<RockPlayer>
             pattern[i] = delay;
         }
 
-        foreach (RockPlayer player in _players)
+        foreach (RockPlayer player in players)
         {
             Vector3 playerPos = player.transform.position;
 
@@ -74,7 +74,7 @@ public class RockGameManager : GameManager<RockPlayer>
     RockPlayer[] RemoveKilledPlayers()
     {
         RockPlayer[] killedPlayers = _alivePlayers.Where(player => player.IsDead()).ToArray();
-        _alivePlayers = _players.Where(player => !player.IsDead()).ToArray();
+        _alivePlayers = players.Where(player => !player.IsDead()).ToArray();
 
         return killedPlayers;
     }

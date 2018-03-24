@@ -6,18 +6,18 @@ public class Player : MonoBehaviour
 {
 
     [SerializeField]
-    protected PlayerNumber _playerNumber;
+    protected PlayerNumber playerNumber;
 
-    protected IPlayerControls _controls { get; private set; }
+    protected IPlayerControls controls { get; private set; }
 
     public void Awake()
     {
-        _controls = GameControlsManager.Instance.PlayerControls(_playerNumber);
+        controls = GameControlsManager.Instance.PlayerControls(playerNumber);
     }
 
     public void OnValidate()
     {
-        if (_playerNumber == 0)
+        if (playerNumber == 0)
         {
             throw new System.ArgumentException("Player is missing PlayerNumber assignment.");
         }

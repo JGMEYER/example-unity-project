@@ -5,6 +5,6 @@ using UnityEngine;
 public class LightMazeRowData : MonoBehaviour
 {
 
-    public BitArray rowMap = null;
+    public BitArray RowMap = null;
 
 }

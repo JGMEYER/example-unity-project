@@ -5,18 +5,18 @@ public class LightMazeCamera : MonoBehaviour
 {
 
     [SerializeField]
-    private LightMazeMap _map;
-    private Camera _camera;
+    private LightMazeMap map;
+    private Camera mainCamera;
 
     void Start()
     {
-        _camera = GetComponent<Camera>();
+        mainCamera = GetComponent<Camera>();
     }
 
     void Update()
     {
-        Vector3 cameraPos = _camera.transform.position;
-        _camera.transform.position = new Vector3((float)_map.mapWidth / 2 - 0.5f, cameraPos.y, cameraPos.z);
+        Vector3 cameraPos = mainCamera.transform.position;
+        mainCamera.transform.position = new Vector3((float)map.MapWidth / 2 - 0.5f, cameraPos.y, cameraPos.z);
     }
 
 }

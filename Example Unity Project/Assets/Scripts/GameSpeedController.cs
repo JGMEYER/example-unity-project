@@ -5,22 +5,15 @@ using UnityEngine;
 public class GameSpeedController : MonoBehaviour
 {
 
-    public bool controlSpeed = true;
+    public bool ControlSpeed = true;
     [Range(0.25f, 4f)]
-    public float timeScale = 1f;
+    public float TimeScale = 1f;
 
-    float _lastTimeScale;
-
-    private void Start()
+    void OnValidate()
     {
-        _lastTimeScale = timeScale;
-    }
-
-    void Update()
-    {
-        if (controlSpeed = true && _lastTimeScale != timeScale)
+        if (ControlSpeed)
         {
-            Time.timeScale = timeScale;
+            Time.timeScale = TimeScale;
         }
     }
 
