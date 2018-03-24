@@ -10,6 +10,8 @@ public class ReactionGameManager : GameManager<ReactionPlayer>
     private ReactionSphere ReactionSphere;
     [SerializeField]
     private Text WinningPlayerText;
+    [SerializeField]
+    private ReactionToast ReactionToast;
 
     public int NumPlayers;
     public float MinWait;
@@ -101,6 +103,7 @@ public class ReactionGameManager : GameManager<ReactionPlayer>
         allowGrab = true;
         currentTime = Time.timeSinceLevelLoad;
         ReactionSphere.SetAsStartColor();
+        ReactionToast.flingToast();
         Debug.Log("Grab allowed");
     }
 
@@ -115,5 +118,6 @@ public class ReactionGameManager : GameManager<ReactionPlayer>
     {
         yield return new WaitForSeconds(BetweenRoundTime);
         roundActive = false;
+        ReactionToast.resetToast();
     }
 }
