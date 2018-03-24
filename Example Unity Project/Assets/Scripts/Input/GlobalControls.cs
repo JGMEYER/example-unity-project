@@ -1,17 +1,20 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GlobalControls : Object {
+public class GlobalControls : Object
+{
 
-	public KeyCode ExitKey { get; private set; }
+    public KeyCode ExitKey { get; private set; }
 
-	public GlobalControls(KeyCode exitKey) {
-		ExitKey = exitKey;
-	}
+    public GlobalControls(KeyCode exitKey)
+    {
+        ExitKey = exitKey;
+    }
 
-	public bool GetExitKeyDown() {
-		return Input.GetKeyDown(ExitKey);
-	}
+    public bool GetExitKeyDown()
+    {
+        return Input.GetKeyDown(ExitKey);
+    }
 
 }

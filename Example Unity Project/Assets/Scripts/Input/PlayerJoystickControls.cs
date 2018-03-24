@@ -3,90 +3,106 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerJoystickControls : IPlayerControls {
+public class PlayerJoystickControls : IPlayerControls
+{
 
-	private int _joystickNumber;
+    private int _joystickNumber;
 
-	public PlayerJoystickControls(int joystickNumber) {
-		_joystickNumber = joystickNumber;
-	}
+    public PlayerJoystickControls(int joystickNumber)
+    {
+        _joystickNumber = joystickNumber;
+    }
 
-	// ==============
-	// Axes Helpers
-	// ==============
+    // ==============
+    // Axes Helpers
+    // ==============
 
-	private String GetJoystickAxisName(String axisName) {
-		return "Joystick" + _joystickNumber + axisName;
-	}
+    private String GetJoystickAxisName(String axisName)
+    {
+        return "Joystick" + _joystickNumber + axisName;
+    }
 
-	private float GetAxis(String axisName) {
-		return Input.GetAxis(GetJoystickAxisName(axisName));
-	}
+    private float GetAxis(String axisName)
+    {
+        return Input.GetAxis(GetJoystickAxisName(axisName));
+    }
 
-	private float GetAxisRaw(String axisName) {
-		return Input.GetAxisRaw(GetJoystickAxisName(axisName));
-	}
+    private float GetAxisRaw(String axisName)
+    {
+        return Input.GetAxisRaw(GetJoystickAxisName(axisName));
+    }
 
-	// ================
-	// Button Helpers
-	// ================
+    // ================
+    // Button Helpers
+    // ================
 
-	private KeyCode GetJoystickButtonKeyCode(int buttonNum) {
-		String keyName = "Joystick" + _joystickNumber + "Button" + buttonNum;
-		return (KeyCode)System.Enum.Parse(typeof(KeyCode), keyName);
-	}
+    private KeyCode GetJoystickButtonKeyCode(int buttonNum)
+    {
+        String keyName = "Joystick" + _joystickNumber + "Button" + buttonNum;
+        return (KeyCode)System.Enum.Parse(typeof(KeyCode), keyName);
+    }
 
-	private bool GetButton(int buttonNum) {
-		KeyCode keyCode = GetJoystickButtonKeyCode(buttonNum);
-		return Input.GetKey(keyCode);
-	}
+    private bool GetButton(int buttonNum)
+    {
+        KeyCode keyCode = GetJoystickButtonKeyCode(buttonNum);
+        return Input.GetKey(keyCode);
+    }
 
-	private bool GetButtonDown(int buttonNum) {
-		KeyCode keyCode = GetJoystickButtonKeyCode(buttonNum);
-		return Input.GetKeyDown(keyCode);
-	}
+    private bool GetButtonDown(int buttonNum)
+    {
+        KeyCode keyCode = GetJoystickButtonKeyCode(buttonNum);
+        return Input.GetKeyDown(keyCode);
+    }
 
-	// ===================
-	// Interface Methods
-	// ===================
+    // ===================
+    // Interface Methods
+    // ===================
 
-	float IPlayerControls.GetMovementHorizontal() {
-		float leftAxis = GetAxisRaw("LeftHorizontal");
-		float dPadAxis = GetAxisRaw("DPadHorizontal");
+    float IPlayerControls.GetMovementHorizontal()
+    {
+        float leftAxis = GetAxisRaw("LeftHorizontal");
+        float dPadAxis = GetAxisRaw("DPadHorizontal");
 
-		return Mathf.Clamp(leftAxis + dPadAxis, -1f, 1f);
-	}
+        return Mathf.Clamp(leftAxis + dPadAxis, -1f, 1f);
+    }
 
-	float IPlayerControls.GetMovementVertical() {
-		Debug.Log(GetAxisRaw("LeftVertical"));
-		float leftAxis = GetAxisRaw("LeftVertical");
-		float dPadAxis = GetAxisRaw("DPadVertical");
+    float IPlayerControls.GetMovementVertical()
+    {
+        Debug.Log(GetAxisRaw("LeftVertical"));
+        float leftAxis = GetAxisRaw("LeftVertical");
+        float dPadAxis = GetAxisRaw("DPadVertical");
 
-		return Mathf.Clamp(leftAxis + dPadAxis, -1f, 1f);
-	}
+        return Mathf.Clamp(leftAxis + dPadAxis, -1f, 1f);
+    }
 
-	bool IPlayerControls.GetSubmitDown() {
-		return GetButtonDown(0);
-	}
+    bool IPlayerControls.GetSubmitDown()
+    {
+        return GetButtonDown(0);
+    }
 
-	bool IPlayerControls.GetJump() {
-		return GetButton(0);
-	}
+    bool IPlayerControls.GetJump()
+    {
+        return GetButton(0);
+    }
 
-	bool IPlayerControls.GetUpKey() {
-		return GetAxis("DPadVertical") > 0;
-	}
+    bool IPlayerControls.GetUpKey()
+    {
+        return GetAxis("DPadVertical") > 0;
+    }
 
-	bool IPlayerControls.GetUpKeyDown() {
-		return GetAxis("DPadVertical") > 0;  // incorrect event!
-	}
+    bool IPlayerControls.GetUpKeyDown()
+    {
+        return GetAxis("DPadVertical") > 0;  // incorrect event!
+    }
 
-	bool IPlayerControls.GetDownKey() {
-		return GetAxis("DPadVertical") < 0;
-	}
+    bool IPlayerControls.GetDownKey()
+    {
+        return GetAxis("DPadVertical") < 0;
+    }
 
-	bool IPlayerControls.GetDownKeyDown() {
-		return GetAxis("DPadVertical") < 0;  // incorrect event!
-	}
+    bool IPlayerControls.GetDownKeyDown()
+    {
+        return GetAxis("DPadVertical") < 0;  // incorrect event!
+    }
 
 }

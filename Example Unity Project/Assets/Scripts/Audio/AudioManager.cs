@@ -1,8 +1,9 @@
-﻿using UnityEngine.Audio;
+using UnityEngine.Audio;
 using System;
 using UnityEngine;
 
-public class AudioManager : MonoBehaviour {
+public class AudioManager : MonoBehaviour
+{
 
     // To play sound
     // FindObjectOfType<AudioManager>().Play("SoundName");
@@ -11,8 +12,10 @@ public class AudioManager : MonoBehaviour {
     public bool mute = false;
     public Sound[] sounds;
 
-	void Awake () {
-		foreach (Sound s in sounds) {
+    void Awake()
+    {
+        foreach (Sound s in sounds)
+        {
             s.source = gameObject.AddComponent<AudioSource>();
             s.source.clip = s.clip;
 
@@ -20,18 +23,22 @@ public class AudioManager : MonoBehaviour {
             s.source.pitch = s.pitch;
             s.source.loop = s.loop;
         }
-	}
+    }
 
-    void Start() {
+    void Start()
+    {
         FindObjectOfType<AudioManager>().Play("Theme");
     }
-	
-	public void Play(string name) {
+
+    public void Play(string name)
+    {
         Sound s = Array.Find(sounds, sound => sound.name == name);
-        if (s == null || mute == true) {
+        if (s == null || mute == true)
+        {
             return;
         }
         s.source.Play();
         //Debug.Log("Sound played: " + name);
     }
+
 }

@@ -1,8 +1,9 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ReactionPlayer : Player {
+public class ReactionPlayer : Player
+{
 
     [SerializeField]
     private ReactionGameManager reactionGameManager;
@@ -11,19 +12,23 @@ public class ReactionPlayer : Player {
 
     public int numPlayers;
 
-    void Start () {
-        
-	}
+    void Start()
+    {
 
-    void Update () {
+    }
+
+    void Update()
+    {
         HandleInput();
     }
 
     private void HandleInput()
     {
-        if (_controls.GetUpKeyDown()) {
+        if (_controls.GetUpKeyDown())
+        {
             float pressTime = Time.timeSinceLevelLoad;
             reactionGameManager.Grab(_playerNumber, pressTime);
         }
     }
+
 }

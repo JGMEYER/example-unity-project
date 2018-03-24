@@ -1,10 +1,11 @@
-﻿public enum InputCommand {
-	// Global commands
-	EXIT,
+public enum InputCommand
+{
+    // Global commands
+    EXIT,
 
-	// Player commands
-	UP,
-	LEFT,
-	DOWN,
-	RIGHT,
+    // Player commands
+    UP,
+    LEFT,
+    DOWN,
+    RIGHT,
 }

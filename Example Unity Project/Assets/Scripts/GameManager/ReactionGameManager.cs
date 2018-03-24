@@ -1,9 +1,10 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ReactionGameManager : GameManager<ReactionPlayer> {
+public class ReactionGameManager : GameManager<ReactionPlayer>
+{
 
     public int numPlayers;
     private bool gameOver;
@@ -19,52 +20,64 @@ public class ReactionGameManager : GameManager<ReactionPlayer> {
     [SerializeField]
     private Text winningPlayerText;
 
-	new void Awake() {
-		base.Awake();
+    new void Awake()
+    {
+        base.Awake();
 
-		gameOver = false;
-		allowGrab = false;
-		roundActive = false;
-		playerTimes = new Dictionary<PlayerNumber, float>();
-	}
+        gameOver = false;
+        allowGrab = false;
+        roundActive = false;
+        playerTimes = new Dictionary<PlayerNumber, float>();
+    }
 
-	new void Start() {
-		base.Start();
+    new void Start()
+    {
+        base.Start();
         winningPlayerText.text = "";
         StartRound();
     }
 
-	new void Update() {
-		base.Update();
+    new void Update()
+    {
+        base.Update();
 
-		if (!roundActive) {
+        if (!roundActive)
+        {
             StartRound();
-		}
-		if (playerTimes.Count == numPlayers) {
-			allowGrab = false;
-			EndRound();
-		}
-	}
+        }
 
-    public void Grab(PlayerNumber playerNumber, float timePressed) {
-        if (allowGrab && (!playerTimes.ContainsKey(playerNumber))) {
+        if (playerTimes.Count == numPlayers)
+        {
+            allowGrab = false;
+            EndRound();
+        }
+    }
+
+    public void Grab(PlayerNumber playerNumber, float timePressed)
+    {
+        if (allowGrab && (!playerTimes.ContainsKey(playerNumber)))
+        {
             Debug.Log("Grab! " + playerNumber);
             playerTimes.Add(playerNumber, timePressed);
         }
     }
 
-    void StartRound() {
+    void StartRound()
+    {
         Debug.Log("Round started");
         roundActive = true;
         reactionSphere.SetAsWaitColor();
         StartCoroutine(WaitForGrab());
     }
 
-    void EndRound() {
+    void EndRound()
+    {
         float minTime = float.MaxValue;
         PlayerNumber player = PlayerNumber.ONE;
-        foreach (KeyValuePair<PlayerNumber, float> pair in playerTimes) {
-            if (pair.Value < minTime) {
+        foreach (KeyValuePair<PlayerNumber, float> pair in playerTimes)
+        {
+            if (pair.Value < minTime)
+            {
                 minTime = pair.Value;
                 player = pair.Key;
             }
@@ -78,7 +91,8 @@ public class ReactionGameManager : GameManager<ReactionPlayer> {
     }
 
 
-    IEnumerator WaitForGrab() {
+    IEnumerator WaitForGrab()
+    {
         float waitTime = Random.Range(minWait, maxWait);
         Debug.Log("Waiting for " + waitTime + " seconds");
         yield return new WaitForSeconds(waitTime);
@@ -88,13 +102,15 @@ public class ReactionGameManager : GameManager<ReactionPlayer> {
         Debug.Log("Grab allowed");
     }
 
-    void EndGame(PlayerNumber playerNumber) {
+    void EndGame(PlayerNumber playerNumber)
+    {
         Debug.Log("Player " + playerNumber + "has won the game!");
         gameOver = true;
-		StartCoroutine(EndGameAfterDelay());
+        StartCoroutine(EndGameAfterDelay());
     }
 
-    IEnumerator WaitBetweenRounds() {
+    IEnumerator WaitBetweenRounds()
+    {
         yield return new WaitForSeconds(betweenRoundTime);
         roundActive = false;
     }

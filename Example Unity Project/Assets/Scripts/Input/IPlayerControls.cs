@@ -2,22 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IPlayerControls {
+public interface IPlayerControls
+{
 
-	float GetMovementHorizontal();
+    float GetMovementHorizontal();
 
-	float GetMovementVertical();
+    float GetMovementVertical();
 
-	bool GetSubmitDown();
+    bool GetSubmitDown();
 
-	bool GetJump();
+    bool GetJump();
 
-	bool GetUpKey();
+    bool GetUpKey();
 
-	bool GetUpKeyDown();
+    bool GetUpKeyDown();
 
-	bool GetDownKey();
+    bool GetDownKey();
 
-	bool GetDownKeyDown();
+    bool GetDownKeyDown();
 
 }
