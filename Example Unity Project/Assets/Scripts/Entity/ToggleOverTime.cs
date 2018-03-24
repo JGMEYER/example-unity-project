@@ -5,45 +5,45 @@ using UnityEngine;
 public class ToggleOverTime : MonoBehaviour
 {
 
-    public float time = 3f;
-    public float numToggles = 2f;
+    public float ToggleDuration = 3f;
+    public float ToggleCount = 2f;
 
-    private bool _started = false;
-    private float _interval;
-    private float _timer;
+    private bool started = false;
+    private float interval;
+    private float timer;
 
     void Start()
     {
-        _timer = time;
-        _interval = time / numToggles / 2;
+        timer = ToggleDuration;
+        interval = ToggleDuration / ToggleCount / 2;
     }
 
     void Update()
     {
-        if (_started && _timer > 0f)
+        if (started && timer > 0f)
         {
-            _timer -= Time.deltaTime;
+            timer -= Time.deltaTime;
 
-            if (_timer < 0f)
+            if (timer < 0f)
             {
-                _timer = 0f;
+                timer = 0f;
             }
         }
     }
 
     public void BeginToggle()
     {
-        _started = true;
+        started = true;
     }
 
     public bool IsFinished()
     {
-        return _timer <= 0f;
+        return timer <= 0f;
     }
 
     public bool ToggleIsTrue()
     {
-        return Mathf.Floor(_timer / _interval) % 2 == 0;
+        return (int)Mathf.Floor(timer / interval) % 2 == 0;
     }
 
 }

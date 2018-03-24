@@ -5,32 +5,32 @@ using UnityEngine;
 public class ThrownItem : MonoBehaviour
 {
 
-    private float _targetX;
-    private float _distanceZ;
-    private float _amplitude;
-    private float _speed;
-    private float _a;  // width modifier for parabola
-    private float _currentZ;
+    private float TargetX;
+    private float DistanceZ;
+    private float Amplitude;
+    private float Speed;
+    private float A;  // width modifier for parabola
+    private float CurrentZ;
 
     void Update()
     {
-        _currentZ -= Time.deltaTime * _speed;
+        CurrentZ -= Time.deltaTime * Speed;
 
-        float y = -1 * _a * Mathf.Pow(_currentZ - (_distanceZ / 2), 2) + _amplitude;
-        transform.position = new Vector3(_targetX, y, _currentZ);
+        float y = -1 * A * Mathf.Pow(CurrentZ - (DistanceZ / 2), 2) + Amplitude;
+        transform.position = new Vector3(TargetX, y, CurrentZ);
     }
 
     public void Initialize(float targetX, float distanceZ, float amplitude, float speed)
     {
-        _targetX = targetX;
-        _distanceZ = distanceZ;
-        _amplitude = amplitude;
-        _speed = speed;
+        TargetX = targetX;
+        DistanceZ = distanceZ;
+        Amplitude = amplitude;
+        Speed = speed;
 
         // solve for A using (0, 0, 0)
-        _a = -1 * (-1 * _amplitude / Mathf.Pow(-distanceZ / 2, 2));
+        A = -1 * (-1 * Amplitude / Mathf.Pow(-distanceZ / 2, 2));
 
-        _currentZ = _distanceZ;
+        CurrentZ = DistanceZ;
     }
 
 }

@@ -6,27 +6,27 @@ public class RockThrowSpawner : MonoBehaviour
 {
 
     [SerializeField]
-    private ThrownItem _thrownRockPrefab;
+    private ThrownItem thrownRockPrefab;
 
-    public float rockThrowDistanceZ = 15f;
-    public float rockThrowAmplitude = 15f;
-    public float rockThrowSpeed = 4f;
+    public float RockThrowDistanceZ = 15f;
+    public float RockThrowAmplitude = 15f;
+    public float RockThrowSpeed = 4f;
 
-    private float[] _pattern;
-    private int _currentPattern = -1;
-    private float _timeSinceLastSpawn;
-    private float _nextSpawn;
-    private bool _done = false;
+    private float[] pattern;
+    private int currentPattern = -1;
+    private float timeSinceLastSpawn;
+    private float nextSpawn;
+    private bool done = false;
 
     void Update()
     {
-        if (_pattern == null) return;
+        if (pattern == null) return;
 
-        if (!_done)
+        if (!done)
         {
-            _timeSinceLastSpawn += Time.deltaTime;
+           timeSinceLastSpawn += Time.deltaTime;
 
-            if (_timeSinceLastSpawn > _nextSpawn)
+            if (timeSinceLastSpawn > nextSpawn)
             {
                 SpawnRock();
                 NextTimer();
@@ -36,8 +36,8 @@ public class RockThrowSpawner : MonoBehaviour
 
     void SpawnRock()
     {
-        ThrownItem thrownRock = Instantiate(_thrownRockPrefab) as ThrownItem;
-        thrownRock.GetComponent<ThrownItem>().Initialize(transform.position.x, rockThrowDistanceZ, rockThrowAmplitude, rockThrowSpeed);
+        ThrownItem thrownRock = Instantiate(thrownRockPrefab) as ThrownItem;
+        thrownRock.GetComponent<ThrownItem>().Initialize(transform.position.x, RockThrowDistanceZ, RockThrowAmplitude, RockThrowSpeed);
         thrownRock.transform.parent = transform;
 
         FindObjectOfType<AudioManager>().Play("Throw");
@@ -45,27 +45,27 @@ public class RockThrowSpawner : MonoBehaviour
 
     void NextTimer()
     {
-        if (_currentPattern + 1 >= _pattern.Length)
+        if (currentPattern + 1 >= pattern.Length)
         {
-            _nextSpawn = float.MaxValue;
-            _done = true;
+            nextSpawn = float.MaxValue;
+            done = true;
             return;
         }
 
-        _timeSinceLastSpawn = 0;
-        _currentPattern += 1;
-        _nextSpawn = _pattern[_currentPattern];
+        timeSinceLastSpawn = 0;
+        currentPattern += 1;
+        nextSpawn = pattern[currentPattern];
     }
 
     public void Initialize(float[] pattern)
     {
-        _pattern = pattern;
+        this.pattern = pattern;
         NextTimer();
     }
 
     public void Stop()
     {
-        _done = true;
+        done = true;
 
         foreach (ThrownItem activeRock in GetComponentsInChildren<ThrownItem>())
         {

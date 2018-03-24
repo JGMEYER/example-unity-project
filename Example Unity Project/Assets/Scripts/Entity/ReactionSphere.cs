@@ -5,32 +5,33 @@ using UnityEngine;
 public class ReactionSphere : MonoBehaviour
 {
 
+    public Color StartColor = Color.green;
+    public Color EndColor = Color.red;
+    public Color WaitColor = Color.yellow;
+
     private Material material;
-    public Color startColor = Color.green;
-    public Color endColor = Color.red;
-    public Color waitColor = Color.yellow;
 
     void Start()
     {
         material = GetComponent<Renderer>().material;
-        material.color = waitColor;
+        material.color = WaitColor;
     }
 
     public void SetAsStartColor()
     {
-        material.color = startColor;
+        material.color = StartColor;
     }
 
     public void SetAsEndColor()
     {
-        material.color = endColor;
+        material.color = EndColor;
     }
 
     public void SetAsWaitColor()
     {
         if (material != null)
         {
-            material.color = waitColor;
+            material.color = WaitColor;
         }
     }
 

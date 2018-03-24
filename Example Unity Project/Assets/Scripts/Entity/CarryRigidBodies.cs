@@ -5,26 +5,26 @@ using UnityEngine;
 public class CarryRigidBodies : MonoBehaviour
 {
 
-    public List<Rigidbody> rigidbodies = new List<Rigidbody>();
+    public List<Rigidbody> RigidBodies = new List<Rigidbody>();
 
-    private Vector3 _lastPosition;
-    private Transform _transform;
+    private Vector3 lastPosition;
+    new private Transform transform;
 
     void Start()
     {
-        _transform = transform;
-        _lastPosition = _transform.position;
+        transform = GetComponent<Transform>();
+        lastPosition = transform.position;
     }
 
     void LateUpdate()
     {
-        foreach (Rigidbody rb in rigidbodies)
+        foreach (Rigidbody rb in RigidBodies)
         {
-            Vector3 velocity = (_transform.position - _lastPosition);
-            rb.transform.Translate(velocity, _transform);
+            Vector3 velocity = (transform.position - lastPosition);
+            rb.transform.Translate(velocity, transform);
         }
 
-        _lastPosition = _transform.position;
+        lastPosition = transform.position;
     }
 
     void OnTriggerEnter(Collider other)
@@ -47,17 +47,17 @@ public class CarryRigidBodies : MonoBehaviour
 
     void Add(Rigidbody rb)
     {
-        if (!rigidbodies.Contains(rb))
+        if (!RigidBodies.Contains(rb))
         {
-            rigidbodies.Add(rb);
+            RigidBodies.Add(rb);
         }
     }
 
     void Remove(Rigidbody rb)
     {
-        if (rigidbodies.Contains(rb))
+        if (RigidBodies.Contains(rb))
         {
-            rigidbodies.Remove(rb);
+            RigidBodies.Remove(rb);
         }
     }
 

@@ -9,12 +9,14 @@ public class AudioManager : MonoBehaviour
     // FindObjectOfType<AudioManager>().Play("SoundName");
 
 
-    public bool mute = false;
-    public Sound[] sounds;
+    [UnityEngine.Serialization.FormerlySerializedAs("mute")]
+    public bool Mute = false;
+    [UnityEngine.Serialization.FormerlySerializedAs("sounds")]
+    public Sound[] Sounds;
 
     void Awake()
     {
-        foreach (Sound s in sounds)
+        foreach (Sound s in Sounds)
         {
             s.source = gameObject.AddComponent<AudioSource>();
             s.source.clip = s.clip;
@@ -32,8 +34,8 @@ public class AudioManager : MonoBehaviour
 
     public void Play(string name)
     {
-        Sound s = Array.Find(sounds, sound => sound.name == name);
-        if (s == null || mute == true)
+        Sound s = Array.Find(Sounds, sound => sound.name == name);
+        if (s == null || Mute == true)
         {
             return;
         }

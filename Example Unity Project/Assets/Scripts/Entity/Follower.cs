@@ -5,13 +5,13 @@ using UnityEngine;
 public class Follower : MonoBehaviour
 {
 
-    public GameObject targetObject;
-    public Vector3 offsetFromObject;
+    public GameObject TargetObject;
+    public Vector3 OffsetFromObject;
 
     void Update()
     {
-        Vector3 targetPosition = targetObject.transform.position;
-        transform.position = targetPosition + offsetFromObject;
+        Vector3 targetPosition = TargetObject.transform.position;
+        transform.position = targetPosition + OffsetFromObject;
     }
 
 }
