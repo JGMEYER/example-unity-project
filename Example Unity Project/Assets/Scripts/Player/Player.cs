@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
 
     protected void Awake()
     {
-        controls = GameControlsManager.Instance.PlayerControls(playerNumber);
+        controls = InputManager.Instance.PlayerControls(playerNumber);
     }
 
     protected void OnValidate()

@@ -6,11 +6,11 @@ using UnityEngine;
 public class PlayerJoystickControls : IPlayerControls
 {
 
-    private int joystickNumber;
+    public int JoystickNumber { get; private set;}
 
     public PlayerJoystickControls(int joystickNumber)
     {
-        this.joystickNumber = joystickNumber;
+        JoystickNumber = joystickNumber;
     }
 
     // ==============
@@ -19,7 +19,7 @@ public class PlayerJoystickControls : IPlayerControls
 
     private String GetJoystickAxisName(String axisName)
     {
-        return "Joystick" + joystickNumber + axisName;
+        return "Joystick" + JoystickNumber + axisName;
     }
 
     private float GetAxis(String axisName)
@@ -38,7 +38,7 @@ public class PlayerJoystickControls : IPlayerControls
 
     private KeyCode GetJoystickButtonKeyCode(int buttonNum)
     {
-        String keyName = "Joystick" + joystickNumber + "Button" + buttonNum;
+        String keyName = "Joystick" + JoystickNumber + "Button" + buttonNum;
         return (KeyCode)System.Enum.Parse(typeof(KeyCode), keyName);
     }
 
@@ -79,6 +79,11 @@ public class PlayerJoystickControls : IPlayerControls
         return GetButtonDown(0);
     }
 
+    bool IPlayerControls.GetJoinGameDown()
+    {
+        return GetButtonDown(0);
+    }
+
     bool IPlayerControls.GetJump()
     {
         return GetButton(0);
@@ -102,6 +107,11 @@ public class PlayerJoystickControls : IPlayerControls
     bool IPlayerControls.GetDownKeyDown()
     {
         return GetAxis("DPadVertical") < 0;  // incorrect event!
+    }
+
+    string IPlayerControls.GetJoinGameKeyName()
+    {
+        return "(A)";
     }
 
 }

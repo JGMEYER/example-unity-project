@@ -77,7 +77,7 @@ public class ReactionGameManager : GameManager<ReactionPlayer>
     private void EndRound()
     {
         float minTime = float.MaxValue;
-        PlayerNumber player = PlayerNumber.ONE;
+        PlayerNumber player = PlayerNumber.One;
         foreach (KeyValuePair<PlayerNumber, float> pair in playerTimes)
         {
             if (pair.Value < minTime)

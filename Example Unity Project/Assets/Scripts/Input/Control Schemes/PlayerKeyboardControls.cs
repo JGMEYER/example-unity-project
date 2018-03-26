@@ -6,6 +6,8 @@ using UnityEngine;
 public class PlayerKeyboardControls : IPlayerControls
 {
 
+    public KeyboardConfigNumber KeyboardConfigNumber { get; private set; }
+
     // Only UI should pull these values. Players should call included methods
     // in order to keep all player input logic controller agnostic.
     public KeyCode UpKey { get; private set; }
@@ -13,8 +15,10 @@ public class PlayerKeyboardControls : IPlayerControls
     public KeyCode DownKey { get; private set; }
     public KeyCode RightKey { get; private set; }
 
-    public PlayerKeyboardControls(KeyCode upKey, KeyCode leftKey, KeyCode downKey, KeyCode rightKey)
+    public PlayerKeyboardControls(KeyboardConfigNumber keyboardConfigNumber, KeyCode upKey, KeyCode leftKey, KeyCode downKey, KeyCode rightKey)
     {
+        KeyboardConfigNumber = keyboardConfigNumber;
+
         UpKey = upKey;
         LeftKey = leftKey;
         DownKey = downKey;
@@ -58,6 +62,11 @@ public class PlayerKeyboardControls : IPlayerControls
         return Input.GetKeyDown(KeyCode.Return);
     }
 
+    bool IPlayerControls.GetJoinGameDown()
+    {
+        return Input.GetKeyDown(UpKey);
+    }
+
     bool IPlayerControls.GetJump()
     {
         return Input.GetKey(UpKey);
@@ -83,4 +92,8 @@ public class PlayerKeyboardControls : IPlayerControls
         return Input.GetKeyDown(DownKey);
     }
 
+    string IPlayerControls.GetJoinGameKeyName()
+    {
+        return UpKey.ToString();
+    }
 }

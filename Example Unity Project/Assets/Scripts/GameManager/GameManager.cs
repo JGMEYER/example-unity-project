@@ -26,7 +26,7 @@ public class GameManager<P> : MonoBehaviour where P : Player
             instance = this;
         }
 
-        globalControls = GameControlsManager.Instance.GlobalControls();
+        globalControls = InputManager.Instance.GlobalControls();
     }
 
     protected void Start()

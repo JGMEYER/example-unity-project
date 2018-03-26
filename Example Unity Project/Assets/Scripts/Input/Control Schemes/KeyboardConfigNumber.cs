@@ -1,4 +1,4 @@
-public enum PlayerNumber
+﻿public enum KeyboardConfigNumber
 {
     One = 1,
     Two = 2,
