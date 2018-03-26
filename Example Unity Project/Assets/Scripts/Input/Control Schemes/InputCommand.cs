@@ -8,4 +8,7 @@ public enum InputCommand
     Left,
     Down,
     Right,
+
+    // Player and Global
+    Submit,
 }
