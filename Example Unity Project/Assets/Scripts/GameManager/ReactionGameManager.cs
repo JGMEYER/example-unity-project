@@ -7,11 +7,13 @@ public class ReactionGameManager : GameManager<ReactionPlayer>
 {
 
     [SerializeField]
-    private ReactionSphere ReactionSphere;
+    private ReactionSphere reactionSphere;
     [SerializeField]
-    private Text WinningPlayerText;
+    private Text winningPlayerText;
     [SerializeField]
-    private ReactionToast ReactionToast;
+    private ReactionToast reactionToast;
+    [SerializeField]
+    private ReactionToast burntToast;
 
     public int NumPlayers;
     public float MinWait;
@@ -37,7 +39,7 @@ public class ReactionGameManager : GameManager<ReactionPlayer>
     private new void Start()
     {
         base.Start();
-        WinningPlayerText.text = "";
+        winningPlayerText.text = "";
         StartRound();
     }
 
@@ -70,7 +72,7 @@ public class ReactionGameManager : GameManager<ReactionPlayer>
     {
         Debug.Log("Round started");
         roundActive = true;
-        ReactionSphere.SetAsWaitColor();
+        reactionSphere.SetAsWaitColor();
         StartCoroutine(WaitForGrab());
     }
 
@@ -88,9 +90,9 @@ public class ReactionGameManager : GameManager<ReactionPlayer>
         }
         float timeTaken = minTime - currentTime;
         Debug.Log("Winner is player: " + player + " with time: " + timeTaken);
-        WinningPlayerText.text = "Winner: " + player + " time: " + timeTaken;
+        winningPlayerText.text = "Winner: " + player + " time: " + timeTaken;
         playerTimes.Clear();
-        ReactionSphere.SetAsEndColor();
+        reactionSphere.SetAsEndColor();
         StartCoroutine(WaitBetweenRounds());
     }
 
@@ -102,8 +104,10 @@ public class ReactionGameManager : GameManager<ReactionPlayer>
         yield return new WaitForSeconds(waitTime);
         allowGrab = true;
         currentTime = Time.timeSinceLevelLoad;
-        ReactionSphere.SetAsStartColor();
-        ReactionToast.flingToast();
+        reactionSphere.SetAsStartColor();
+        //reactionToast.flingToast();
+        burntToast.flingToast();
+        FindObjectOfType<AudioManager>().Play("Impact");
         Debug.Log("Grab allowed");
     }
 
@@ -118,6 +122,7 @@ public class ReactionGameManager : GameManager<ReactionPlayer>
     {
         yield return new WaitForSeconds(BetweenRoundTime);
         roundActive = false;
-        ReactionToast.resetToast();
+        //reactionToast.resetToast();
+        burntToast.resetToast();
     }
 }
