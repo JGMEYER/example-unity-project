@@ -71,7 +71,7 @@ public class PlayerSelect : MonoBehaviour
             float controlsLayoutBuffer = 20f;
 
             // Starting Y position
-            float controlsLayoutY = ((controlsLayoutHeight * availablePlayerControls.Count) + (controlsLayoutBuffer * (availablePlayerControls.Count - 1))) / 2;
+            float controlsLayoutY = ((controlsLayoutHeight * availablePlayerControls.Count) + (controlsLayoutBuffer * (availablePlayerControls.Count - 1))) / 2 - controlsLayoutHeight / 2;
 
             foreach (IPlayerControls availableControls in availablePlayerControls)
             {
