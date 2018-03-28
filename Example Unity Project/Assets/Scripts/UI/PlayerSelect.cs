@@ -19,6 +19,7 @@ public class PlayerSelect : MonoBehaviour
     {
         globalControls = InputManager.Instance.GlobalControls();
 
+        InputManager.Instance.ClearPlayerControlsAssignments();
         UpdatePlayerSelectUI();
     }
 
@@ -33,12 +34,22 @@ public class PlayerSelect : MonoBehaviour
 
     private void OnEnable()
     {
+        InputEventManager.Instance.StartListening(InputEvent.PlayerPressedSubmit, AttemptSceneChange);
         InputEventManager.Instance.StartListening(InputEvent.PlayerControlsAssigned, UpdatePlayerSelectUI);
     }
 
     private void OnDisable()
     {
+        InputEventManager.Instance.StopListening(InputEvent.PlayerPressedSubmit, AttemptSceneChange);
         InputEventManager.Instance.StopListening(InputEvent.PlayerControlsAssigned, UpdatePlayerSelectUI);
+    }
+
+    private void AttemptSceneChange()
+    {
+        if (InputManager.Instance.EnoughPlayersRegistered())
+        {
+            SceneManager.LoadScene("GameSelect");
+        }
     }
 
     private void UpdatePlayerSelectUI()

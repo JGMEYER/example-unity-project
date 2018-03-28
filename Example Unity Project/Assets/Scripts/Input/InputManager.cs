@@ -39,6 +39,7 @@ public class InputManager : PersistentSingleton<InputManager>
             { PlayerNumber.Three, null },
             { PlayerNumber.Four, null },
         };
+        UpdateAvailablePlayerControls();
     }
 
     private void SetDefaultPlayerControlsAssignments()
@@ -50,6 +51,7 @@ public class InputManager : PersistentSingleton<InputManager>
             { PlayerNumber.Three, PlayerKeyboardControls(KeyboardConfigNumber.Three) },
             { PlayerNumber.Four, PlayerKeyboardControls(KeyboardConfigNumber.Four) },
         };
+        UpdateAvailablePlayerControls();
     }
 
     private bool AssignControlsToNextAvailablePlayer(IPlayerControls playerControls)
@@ -75,9 +77,9 @@ public class InputManager : PersistentSingleton<InputManager>
         return assigned;
     }
 
-    private bool NotEnoughPlayersRegistered()
+    public bool EnoughPlayersRegistered()
     {
-        return PlayerControlsAssignments[PlayerNumber.One] == null && PlayerControlsAssignments[PlayerNumber.Two] == null;
+        return PlayerControlsAssignments[PlayerNumber.One] != null && PlayerControlsAssignments[PlayerNumber.Two] != null;
     }
 
     private void UpdateAvailablePlayerControls()
@@ -147,7 +149,7 @@ public class InputManager : PersistentSingleton<InputManager>
 
     public IPlayerControls PlayerControls(PlayerNumber playerNumber)
     {
-        if (NotEnoughPlayersRegistered() && Application.isEditor)
+        if (!EnoughPlayersRegistered() && Application.isEditor)
         {
             Debug.LogWarning("Not enough players registered. Using default " +
                 "control assignments while in the editor. This could be " +
@@ -175,14 +177,27 @@ public class InputManager : PersistentSingleton<InputManager>
 
     public void PollPlayerInputForEvents()
     {
-        // Poll player input only if someone's requesting it
+        if (InputEventManager.Instance.ListeningOnEvent(InputEvent.PlayerPressedSubmit))
+        {
+            foreach (PlayerNumber playerNumber in Enum.GetValues(typeof(PlayerNumber)))
+            {
+                IPlayerControls playerControls = PlayerControlsAssignments[playerNumber];
+                if (playerControls != null && playerControls.GetSubmitDown())
+                {
+                    InputEventManager.Instance.TriggerEvent(InputEvent.PlayerPressedSubmit);
+                    break;
+                }
+            }
+        }
+
         if (InputEventManager.Instance.ListeningOnEvent(InputEvent.PlayerControlsAssigned))
         {
             foreach (IPlayerControls playerControls in AvailablePlayerControls)
             {
                 if (playerControls.GetJoinGameDown())
                 {
-                    if (AssignControlsToNextAvailablePlayer(playerControls))
+                    bool assignSuccessful = AssignControlsToNextAvailablePlayer(playerControls);
+                    if (assignSuccessful)
                     {
                         InputEventManager.Instance.TriggerEvent(InputEvent.PlayerControlsAssigned);
                     }
