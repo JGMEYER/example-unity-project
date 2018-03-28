@@ -13,6 +13,7 @@ public class GameManager<P> : MonoBehaviour where P : Player
 
     protected GlobalControls globalControls;
     protected P[] players;
+    protected int numPlayers { get; private set; }
 
     protected void Awake()
     {
@@ -27,11 +28,12 @@ public class GameManager<P> : MonoBehaviour where P : Player
         }
 
         globalControls = InputManager.Instance.GlobalControls();
+        numPlayers = InputManager.Instance.NumPlayersRegistered();
     }
 
     protected void Start()
     {
-        FetchPlayersFromScene();
+        InitializePlayers();
     }
 
     protected void Update()
@@ -39,9 +41,22 @@ public class GameManager<P> : MonoBehaviour where P : Player
         DoInput();
     }
 
-    protected void FetchPlayersFromScene()
+    protected void InitializePlayers()
     {
-        players = FindObjectsOfType(typeof(P)) as P[];
+        List<P> playersInScene = new List<P>(FindObjectsOfType(typeof(P)) as P[]);
+
+        for (int i = playersInScene.Count - 1; i >= 0; i--)
+        {
+            P player = playersInScene[i];
+
+            if ((int)player.GetPlayerNumber() > numPlayers)
+            {
+                playersInScene.RemoveAt(i);
+                Destroy(player.gameObject);
+            }
+        }
+
+        players = playersInScene.ToArray();
     }
 
     protected void DoInput()

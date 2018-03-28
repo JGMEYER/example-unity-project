@@ -82,6 +82,27 @@ public class InputManager : PersistentSingleton<InputManager>
         return PlayerControlsAssignments[PlayerNumber.One] != null && PlayerControlsAssignments[PlayerNumber.Two] != null;
     }
 
+    public int NumPlayersRegistered()
+    {
+        int numPlayersRegistered = 0;
+
+        // Possibly a better check than just looking for a count of non-null assignments.
+        // Players should only be assigned consecutively, starting at PlayerNumber.ONE.
+        foreach (PlayerNumber playerNumber in Enum.GetValues(typeof(PlayerNumber)))
+        {
+            if (PlayerControlsAssignments[playerNumber] != null)
+            {
+                numPlayersRegistered++;
+            }
+            else
+            {
+                return numPlayersRegistered;
+            }
+        }
+
+        return numPlayersRegistered;
+    }
+
     private void UpdateAvailablePlayerControls()
     {
         AvailablePlayerControls = new List<IPlayerControls>();

@@ -10,8 +10,11 @@ public class Follower : MonoBehaviour
 
     private void Update()
     {
-        Vector3 targetPosition = TargetObject.transform.position;
-        transform.position = targetPosition + OffsetFromObject;
+        if (TargetObject != null)
+        {
+            Vector3 targetPosition = TargetObject.transform.position;
+            transform.position = targetPosition + OffsetFromObject;
+        }
     }
 
 }

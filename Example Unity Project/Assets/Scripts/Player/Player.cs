@@ -23,4 +23,10 @@ public class Player : MonoBehaviour
         }
     }
 
+    public PlayerNumber GetPlayerNumber()
+    {
+        // Could be a public { get; protected set;} instead, if we add a custom inspector.
+        return playerNumber;
+    }
+
 }
