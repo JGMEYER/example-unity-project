@@ -59,13 +59,15 @@ public class ReactionGameManager : GameManager<ReactionPlayer>
         }
     }
 
-    public void Grab(PlayerNumber playerNumber, float timePressed)
+    public bool Grab(PlayerNumber playerNumber, float timePressed)
     {
         if (allowGrab && (!playerTimes.ContainsKey(playerNumber)))
         {
             Debug.Log("Grab! " + playerNumber);
             playerTimes.Add(playerNumber, timePressed);
+            return true;
         }
+        return false;
     }
 
     private void StartRound()
@@ -124,5 +126,9 @@ public class ReactionGameManager : GameManager<ReactionPlayer>
         roundActive = false;
         //reactionToast.resetToast();
         burntToast.resetToast();
+        foreach (ReactionPlayer player in players) 
+        {
+            player.ResetPlayerPosition();
+        }
     }
 }
