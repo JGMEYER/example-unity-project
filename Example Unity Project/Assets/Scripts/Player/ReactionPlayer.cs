@@ -34,7 +34,7 @@ public class ReactionPlayer : Player
 
     private void HandleInput()
     {
-        if (controls.GetUpKeyDown())
+        if (controls.GetSubmitDown())
         {
             float pressTime = Time.timeSinceLevelLoad;
             if (reactionGameManager.Grab(playerNumber, pressTime)) {
