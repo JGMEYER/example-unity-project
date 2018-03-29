@@ -17,6 +17,11 @@ public class PlayerJoystickControls : IPlayerControls
     // Axes Helpers
     // ==============
 
+    private bool upDownLast = false;
+    private bool leftDownLast = false;
+    private bool downDownLast = false;
+    private bool rightDownLast = false;
+
     private String GetJoystickAxisName(String axisName)
     {
         return "Joystick" + JoystickNumber + axisName;
@@ -96,7 +101,29 @@ public class PlayerJoystickControls : IPlayerControls
 
     bool IPlayerControls.GetUpKeyDown()
     {
-        return GetAxis("DPadVertical") > 0;  // incorrect event!
+        // Assumes value is polled to reset tracker
+        bool upKey = GetAxis("DPadVertical") > 0;
+        bool upKeyDown = upKey && !upDownLast;
+
+        upDownLast = upKey;
+
+        return upKeyDown;
+    }
+
+    bool IPlayerControls.GetLeftKey()
+    {
+        return GetAxis("DPadHorizontal") < 0;
+    }
+
+    bool IPlayerControls.GetLeftKeyDown()
+    {
+        // Assumes value is polled to reset tracker
+        bool leftKey = GetAxis("DPadHorizontal") < 0;
+        bool leftKeyDown = leftKey && !leftDownLast;
+
+        leftDownLast = leftKey;
+
+        return leftKeyDown;
     }
 
     bool IPlayerControls.GetDownKey()
@@ -106,12 +133,33 @@ public class PlayerJoystickControls : IPlayerControls
 
     bool IPlayerControls.GetDownKeyDown()
     {
-        return GetAxis("DPadVertical") < 0;  // incorrect event!
+        // Assumes value is polled to reset tracker
+        bool downKey = GetAxis("DPadVertical") < 0;
+        bool downKeyDown = downKey && !downDownLast;
+
+        downDownLast = downKey;
+
+        return downKeyDown;
+    }
+
+    bool IPlayerControls.GetRightKey()
+    {
+        return GetAxis("DPadHorizontal") > 0;
+    }
+
+    bool IPlayerControls.GetRightKeyDown()
+    {
+        // Assumes value is polled to reset tracker
+        bool rightKey = GetAxis("DPadHorizontal") > 0;
+        bool rightKeyDown = rightKey && !rightDownLast;
+
+        rightDownLast = rightKey;
+
+        return rightKeyDown;
     }
 
     string IPlayerControls.GetJoinGameKeyName()
     {
         return "(A)";
     }
-
 }

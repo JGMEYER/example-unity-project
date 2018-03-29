@@ -84,6 +84,16 @@ public class PlayerKeyboardControls : IPlayerControls
         return Input.GetKeyDown(UpKey);
     }
 
+    bool IPlayerControls.GetLeftKey()
+    {
+        return Input.GetKey(LeftKey);
+    }
+
+    bool IPlayerControls.GetLeftKeyDown()
+    {
+        return Input.GetKeyDown(LeftKey);
+    }
+
     bool IPlayerControls.GetDownKey()
     {
         return Input.GetKey(DownKey);
@@ -92,6 +102,16 @@ public class PlayerKeyboardControls : IPlayerControls
     bool IPlayerControls.GetDownKeyDown()
     {
         return Input.GetKeyDown(DownKey);
+    }
+
+    bool IPlayerControls.GetRightKey()
+    {
+        return Input.GetKey(RightKey);
+    }
+
+    bool IPlayerControls.GetRightKeyDown()
+    {
+        return Input.GetKeyDown(RightKey);
     }
 
     string IPlayerControls.GetJoinGameKeyName()

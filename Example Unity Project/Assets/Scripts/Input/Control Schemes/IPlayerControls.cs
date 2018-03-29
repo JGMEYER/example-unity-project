@@ -12,8 +12,12 @@ public interface IPlayerControls
     bool GetJump();
     bool GetUpKey();
     bool GetUpKeyDown();
+    bool GetLeftKey();
+    bool GetLeftKeyDown();
     bool GetDownKey();
     bool GetDownKeyDown();
+    bool GetRightKey();
+    bool GetRightKeyDown();
 
     string GetJoinGameKeyName();
 
