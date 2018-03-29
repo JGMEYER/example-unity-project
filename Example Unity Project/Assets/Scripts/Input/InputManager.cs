@@ -22,8 +22,6 @@ public class InputManager : PersistentSingleton<InputManager>
     {
         // Ideally we should only call this when Input.JoyStickNames() changes or when assignments change
         UpdateAvailablePlayerControls();
-
-        PollPlayerInputForEvents();
     }
 
     // =============================
@@ -54,7 +52,7 @@ public class InputManager : PersistentSingleton<InputManager>
         UpdateAvailablePlayerControls();
     }
 
-    private bool AssignControlsToNextAvailablePlayer(IPlayerControls playerControls)
+    public bool AssignControlsToNextAvailablePlayer(IPlayerControls playerControls)
     {
         bool assigned = false;
 
@@ -190,41 +188,6 @@ public class InputManager : PersistentSingleton<InputManager>
     private IPlayerControls PlayerJoystickControls(int joystickNumber)
     {
         return new PlayerJoystickControls(joystickNumber);
-    }
-
-    // ====================
-    // Input Event Checks
-    // ====================
-
-    public void PollPlayerInputForEvents()
-    {
-        if (InputEventManager.Instance.ListeningOnEvent(InputEvent.PlayerPressedSubmit))
-        {
-            foreach (PlayerNumber playerNumber in Enum.GetValues(typeof(PlayerNumber)))
-            {
-                IPlayerControls playerControls = PlayerControlsAssignments[playerNumber];
-                if (playerControls != null && playerControls.GetSubmitDown())
-                {
-                    InputEventManager.Instance.TriggerEvent(InputEvent.PlayerPressedSubmit);
-                    break;
-                }
-            }
-        }
-
-        if (InputEventManager.Instance.ListeningOnEvent(InputEvent.PlayerControlsAssigned))
-        {
-            foreach (IPlayerControls playerControls in AvailablePlayerControls)
-            {
-                if (playerControls.GetJoinGameDown())
-                {
-                    bool assignSuccessful = AssignControlsToNextAvailablePlayer(playerControls);
-                    if (assignSuccessful)
-                    {
-                        InputEventManager.Instance.TriggerEvent(InputEvent.PlayerControlsAssigned);
-                    }
-                }
-            }
-        }
     }
 
 }

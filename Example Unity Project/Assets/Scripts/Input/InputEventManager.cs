@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -12,6 +13,11 @@ public class InputEventManager : PersistentSingleton<InputEventManager> {
     private void Awake()
     {
         eventDictionary = new Dictionary<InputEvent, TrackedUnityEvent>();
+    }
+
+    private void Update()
+    {
+        PollPlayerInputForEvents();
     }
 
     public void StartListening(InputEvent inputEvent, UnityAction listener)
@@ -56,6 +62,54 @@ public class InputEventManager : PersistentSingleton<InputEventManager> {
     {
         TrackedUnityEvent thisEvent = null;
         return eventDictionary.TryGetValue(inputEvent, out thisEvent);
+    }
+
+    // ====================
+    // Input Event Checks
+    // ====================
+
+    private void PollPlayerInputForEvents()
+    {
+        if (ListeningOnEvent(InputEvent.PlayerPressedSubmit) && PlayerPressedSubmit())
+        {
+            TriggerEvent(InputEvent.PlayerPressedSubmit);
+        }
+
+        if (ListeningOnEvent(InputEvent.PlayerControlsAssigned) && PlayerControlsAssigned())
+        {
+            TriggerEvent(InputEvent.PlayerControlsAssigned);
+        }
+    }
+
+    private bool PlayerPressedSubmit()
+    {
+        foreach (PlayerNumber playerNumber in Enum.GetValues(typeof(PlayerNumber)))
+        {
+            IPlayerControls playerControls = InputManager.Instance.PlayerControlsAssignments[playerNumber];
+            if (playerControls != null && playerControls.GetSubmitDown())
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private bool PlayerControlsAssigned()
+    {
+        foreach (IPlayerControls playerControls in InputManager.Instance.AvailablePlayerControls)
+        {
+            if (playerControls.GetJoinGameDown())
+            {
+                bool assignSuccessful = InputManager.Instance.AssignControlsToNextAvailablePlayer(playerControls);
+                if (assignSuccessful)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
 }
