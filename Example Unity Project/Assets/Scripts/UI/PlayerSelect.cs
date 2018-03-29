@@ -32,6 +32,14 @@ public class PlayerSelect : MonoBehaviour
         }
     }
 
+    private void OnValidate()
+    {
+        if (uiPlayerKeyboardControlsLayoutPrefab && uiPlayerKeyboardControlsLayoutPrefab.GetComponent<PlayerKeyboardControlsLayout>() == null)
+        {
+            throw new MissingComponentException("uiPlayerKeyboardControlsLayoutPrefab requires a PlayerKeyboardControls script.");
+        }
+    }
+
     private void OnEnable()
     {
         InputEventManager.Instance.StartListening(InputEvent.PlayerPressedSubmit, AttemptSceneChange);
@@ -91,7 +99,10 @@ public class PlayerSelect : MonoBehaviour
                 if (availableControls is PlayerKeyboardControls)
                 {
                     PlayerKeyboardControls playerKeyboardControls = (PlayerKeyboardControls)availableControls;
-                    controlsLayout = GetUIKeyboardControlsLayout(playerKeyboardControls);
+                    GameObject keyboardControlsLayout = Instantiate(uiPlayerKeyboardControlsLayoutPrefab);
+
+                    keyboardControlsLayout.GetComponent<PlayerKeyboardControlsLayout>().Init(playerKeyboardControls);
+                    controlsLayout = keyboardControlsLayout;
                 }
                 else if (availableControls is PlayerJoystickControls)
                 {
@@ -122,45 +133,6 @@ public class PlayerSelect : MonoBehaviour
             joinedText.transform.SetParent(playerPanel.transform);
             joinedText.transform.localPosition = Vector3.zero;
         }
-    }
-
-    private GameObject GetUIKeyboardControlsLayout(PlayerKeyboardControls playerKeyboardControls)
-    {
-        // Hacky: grabs Panel by its Image
-        GameObject keyboardControlsLayout = Instantiate(uiPlayerKeyboardControlsLayoutPrefab);
-        Image[] uiKeys = keyboardControlsLayout.GetComponentsInChildren<Image>();
-
-        foreach (Image uiKey in uiKeys)
-        {
-            Text uiKeyText = uiKey.GetComponentInChildren<Text>();
-
-            // Hacky: key names should be enums or standardized in some way
-            switch(uiKey.name)
-            {
-                case "SubmitKey":
-                    KeyCode submitKey = playerKeyboardControls.SubmitKey;
-                    uiKeyText.text = KeyCodeCharacter.For(submitKey).ToString();
-                    break;
-                case "UpKey":
-                    KeyCode upKey = playerKeyboardControls.UpKey;
-                    uiKeyText.text = KeyCodeCharacter.For(upKey).ToString();
-                    break;
-                case "LeftKey":
-                    KeyCode leftKey = playerKeyboardControls.LeftKey;
-                    uiKeyText.text = KeyCodeCharacter.For(leftKey).ToString();
-                    break;
-                case "DownKey":
-                    KeyCode downKey = playerKeyboardControls.DownKey;
-                    uiKeyText.text = KeyCodeCharacter.For(downKey).ToString();
-                    break;
-                case "RightKey":
-                    KeyCode rightKey = playerKeyboardControls.RightKey;
-                    uiKeyText.text = KeyCodeCharacter.For(rightKey).ToString();
-                    break;
-            }
-        }
-
-        return keyboardControlsLayout;
     }
 
 }
