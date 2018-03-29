@@ -18,8 +18,8 @@ public class PlayerSelect : MonoBehaviour
     private void Start()
     {
         globalControls = InputManager.Instance.GlobalControls();
-
         InputManager.Instance.ClearPlayerControlsAssignments();
+
         UpdatePlayerSelectUI();
     }
 
@@ -86,53 +86,24 @@ public class PlayerSelect : MonoBehaviour
 
             foreach (IPlayerControls availableControls in availablePlayerControls)
             {
+                GameObject controlsLayout;
+
                 if (availableControls is PlayerKeyboardControls)
                 {
                     PlayerKeyboardControls playerKeyboardControls = (PlayerKeyboardControls)availableControls;
-
-                    // Hacky: grabs Panel by its Image
-                    GameObject keyboardControlsLayout = Instantiate(uiPlayerKeyboardControlsLayoutPrefab);
-                    Image[] uiKeys = keyboardControlsLayout.GetComponentsInChildren<Image>();
-
-                    foreach (Image uiKey in uiKeys)
-                    {
-                        Text uiKeyText = uiKey.GetComponentInChildren<Text>();
-
-                        // Hacky: key names should be enums or standardized in some way
-                        switch(uiKey.name)
-                        {
-                            case "SubmitKey":
-                                uiKeyText.text = playerKeyboardControls.SubmitKey.ToString();
-                                break;
-                            case "UpKey":
-                                uiKeyText.text = playerKeyboardControls.UpKey.ToString();
-                                break;
-                            case "LeftKey":
-                                uiKeyText.text = playerKeyboardControls.LeftKey.ToString();
-                                break;
-                            case "DownKey":
-                                uiKeyText.text = playerKeyboardControls.DownKey.ToString();
-                                break;
-                            case "RightKey":
-                                uiKeyText.text = playerKeyboardControls.RightKey.ToString();
-                                break;
-                        }
-                    }
-
-                    keyboardControlsLayout.transform.SetParent(playerPanel.transform);
-                    keyboardControlsLayout.transform.localPosition = new Vector3(0, controlsLayoutY, 0);
+                    controlsLayout = GetUIKeyboardControlsLayout(playerKeyboardControls);
                 }
                 else if (availableControls is PlayerJoystickControls)
                 {
-                    GameObject joystickControlsLayout = Instantiate(uiPlayerJoystickControlsLayoutPrefab);
-
-                    joystickControlsLayout.transform.SetParent(playerPanel.transform);
-                    joystickControlsLayout.transform.localPosition = new Vector3(0, controlsLayoutY, 0);
+                    controlsLayout = Instantiate(uiPlayerJoystickControlsLayoutPrefab);
                 }
                 else
                 {
                     throw new ArgumentException("Unknown player controls type.");
                 }
+
+                controlsLayout.transform.SetParent(playerPanel.transform);
+                controlsLayout.transform.localPosition = new Vector3(0, controlsLayoutY, 0);
 
                 controlsLayoutY -= controlsLayoutHeight + controlsLayoutBuffer;
             }
@@ -151,6 +122,45 @@ public class PlayerSelect : MonoBehaviour
             joinedText.transform.SetParent(playerPanel.transform);
             joinedText.transform.localPosition = Vector3.zero;
         }
+    }
+
+    private GameObject GetUIKeyboardControlsLayout(PlayerKeyboardControls playerKeyboardControls)
+    {
+        // Hacky: grabs Panel by its Image
+        GameObject keyboardControlsLayout = Instantiate(uiPlayerKeyboardControlsLayoutPrefab);
+        Image[] uiKeys = keyboardControlsLayout.GetComponentsInChildren<Image>();
+
+        foreach (Image uiKey in uiKeys)
+        {
+            Text uiKeyText = uiKey.GetComponentInChildren<Text>();
+
+            // Hacky: key names should be enums or standardized in some way
+            switch(uiKey.name)
+            {
+                case "SubmitKey":
+                    KeyCode submitKey = playerKeyboardControls.SubmitKey;
+                    uiKeyText.text = KeyCodeCharacter.For(submitKey).ToString();
+                    break;
+                case "UpKey":
+                    KeyCode upKey = playerKeyboardControls.UpKey;
+                    uiKeyText.text = KeyCodeCharacter.For(upKey).ToString();
+                    break;
+                case "LeftKey":
+                    KeyCode leftKey = playerKeyboardControls.LeftKey;
+                    uiKeyText.text = KeyCodeCharacter.For(leftKey).ToString();
+                    break;
+                case "DownKey":
+                    KeyCode downKey = playerKeyboardControls.DownKey;
+                    uiKeyText.text = KeyCodeCharacter.For(downKey).ToString();
+                    break;
+                case "RightKey":
+                    KeyCode rightKey = playerKeyboardControls.RightKey;
+                    uiKeyText.text = KeyCodeCharacter.For(rightKey).ToString();
+                    break;
+            }
+        }
+
+        return keyboardControlsLayout;
     }
 
 }
