@@ -8,8 +8,6 @@ public class RockGameManager : GameManager<RockPlayer>
     [Header("GameObjects")]
     [SerializeField]
     private RockThrowSpawner RockSpawnerPrefab;
-    [SerializeField]
-    private Text VictoryText;
 
     [Header("Gameplay")]
     public int NumRocks = 6;

@@ -3,9 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager<P> : MonoBehaviour where P : Player
 {
+
+    [SerializeField]
+    private Text victoryText;
 
     // Singleton values
     private static GameManager<P> instance;
@@ -31,6 +35,8 @@ public class GameManager<P> : MonoBehaviour where P : Player
         {
             instance = this;
         }
+
+        victoryText.text = "";
 
         globalControls = InputManager.Instance.GlobalControls();
         numPlayers = InputManager.Instance.NumPlayersRegistered();
@@ -111,15 +117,17 @@ public class GameManager<P> : MonoBehaviour where P : Player
         {
             Debug.LogError("Empty array of winners passed. Pass winners to " +
                 "EndGame() to properly handle scoring for your game.");
+            victoryText.text = "GAME OVER!";
         }
         else if (winners.Length == 1)
         {
-            Debug.Log("Player " + winners[0] + " wins!");
+            victoryText.text = "WINNER!\nPlayer " + winners[0].ToString();
         }
         else
         {
+            winners = winners.OrderBy(winner => winner).ToArray();
             string winnersString = string.Join(", ", winners.Select(winner => winner.ToString()).ToArray());
-            Debug.Log("Players " + winnersString + " have won the game!");
+            victoryText.text = "DRAW!\nPlayers " + winnersString;
         }
 
         gameOver = true;

@@ -9,7 +9,7 @@ public class ReactionGameManager : GameManager<ReactionPlayer>
     [SerializeField]
     private ReactionSphere reactionSphere;
     [SerializeField]
-    private Text winningPlayerText;
+    private Text roundVictoryText;
     [SerializeField]
     private ReactionToast reactionToast;
     [SerializeField]
@@ -36,7 +36,7 @@ public class ReactionGameManager : GameManager<ReactionPlayer>
     {
         base.Start();
         
-        winningPlayerText.text = "";
+        roundVictoryText.text = "";
         StartCoroutine(StartRoundAfterDelay());
     }
 
@@ -86,7 +86,7 @@ public class ReactionGameManager : GameManager<ReactionPlayer>
         }
         float timeTaken = minTime - currentTime;
         Debug.Log("Winner is player: " + player + " with time: " + timeTaken);
-        winningPlayerText.text = "Winner: " + player + " time: " + timeTaken;
+        roundVictoryText.text = "Winner: " + player + " time: " + timeTaken;
         playerTimes.Clear();
         reactionSphere.SetAsEndColor();
     }

@@ -9,8 +9,6 @@ public class LightMazeGameManager : GameManager<LightMazePlayer>
     [Header("GameObjects")]
     [SerializeField]
     private LightMazeMap map;
-    [SerializeField]
-    private Text victoryText;
 
     [Header("Debug Settings")]
     public bool AutoScrollEnabled;
