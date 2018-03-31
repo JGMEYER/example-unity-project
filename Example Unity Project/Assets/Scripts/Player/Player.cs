@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -9,10 +7,12 @@ public class Player : MonoBehaviour
     protected PlayerNumber playerNumber;
 
     protected IPlayerControls controls { get; private set; }
+    protected bool active;
 
     protected void Awake()
     {
         controls = InputManager.Instance.PlayerControls(playerNumber);
+        active = false;
     }
 
     protected void OnValidate()
@@ -27,6 +27,11 @@ public class Player : MonoBehaviour
     {
         // Could be a public { get; protected set;} instead, if we add a custom inspector.
         return playerNumber;
+    }
+
+    public void SetActive(bool active)
+    {
+        this.active = active;
     }
 
 }

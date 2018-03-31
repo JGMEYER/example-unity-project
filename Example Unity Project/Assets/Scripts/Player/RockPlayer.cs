@@ -42,6 +42,17 @@ public class RockPlayer : Player
 
     private void Update()
     {
+        if (!active)
+        {
+            return;
+        }
+
+        if (IsDead())
+        {
+            active = false;
+            return;
+        }
+
         if (isHurt)
         {
             float shakeX = -1 * Mathf.Cos(hurtTimer * HurtShakeSpeed) * HurtShakeAmplitude;
@@ -73,7 +84,7 @@ public class RockPlayer : Player
         ThrownItem thrownItem = other.GetComponent<ThrownItem>();
         if (thrownItem != null)
         {
-            if (!shieldActive)
+            if (active && !shieldActive)
             {
                 StartCoroutine(Hurt());
             }
@@ -81,16 +92,16 @@ public class RockPlayer : Player
         }
     }
 
-    private void SetShieldActive(bool active)
+    private void SetShieldActive(bool shieldActive)
     {
-        if (active == shieldActive)
+        if (this.shieldActive == shieldActive)
         {
             return;
         }
 
-        shieldActive = active;
+        this.shieldActive = shieldActive;
 
-        if (shieldActive)
+        if (this.shieldActive)
         {
             rend.material = ShieldMaterial;
         }

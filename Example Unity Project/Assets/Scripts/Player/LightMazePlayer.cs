@@ -37,7 +37,7 @@ public class LightMazePlayer : Player
 
     private void Update()
     {
-        if (!isDead)
+        if (active && !isDead)
         {
             DoInput();
         }

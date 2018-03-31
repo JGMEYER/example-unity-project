@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class RockThrowSpawner : MonoBehaviour
@@ -16,15 +14,20 @@ public class RockThrowSpawner : MonoBehaviour
     private int currentPattern = -1;
     private float timeSinceLastSpawn;
     private float nextSpawn;
-    private bool done = false;
+    private bool active;
+
+    private void Awake()
+    {
+        active = false;
+    }
 
     private void Update()
     {
         if (pattern == null) return;
 
-        if (!done)
+        if (active)
         {
-           timeSinceLastSpawn += Time.deltaTime;
+            timeSinceLastSpawn += Time.deltaTime;
 
             if (timeSinceLastSpawn > nextSpawn)
             {
@@ -32,6 +35,12 @@ public class RockThrowSpawner : MonoBehaviour
                 NextTimer();
             }
         }
+    }
+
+    public void Initialize(float[] pattern)
+    {
+        this.pattern = pattern;
+        NextTimer();
     }
 
     private void SpawnRock()
@@ -48,7 +57,7 @@ public class RockThrowSpawner : MonoBehaviour
         if (currentPattern + 1 >= pattern.Length)
         {
             nextSpawn = float.MaxValue;
-            done = true;
+            active = false;
             return;
         }
 
@@ -57,15 +66,14 @@ public class RockThrowSpawner : MonoBehaviour
         nextSpawn = pattern[currentPattern];
     }
 
-    public void Initialize(float[] pattern)
+    public void StartSpawn()
     {
-        this.pattern = pattern;
-        NextTimer();
+        active = true;
     }
 
-    public void Stop()
+    public void StopSpawn()
     {
-        done = true;
+        active = false;
 
         foreach (ThrownItem activeRock in GetComponentsInChildren<ThrownItem>())
         {

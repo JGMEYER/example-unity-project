@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine;
 
@@ -35,6 +32,11 @@ public class IcePlayer : Player
 
     private void Update()
     {
+        if (!active)
+        {
+            return;
+        }
+
         currentPosition = transform.position;
 
         if (currentPosition.y < resetHeight)

@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine;
 using System.Linq;
@@ -24,15 +22,21 @@ public class LightMazeGameManager : GameManager<LightMazePlayer>
     public bool ScrollMapWhenPlayerAhead = true;
     public float PauseBetweenMapShifts = 1f;
 
-    private bool gameOver;
     private float mapShiftPauseCounter = 0f;
     private float mapShiftDistanceRemaining = 0f;
+
+    private new void Start()
+    {
+        base.Start();
+
+        StartCoroutine(StartRoundAfterDelay());
+    }
 
     private new void Update()
     {
         base.Update();
 
-        if (!gameOver)
+        if (roundActive)
         {
             if (ScrollMapWhenPlayerAhead)
             {
@@ -50,7 +54,7 @@ public class LightMazeGameManager : GameManager<LightMazePlayer>
 
     private void FixedUpdate()
     {
-        if (!gameOver && AutoScrollEnabled)
+        if (roundActive && AutoScrollEnabled)
         {
             ScrollRows(AutoScrollSpeed * Time.deltaTime);
         }
@@ -112,51 +116,27 @@ public class LightMazeGameManager : GameManager<LightMazePlayer>
     private void CheckGameOver(List<LightMazePlayer> playersKilled)
     {
         LightMazePlayer[] alivePlayers = players.Where(player => !player.IsDead()).ToArray();
-        LightMazePlayer[] jetpackPlayers = players.Where(player => player.HasJetpack()).ToArray();
+        LightMazePlayer jetpackPlayer = players.Where(player => player.HasJetpack()).SingleOrDefault();
 
-        List<string> winnerNames = new List<string>();
-        bool jetpackWin = false;
+        PlayerNumber[] winners = null;
 
-        if (jetpackPlayers.Length == 1)
+        if (jetpackPlayer != null)
         {
-            winnerNames.Add(jetpackPlayers[0].name);
-            jetpackWin = true;
+            winners = new PlayerNumber[] { jetpackPlayer.GetPlayerNumber() };
         }
         else if (alivePlayers.Length == 1)
         {
-            winnerNames.Add(alivePlayers[0].name);
+            winners = alivePlayers.Select(player => player.GetPlayerNumber()).ToArray();
         }
         else if (alivePlayers.Length == 0)
         {
-            foreach (LightMazePlayer player in playersKilled)
-            {
-                winnerNames.Add(player.name);
-            }
+            winners = playersKilled.Select(player => player.GetPlayerNumber()).ToArray();
         }
 
-        if (winnerNames.Count > 0)
+        if (winners != null)
         {
-            GameOver(winnerNames, jetpackWin);
+            StartCoroutine(EndGameAfterDelay(winners));
         }
-    }
-
-    private void GameOver(List<string> winnerNames, bool jetpackWin)
-    {
-        gameOver = true;
-
-        if (winnerNames.Count == 1)
-        {
-            victoryText.text = "WINNER!\n";
-        }
-        else
-        {
-            victoryText.text = "DRAW!\n";
-        }
-        victoryText.text += string.Join(", ", winnerNames.ToArray());
-
-        // TODO jetpackWin: scroll map quickly without interruption and allow players to explode
-
-        StartCoroutine(EndGameAfterDelay());
     }
 
 }

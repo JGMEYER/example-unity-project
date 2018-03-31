@@ -20,8 +20,6 @@ public class ReactionGameManager : GameManager<ReactionPlayer>
     public float MaxWait;
     public float BetweenRoundTime;
 
-    private bool gameOver;
-    private bool roundActive;
     private bool allowGrab;
     private Dictionary<PlayerNumber, float> playerTimes;
     private float currentTime;
@@ -30,32 +28,26 @@ public class ReactionGameManager : GameManager<ReactionPlayer>
     {
         base.Awake();
 
-        gameOver = false;
         allowGrab = false;
-        roundActive = false;
         playerTimes = new Dictionary<PlayerNumber, float>();
     }
 
     private new void Start()
     {
         base.Start();
+        
         winningPlayerText.text = "";
-        StartRound();
+        StartCoroutine(StartRoundAfterDelay());
     }
 
     private new void Update()
     {
         base.Update();
 
-        if (!roundActive)
-        {
-            StartRound();
-        }
-
         if (playerTimes.Count == NumPlayers)
         {
             allowGrab = false;
-            EndRound();
+            StartCoroutine(ResetRoundAfterDelay());
         }
     }
 
@@ -70,16 +62,18 @@ public class ReactionGameManager : GameManager<ReactionPlayer>
         return false;
     }
 
-    private void StartRound()
+    protected override void StartRound()
     {
-        Debug.Log("Round started");
-        roundActive = true;
+        base.StartRound();
+
         reactionSphere.SetAsWaitColor();
         StartCoroutine(WaitForGrab());
     }
 
-    private void EndRound()
+    protected override void EndRound()
     {
+        base.EndRound();
+
         float minTime = float.MaxValue;
         PlayerNumber player = PlayerNumber.One;
         foreach (KeyValuePair<PlayerNumber, float> pair in playerTimes)
@@ -95,9 +89,18 @@ public class ReactionGameManager : GameManager<ReactionPlayer>
         winningPlayerText.text = "Winner: " + player + " time: " + timeTaken;
         playerTimes.Clear();
         reactionSphere.SetAsEndColor();
-        StartCoroutine(WaitBetweenRounds());
     }
 
+    protected override void ResetRound()
+    {
+        base.ResetRound();
+
+        burntToast.resetToast();
+        foreach (ReactionPlayer player in players) 
+        {
+            player.ResetPlayerPosition();
+        }
+    }
 
     private IEnumerator WaitForGrab()
     {
@@ -113,22 +116,4 @@ public class ReactionGameManager : GameManager<ReactionPlayer>
         Debug.Log("Grab allowed");
     }
 
-    private void EndGame(PlayerNumber playerNumber)
-    {
-        Debug.Log("Player " + playerNumber + "has won the game!");
-        gameOver = true;
-        StartCoroutine(EndGameAfterDelay());
-    }
-
-    private IEnumerator WaitBetweenRounds()
-    {
-        yield return new WaitForSeconds(BetweenRoundTime);
-        roundActive = false;
-        //reactionToast.resetToast();
-        burntToast.resetToast();
-        foreach (ReactionPlayer player in players) 
-        {
-            player.ResetPlayerPosition();
-        }
-    }
 }

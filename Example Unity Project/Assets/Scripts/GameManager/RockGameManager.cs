@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
@@ -23,8 +20,7 @@ public class RockGameManager : GameManager<RockPlayer>
     public float SpawnDelayInterval = 0.5f;
 
     private RockPlayer[] alivePlayers;
-    private bool gameOver = false;
-    private List<RockThrowSpawner> spawners;
+    private RockThrowSpawner[] spawners;
 
     private new void Start()
     {
@@ -32,13 +28,15 @@ public class RockGameManager : GameManager<RockPlayer>
 
         alivePlayers = (RockPlayer[])players.Clone();
         InitializeSpawners();
+
+        StartCoroutine(StartRoundAfterDelay());
     }
 
     private new void Update()
     {
         base.Update();
 
-        if (!gameOver)
+        if (roundActive)
         {
             RockPlayer[] killedPlayers = RemoveKilledPlayers();
             CheckGameOver(killedPlayers);
@@ -47,7 +45,7 @@ public class RockGameManager : GameManager<RockPlayer>
 
     private void InitializeSpawners()
     {
-        spawners = new List<RockThrowSpawner>();
+        spawners = new RockThrowSpawner[numPlayers];
 
         float[] pattern = new float[NumRocks];
 
@@ -60,15 +58,35 @@ public class RockGameManager : GameManager<RockPlayer>
             pattern[i] = delay;
         }
 
-        foreach (RockPlayer player in players)
+        for (int i = 0; i < numPlayers; i++)
         {
-            Vector3 playerPos = player.transform.position;
+            Vector3 playerPos = players[i].transform.position;
 
             RockThrowSpawner spawner = Instantiate(RockSpawnerPrefab) as RockThrowSpawner;
             spawner.transform.position = new Vector3(playerPos.x, 2, playerPos.z);
             spawner.Initialize(pattern);
 
-            spawners.Add(spawner);
+            spawners[i] = spawner;
+        }
+    }
+
+    protected override void StartRound()
+    {
+        base.StartRound();
+
+        foreach(RockThrowSpawner spawner in spawners)
+        {
+            spawner.StartSpawn();
+        }
+    }
+
+    protected override void EndRound()
+    {
+        base.EndRound();
+
+        foreach (RockThrowSpawner spawner in spawners)
+        {
+            spawner.StopSpawn();
         }
     }
 
@@ -82,33 +100,15 @@ public class RockGameManager : GameManager<RockPlayer>
 
     private void CheckGameOver(RockPlayer[] killedPlayers)
     {
-        List<string> winners = new List<string>();
-
         if (alivePlayers.Length == 1)
         {
-            VictoryText.text = "WINNER!\n";
-            winners.Add(alivePlayers[0].name);
+            PlayerNumber[] winners = new PlayerNumber[] { alivePlayers[0].GetPlayerNumber() };
+            StartCoroutine(EndGameAfterDelay(winners));
         }
         else if (alivePlayers.Length == 0)
         {
-            VictoryText.text = "DRAW!\n";
-            foreach (RockPlayer player in killedPlayers)
-            {
-                winners.Add(player.name);
-            }
-        }
-
-        if (winners.Count > 0)
-        {
-            gameOver = true;
-            VictoryText.text += string.Join(", ", winners.ToArray());
-
-            foreach (RockThrowSpawner spawner in spawners)
-            {
-                spawner.Stop();
-            }
-
-            StartCoroutine(EndGameAfterDelay());
+            PlayerNumber[] winners = killedPlayers.Select(player => player.GetPlayerNumber()).ToArray();
+            StartCoroutine(EndGameAfterDelay(winners));
         }
     }
 

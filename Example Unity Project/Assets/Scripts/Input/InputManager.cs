@@ -88,7 +88,7 @@ public class InputManager : PersistentSingleton<InputManager>
         // Players should only be assigned consecutively, starting at PlayerNumber.ONE.
         foreach (PlayerNumber playerNumber in Enum.GetValues(typeof(PlayerNumber)))
         {
-            if (PlayerControlsAssignments[playerNumber] != null)
+            if (PlayerControls(playerNumber) != null)
             {
                 numPlayersRegistered++;
             }
@@ -171,9 +171,10 @@ public class InputManager : PersistentSingleton<InputManager>
         if (!EnoughPlayersRegistered() && Application.isEditor)
         {
             Debug.LogWarning("Not enough players registered. Using default " +
-                "control assignments while in the editor. This could be " +
-                "indicative of a problem with the player control assignment " +
-                "workflow.");
+                "control assignments while in the editor. This could mean " +
+                "there is a problem with the player control assignment " +
+                "workflow OR you are running your game scene directly from " +
+                "the editor without setting controls first.");
             SetDefaultPlayerControlsAssignments();
         }
 
