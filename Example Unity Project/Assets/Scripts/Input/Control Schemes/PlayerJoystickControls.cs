@@ -17,6 +17,7 @@ public class PlayerJoystickControls : IPlayerControls
     // Axes Helpers
     // ==============
 
+    private float axisDiscreteDeadZone = 0.5f;  // dead zone for cardinal direction movement
     private bool upDownLast = false;
     private bool leftDownLast = false;
     private bool downDownLast = false;
@@ -112,7 +113,7 @@ public class PlayerJoystickControls : IPlayerControls
     bool IPlayerControls.GetUpKeyDown()
     {
         // Assumes value is polled to reset tracker
-        bool upKey = GetAxis("DPadVertical") > 0;
+        bool upKey = (GetAxis("DPadVertical") > 0 || GetAxis("LeftVertical") > axisDiscreteDeadZone);
         bool upKeyDown = upKey && !upDownLast;
 
         upDownLast = upKey;
@@ -128,7 +129,7 @@ public class PlayerJoystickControls : IPlayerControls
     bool IPlayerControls.GetLeftKeyDown()
     {
         // Assumes value is polled to reset tracker
-        bool leftKey = GetAxis("DPadHorizontal") < 0;
+        bool leftKey = (GetAxis("DPadHorizontal") < 0 || GetAxis("LeftHorizontal") < -axisDiscreteDeadZone);
         bool leftKeyDown = leftKey && !leftDownLast;
 
         leftDownLast = leftKey;
@@ -144,7 +145,7 @@ public class PlayerJoystickControls : IPlayerControls
     bool IPlayerControls.GetDownKeyDown()
     {
         // Assumes value is polled to reset tracker
-        bool downKey = GetAxis("DPadVertical") < 0;
+        bool downKey = (GetAxis("DPadVertical") < 0 || GetAxis("LeftVertical") < -axisDiscreteDeadZone);
         bool downKeyDown = downKey && !downDownLast;
 
         downDownLast = downKey;
@@ -160,7 +161,7 @@ public class PlayerJoystickControls : IPlayerControls
     bool IPlayerControls.GetRightKeyDown()
     {
         // Assumes value is polled to reset tracker
-        bool rightKey = GetAxis("DPadHorizontal") > 0;
+        bool rightKey = (GetAxis("DPadHorizontal") > 0 || GetAxis("LeftHorizontal") > axisDiscreteDeadZone);
         bool rightKeyDown = rightKey && !rightDownLast;
 
         rightDownLast = rightKey;
@@ -182,4 +183,5 @@ public class PlayerJoystickControls : IPlayerControls
     {
         return "(A)";
     }
+
 }
