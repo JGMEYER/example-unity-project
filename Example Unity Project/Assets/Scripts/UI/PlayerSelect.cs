@@ -56,6 +56,7 @@ public class PlayerSelect : MonoBehaviour
     {
         if (InputManager.Instance.EnoughPlayersRegistered())
         {
+            // TODO string should be generalized somewhere
             SceneManager.LoadScene("GameSelect");
         }
     }
@@ -68,6 +69,28 @@ public class PlayerSelect : MonoBehaviour
         foreach (PlayerNumber playerNumber in Enum.GetValues(typeof(PlayerNumber))) {
             UpdatePlayerPanel(playerNumber, playerControlsAssignments[playerNumber], availablePlayerControls);
         }
+    }
+
+    private GameObject GetControlsLayout(IPlayerControls playerControls)
+    {
+        GameObject controlsLayout;
+
+        if (playerControls is PlayerKeyboardControls)
+        {
+            GameObject keyboardControlsLayout = Instantiate(uiPlayerKeyboardControlsLayoutPrefab);
+            keyboardControlsLayout.GetComponent<PlayerKeyboardControlsLayout>().Init((PlayerKeyboardControls)playerControls);
+            controlsLayout = keyboardControlsLayout;
+        }
+        else if (playerControls is PlayerJoystickControls)
+        {
+            controlsLayout = Instantiate(uiPlayerJoystickControlsLayoutPrefab);
+        }
+        else
+        {
+            throw new ArgumentException("Unknown player controls type");
+        }
+
+        return controlsLayout;
     }
 
     // Hacky proof-of-concept demo
@@ -85,54 +108,53 @@ public class PlayerSelect : MonoBehaviour
 
         if (playerControls == null)
         {
-            // Hacky: assumes both prefabs same height
-            float controlsLayoutHeight = uiPlayerKeyboardControlsLayoutPrefab.GetComponent<RectTransform>().rect.height;
-            float controlsLayoutBuffer = 20f;
-
-            // Starting Y position
-            float controlsLayoutY = ((controlsLayoutHeight * availablePlayerControls.Count) + (controlsLayoutBuffer * (availablePlayerControls.Count - 1))) / 2 - controlsLayoutHeight / 2;
-
-            foreach (IPlayerControls availableControls in availablePlayerControls)
-            {
-                GameObject controlsLayout;
-
-                if (availableControls is PlayerKeyboardControls)
-                {
-                    PlayerKeyboardControls playerKeyboardControls = (PlayerKeyboardControls)availableControls;
-                    GameObject keyboardControlsLayout = Instantiate(uiPlayerKeyboardControlsLayoutPrefab);
-
-                    keyboardControlsLayout.GetComponent<PlayerKeyboardControlsLayout>().Init(playerKeyboardControls);
-                    controlsLayout = keyboardControlsLayout;
-                }
-                else if (availableControls is PlayerJoystickControls)
-                {
-                    controlsLayout = Instantiate(uiPlayerJoystickControlsLayoutPrefab);
-                }
-                else
-                {
-                    throw new ArgumentException("Unknown player controls type.");
-                }
-
-                controlsLayout.transform.SetParent(playerPanel.transform);
-                controlsLayout.transform.localPosition = new Vector3(0, controlsLayoutY, 0);
-
-                controlsLayoutY -= controlsLayoutHeight + controlsLayoutBuffer;
-            }
+            DisplayAvailableControls(playerPanel, availablePlayerControls);
         }
         else
         {
-            GameObject textGameObject = new GameObject("Joined Text");
-            Text joinedText = textGameObject.AddComponent<Text>();
-
-            // Hacky: should be put in a prefab or something
-            joinedText.text = "Player" + (int)playerNumber + " Joined\n" + playerControls.GetType().ToString();
-            joinedText.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
-            joinedText.alignment = TextAnchor.MiddleCenter;
-            joinedText.color = Color.black;
-
-            joinedText.transform.SetParent(playerPanel.transform);
-            joinedText.transform.localPosition = Vector3.zero;
+            DisplaySelectedPlayerControls(playerPanel, playerNumber, playerControls);
         }
+    }
+
+    private void DisplayAvailableControls(GameObject playerPanel, List<IPlayerControls> availablePlayerControls) {
+        // Hacky: assumes both prefabs same height
+        float controlsLayoutHeight = uiPlayerKeyboardControlsLayoutPrefab.GetComponent<RectTransform>().rect.height;
+        float controlsLayoutBuffer = 20f;
+
+        // Starting Y position
+        float controlsLayoutY = ((controlsLayoutHeight * availablePlayerControls.Count) + (controlsLayoutBuffer * (availablePlayerControls.Count - 1))) / 2 - controlsLayoutHeight / 2;
+
+        foreach (IPlayerControls availableControls in availablePlayerControls)
+        {
+            GameObject controlsLayout = GetControlsLayout(availableControls);
+            controlsLayout.transform.SetParent(playerPanel.transform);
+            controlsLayout.transform.localPosition = new Vector3(0, controlsLayoutY, 0);
+            controlsLayoutY -= controlsLayoutHeight + controlsLayoutBuffer;
+        }
+    }
+
+    private void DisplaySelectedPlayerControls(GameObject playerPanel, PlayerNumber playerNumber, IPlayerControls playerControls)
+    {
+        GameObject textGameObject = new GameObject("Joined Text");
+        Text joinedText = textGameObject.AddComponent<Text>();
+
+        // Hacky: should be put in a prefab or something
+        joinedText.text = "Player" + (int)playerNumber + " Joined";
+        joinedText.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
+        joinedText.alignment = TextAnchor.MiddleCenter;
+        joinedText.color = Color.black;
+
+        joinedText.transform.SetParent(playerPanel.transform);
+        joinedText.transform.localPosition = Vector3.zero;
+
+        // Hacky: assumes both prefabs same height
+        float controlsLayoutHeight = uiPlayerKeyboardControlsLayoutPrefab.GetComponent<RectTransform>().rect.height;
+        float controlsLayoutBuffer = 20f;
+
+        GameObject controlsLayout = GetControlsLayout(playerControls);
+        float controlsLayoutY = joinedText.transform.localPosition.y - joinedText.preferredHeight / 2 - controlsLayoutHeight / 2 - controlsLayoutBuffer;
+        controlsLayout.transform.SetParent(playerPanel.transform);
+        controlsLayout.transform.localPosition = new Vector3(0, controlsLayoutY, 0);
     }
 
 }
