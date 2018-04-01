@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class ReactionPlayer : Player
@@ -11,7 +12,13 @@ public class ReactionPlayer : Player
     private Vector3 startingPosition;
     private Vector3 endingPosition;
     private bool isMoving;
+    private bool isStunned;
+    private Color playerColor;
+    private Renderer playerRenderer;
+    private int score;
+
     public float PlayerSpeed;
+    public float stunTime;
 
     private int roundWins;
 
@@ -19,13 +26,20 @@ public class ReactionPlayer : Player
     {
         startingPosition = transform.position;
         endingPosition = reactionToast.transform.position;
+        isStunned = false;
+        playerRenderer = this.gameObject.transform.GetChild(0).GetChild(4).gameObject.GetComponent<Renderer>();
+        playerColor = playerRenderer.material.color;
+        score = 0;
     }
 
     private void Update()
     {
-        HandleInput();
-        if (isMoving) 
-        {
+        if (!isStunned) 
+        { 
+            HandleInput();
+        }
+
+        if (isMoving) {
             MoveToEnd();
         }
     }
@@ -37,6 +51,8 @@ public class ReactionPlayer : Player
             float pressTime = Time.timeSinceLevelLoad;
             if (reactionGameManager.Grab(playerNumber, pressTime)) {
                 isMoving = true;
+            } else {
+                Stun();
             }
         }
     }
@@ -53,4 +69,29 @@ public class ReactionPlayer : Player
         isMoving = false;
     }
 
+    public void Stun()
+    {
+        isStunned = true;
+        playerRenderer.material.color = Color.red;
+        StartCoroutine(WaitStunDuration());
+    }
+
+
+    private IEnumerator WaitStunDuration()
+    {
+        Debug.Log("Player " + playerNumber + " stunned for: " + stunTime);
+        yield return new WaitForSeconds(stunTime);
+        isStunned = false;
+        playerRenderer.material.color = playerColor;
+    }
+
+    public void IncreaseScore()
+    {
+        score++;
+    }
+
+    public int GetScore()
+    {
+        return score;
+    }
 }

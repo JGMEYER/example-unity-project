@@ -19,10 +19,15 @@ public class ReactionGameManager : GameManager<ReactionPlayer>
     public float MinWait;
     public float MaxWait;
     public float BetweenRoundTime;
+    public int NumRounds;
+
+    [Range(0.0f, 100.0f)]
+    public float percentBurntToast;
 
     private bool allowGrab;
     private Dictionary<PlayerNumber, float> playerTimes;
     private float currentTime;
+    private int roundsPlayed;
 
     private new void Awake()
     {
@@ -43,6 +48,11 @@ public class ReactionGameManager : GameManager<ReactionPlayer>
     private new void Update()
     {
         base.Update();
+
+        if (roundsPlayed >= NumRounds)
+        {
+            EndGame();
+        }
 
         if (playerTimes.Count == NumPlayers)
         {
@@ -87,8 +97,18 @@ public class ReactionGameManager : GameManager<ReactionPlayer>
         float timeTaken = minTime - currentTime;
         Debug.Log("Winner is player: " + player + " with time: " + timeTaken);
         roundVictoryText.text = "Winner: " + player + " time: " + timeTaken;
+
+        foreach (ReactionPlayer rPlayer in players)
+        {
+            if (rPlayer.GetPlayerNumber().Equals(player))
+            {
+                rPlayer.IncreaseScore();
+            }
+        }
+
         playerTimes.Clear();
         reactionSphere.SetAsEndColor();
+        roundsPlayed++;
     }
 
     protected override void ResetRound()
@@ -96,6 +116,8 @@ public class ReactionGameManager : GameManager<ReactionPlayer>
         base.ResetRound();
 
         burntToast.resetToast();
+        reactionToast.resetToast();
+
         foreach (ReactionPlayer player in players) 
         {
             player.ResetPlayerPosition();
@@ -107,13 +129,58 @@ public class ReactionGameManager : GameManager<ReactionPlayer>
         float waitTime = Random.Range(MinWait, MaxWait);
         Debug.Log("Waiting for " + waitTime + " seconds");
         yield return new WaitForSeconds(waitTime);
+        float randToast = Random.Range(0, 100);
+        if (randToast >= percentBurntToast)
+        {
+            ThrowToast();
+        } 
+        else
+        {
+            ThrowBurntToast();
+        }
+    }
+
+    private void ThrowToast()
+    {
         allowGrab = true;
         currentTime = Time.timeSinceLevelLoad;
         reactionSphere.SetAsStartColor();
-        //reactionToast.flingToast();
-        burntToast.flingToast();
+        reactionToast.flingToast();
         FindObjectOfType<AudioManager>().Play("Impact");
         Debug.Log("Grab allowed");
     }
+
+    private void ThrowBurntToast()
+    {
+        burntToast.flingToast();
+        FindObjectOfType<AudioManager>().Play("Impact");
+        StartCoroutine(ResetAfterBurntToast());
+    }
+
+    private IEnumerator ResetAfterBurntToast()
+    {
+        yield return new WaitForSeconds(BetweenRoundTime);
+        ResetRound();
+        StartCoroutine(WaitForGrab());
+    }
+
+    private void EndGame()
+    {
+        PlayerNumber winningPlayer = PlayerNumber.One;
+        int highestScore = int.MinValue;
+        foreach (ReactionPlayer player in players)
+        {
+            int score = player.GetScore();
+            if (score > highestScore)
+            {
+                highestScore = score;
+                winningPlayer = player.GetPlayerNumber();
+            }
+        }
+        allowGrab = false;
+        base.EndGame(new PlayerNumber[] { winningPlayer });
+    }
+
+
 
 }
