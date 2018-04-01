@@ -168,13 +168,13 @@ public class InputManager : PersistentSingleton<InputManager>
 
     public IPlayerControls PlayerControls(PlayerNumber playerNumber)
     {
-        if (!EnoughPlayersRegistered() && Application.isEditor)
+        if (!EnoughPlayersRegistered())
         {
             Debug.LogWarning("Not enough players registered. Using default " +
-                "control assignments while in the editor. This could mean " +
-                "there is a problem with the player control assignment " +
-                "workflow OR you are running your game scene directly from " +
-                "the editor without setting controls first.");
+                "control assignments. This could mean there is a problem " + 
+                "with the player control assignment workflow OR you are " + 
+                "running your game scene directly from the editor without " +
+                "setting controls first.");
             SetDefaultPlayerControlsAssignments();
         }
 
