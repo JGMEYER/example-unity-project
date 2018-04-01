@@ -9,6 +9,8 @@ public class GameManager<P> : MonoBehaviour where P : Player
 {
 
     [SerializeField]
+    private Text countdownTimer;
+    [SerializeField]
     private Text victoryText;
 
     // Singleton values
@@ -78,6 +80,33 @@ public class GameManager<P> : MonoBehaviour where P : Player
         }
     }
 
+    private IEnumerator StartCountdown(int seconds)
+    {
+        float timeElapsed = 0f;
+        string timerDisplay = seconds.ToString();
+        string lastTimerDisplay = "";
+
+        countdownTimer.text = timerDisplay;
+
+        while (timeElapsed < seconds)
+        {
+            timerDisplay = (seconds - (int)timeElapsed).ToString();
+
+            if (!timerDisplay.Equals(lastTimerDisplay))
+            {
+                // eventually play sound here
+
+                countdownTimer.text = timerDisplay;
+                lastTimerDisplay = timerDisplay;
+            }
+
+            timeElapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        countdownTimer.text = "";
+    }
+
     // =================
     // Game Flow Logic
     // =================
@@ -108,7 +137,7 @@ public class GameManager<P> : MonoBehaviour where P : Player
 
     protected virtual void ResetRound() {
         Debug.Log("Round reset");
-        // game defined
+        // Game defined
     }
 
     protected virtual void EndGame(PlayerNumber[] winners)
@@ -137,7 +166,7 @@ public class GameManager<P> : MonoBehaviour where P : Player
 
     protected IEnumerator StartRoundAfterDelay()
     {
-        yield return new WaitForSeconds(3f);
+        yield return StartCoroutine(StartCountdown(3));
         StartRound();
     }
 
