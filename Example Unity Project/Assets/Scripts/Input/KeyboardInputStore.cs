@@ -67,9 +67,9 @@ public class KeyboardInputStore : PersistentSingleton<KeyboardInputStore>
         KeyCode leftKey = GetPlayerKeyboardCommand(keyboardConfigNumber, InputCommand.Left);
         KeyCode downKey = GetPlayerKeyboardCommand(keyboardConfigNumber, InputCommand.Down);
         KeyCode rightKey = GetPlayerKeyboardCommand(keyboardConfigNumber, InputCommand.Right);
-        KeyCode submitKey = GetPlayerKeyboardCommand(keyboardConfigNumber, InputCommand.Submit);
+        KeyCode actionKey = GetPlayerKeyboardCommand(keyboardConfigNumber, InputCommand.Action);
 
-        return new PlayerKeyboardControls(keyboardConfigNumber, upKey, leftKey, downKey, rightKey, submitKey);
+        return new PlayerKeyboardControls(keyboardConfigNumber, upKey, leftKey, downKey, rightKey, actionKey);
     }
 
     private string PlayerCommandConfigKey(KeyboardConfigNumber keyboardConfigNumber, InputCommand inputCommand)
@@ -101,25 +101,25 @@ public class KeyboardInputStore : PersistentSingleton<KeyboardInputStore>
         SetPlayerCommandDefault(KeyboardConfigNumber.One, InputCommand.Left, KeyCode.A);
         SetPlayerCommandDefault(KeyboardConfigNumber.One, InputCommand.Down, KeyCode.S);
         SetPlayerCommandDefault(KeyboardConfigNumber.One, InputCommand.Right, KeyCode.D);
-        SetPlayerCommandDefault(KeyboardConfigNumber.One, InputCommand.Submit, KeyCode.Q);
+        SetPlayerCommandDefault(KeyboardConfigNumber.One, InputCommand.Action, KeyCode.Q);
 
         SetPlayerCommandDefault(KeyboardConfigNumber.Two, InputCommand.Up, KeyCode.UpArrow);
         SetPlayerCommandDefault(KeyboardConfigNumber.Two, InputCommand.Left, KeyCode.LeftArrow);
         SetPlayerCommandDefault(KeyboardConfigNumber.Two, InputCommand.Down, KeyCode.DownArrow);
         SetPlayerCommandDefault(KeyboardConfigNumber.Two, InputCommand.Right, KeyCode.RightArrow);
-        SetPlayerCommandDefault(KeyboardConfigNumber.Two, InputCommand.Submit, KeyCode.Return);
+        SetPlayerCommandDefault(KeyboardConfigNumber.Two, InputCommand.Action, KeyCode.Return);
 
         SetPlayerCommandDefault(KeyboardConfigNumber.Three, InputCommand.Up, KeyCode.Y);
         SetPlayerCommandDefault(KeyboardConfigNumber.Three, InputCommand.Left, KeyCode.G);
         SetPlayerCommandDefault(KeyboardConfigNumber.Three, InputCommand.Down, KeyCode.H);
         SetPlayerCommandDefault(KeyboardConfigNumber.Three, InputCommand.Right, KeyCode.J);
-        SetPlayerCommandDefault(KeyboardConfigNumber.Three, InputCommand.Submit, KeyCode.T);
+        SetPlayerCommandDefault(KeyboardConfigNumber.Three, InputCommand.Action, KeyCode.T);
 
         SetPlayerCommandDefault(KeyboardConfigNumber.Four, InputCommand.Up, KeyCode.P);
         SetPlayerCommandDefault(KeyboardConfigNumber.Four, InputCommand.Left, KeyCode.L);
         SetPlayerCommandDefault(KeyboardConfigNumber.Four, InputCommand.Down, KeyCode.Semicolon);
         SetPlayerCommandDefault(KeyboardConfigNumber.Four, InputCommand.Right, KeyCode.Quote);
-        SetPlayerCommandDefault(KeyboardConfigNumber.Four, InputCommand.Submit, KeyCode.O);
+        SetPlayerCommandDefault(KeyboardConfigNumber.Four, InputCommand.Action, KeyCode.O);
 
         PlayerPrefs.Save();
     }

@@ -1,7 +1,11 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class MenuNavigation : MonoBehaviour {
+public class MenuNavigator : MonoBehaviour {
+
+    [SerializeField]
+    private string previousScene;
 
     private Button[] buttons;
     private Button currentSelection;
@@ -9,7 +13,7 @@ public class MenuNavigation : MonoBehaviour {
     private void Awake()
     {
         buttons = GetComponentsInChildren<Button>();
-        currentSelection = buttons[0];
+        currentSelection = buttons.Length > 0 ? buttons[0] : null;
     }
 
     private void Start()
@@ -24,6 +28,8 @@ public class MenuNavigation : MonoBehaviour {
         InputEventManager.Instance.StartListening(InputEvent.PlayerPressedDown, NavigateDown);
         InputEventManager.Instance.StartListening(InputEvent.PlayerPressedRight, NavigateRight);
         InputEventManager.Instance.StartListening(InputEvent.PlayerPressedSubmit, Submit);
+        InputEventManager.Instance.StartListening(InputEvent.PlayerPressedCancel, Back);
+        InputEventManager.Instance.StartListening(InputEvent.PlayerPressedExit, Back);
     }
 
     private void OnDisable()
@@ -33,12 +39,17 @@ public class MenuNavigation : MonoBehaviour {
         InputEventManager.Instance.StopListening(InputEvent.PlayerPressedDown, NavigateDown);
         InputEventManager.Instance.StopListening(InputEvent.PlayerPressedRight, NavigateRight);
         InputEventManager.Instance.StartListening(InputEvent.PlayerPressedSubmit, Submit);
+        InputEventManager.Instance.StartListening(InputEvent.PlayerPressedCancel, Back);
+        InputEventManager.Instance.StartListening(InputEvent.PlayerPressedExit, Back);
     }
 
     private void changeSelection(Button newSelection)
     {
-        newSelection.Select();
-        currentSelection = newSelection;
+        if (newSelection != null)
+        {
+            newSelection.Select();
+            currentSelection = newSelection;
+        }
     }
 
     private void NavigateUp()
@@ -80,6 +91,14 @@ public class MenuNavigation : MonoBehaviour {
     private void Submit()
     {
         currentSelection.onClick.Invoke();
+    }
+
+    private void Back()
+    {
+        if (previousScene != null)
+        {
+            SceneManager.LoadSceneAsync(previousScene);
+        }
     }
 
 }

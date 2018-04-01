@@ -51,9 +51,16 @@ public class GameManager<P> : MonoBehaviour where P : Player
 
     protected void Start() { }
 
-    protected void Update()
+    protected void Update() { }
+
+    protected void OnEnable()
     {
-        DoInput();
+        InputEventManager.Instance.StartListening(InputEvent.PlayerPressedExit, ExitGame);
+    }
+
+    protected void OnDisable()
+    {
+        InputEventManager.Instance.StopListening(InputEvent.PlayerPressedExit, ExitGame);
     }
 
     private void InitializePlayersAndRemoveExtra()
@@ -70,14 +77,6 @@ public class GameManager<P> : MonoBehaviour where P : Player
         }
 
         players = playersInScene.ToArray();
-    }
-
-    protected void DoInput()
-    {
-        if (globalControls.GetExitKeyDown())
-        {
-            SceneManager.LoadSceneAsync(GameSelect);
-        }
     }
 
     private IEnumerator StartCountdown(int seconds)
@@ -110,6 +109,11 @@ public class GameManager<P> : MonoBehaviour where P : Player
     // =================
     // Game Flow Logic
     // =================
+
+    private void ExitGame()
+    {
+        SceneManager.LoadSceneAsync(GameSelect);
+    }
 
     // Only ever extend these, do not fully override or call them directly
 

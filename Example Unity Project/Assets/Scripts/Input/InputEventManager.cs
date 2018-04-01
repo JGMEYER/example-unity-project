@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.Events;
 
 public class InputEventManager : PersistentSingleton<InputEventManager> {
@@ -95,6 +94,16 @@ public class InputEventManager : PersistentSingleton<InputEventManager> {
             TriggerEvent(InputEvent.PlayerPressedSubmit);
         }
 
+        if (ListeningOnEvent(InputEvent.PlayerPressedCancel) && PlayerPressedCancel())
+        {
+            TriggerEvent(InputEvent.PlayerPressedCancel);
+        }
+
+        if (ListeningOnEvent(InputEvent.PlayerPressedExit) && PlayerPressedExit())
+        {
+            TriggerEvent(InputEvent.PlayerPressedExit);
+        }
+
         if (ListeningOnEvent(InputEvent.PlayerControlsAssigned) && PlayerControlsAssigned())
         {
             TriggerEvent(InputEvent.PlayerControlsAssigned);
@@ -159,10 +168,50 @@ public class InputEventManager : PersistentSingleton<InputEventManager> {
 
     private bool PlayerPressedSubmit()
     {
+        GlobalControls globalControls = InputManager.Instance.GlobalControls();
+        if (globalControls.GetSubmitKeyDown())
+        {
+            return true;
+        }
+
         foreach (PlayerNumber playerNumber in Enum.GetValues(typeof(PlayerNumber)))
         {
             IPlayerControls playerControls = InputManager.Instance.PlayerControlsAssignments[playerNumber];
             if (playerControls != null && playerControls.GetSubmitDown())
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private bool PlayerPressedCancel()
+    {
+        foreach (PlayerNumber playerNumber in Enum.GetValues(typeof(PlayerNumber)))
+        {
+            IPlayerControls playerControls = InputManager.Instance.PlayerControlsAssignments[playerNumber];
+            if (playerControls != null && playerControls.GetCancelDown())
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private bool PlayerPressedExit()
+    {
+        GlobalControls globalControls = InputManager.Instance.GlobalControls();
+        if (globalControls.GetExitKeyDown())
+        {
+            return true;
+        }
+
+        foreach (PlayerNumber playerNumber in Enum.GetValues(typeof(PlayerNumber)))
+        {
+            IPlayerControls playerControls = InputManager.Instance.PlayerControlsAssignments[playerNumber];
+            if (playerControls != null && playerControls.GetExitDown())
             {
                 return true;
             }

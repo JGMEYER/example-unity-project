@@ -17,7 +17,7 @@ public class PlayerKeyboardControlsLayout : MonoBehaviour {
             switch (uiKey.name)
             {
                 case "SubmitKey":
-                    KeyCode submitKey = playerKeyboardControls.SubmitKey;
+                    KeyCode submitKey = playerKeyboardControls.ActionKey;
                     uiKeyText.text = KeyCodeCharacter.For(submitKey).ToString();
                     break;
                 case "UpKey":

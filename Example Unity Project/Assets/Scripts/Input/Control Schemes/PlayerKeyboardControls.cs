@@ -14,9 +14,9 @@ public class PlayerKeyboardControls : IPlayerControls
     public KeyCode LeftKey { get; private set; }
     public KeyCode DownKey { get; private set; }
     public KeyCode RightKey { get; private set; }
-    public KeyCode SubmitKey { get; private set; }
+    public KeyCode ActionKey { get; private set; }
 
-    public PlayerKeyboardControls(KeyboardConfigNumber keyboardConfigNumber, KeyCode upKey, KeyCode leftKey, KeyCode downKey, KeyCode rightKey, KeyCode submitKey)
+    public PlayerKeyboardControls(KeyboardConfigNumber keyboardConfigNumber, KeyCode upKey, KeyCode leftKey, KeyCode downKey, KeyCode rightKey, KeyCode actionKey)
     {
         KeyboardConfigNumber = keyboardConfigNumber;
 
@@ -24,7 +24,7 @@ public class PlayerKeyboardControls : IPlayerControls
         LeftKey = leftKey;
         DownKey = downKey;
         RightKey = rightKey;
-        SubmitKey = submitKey;
+        ActionKey = actionKey;
     }
 
     float IPlayerControls.GetMovementHorizontal()
@@ -61,12 +61,22 @@ public class PlayerKeyboardControls : IPlayerControls
 
     bool IPlayerControls.GetSubmitDown()
     {
-        return Input.GetKeyDown(SubmitKey);
+        return Input.GetKeyDown(ActionKey);
+    }
+
+    bool IPlayerControls.GetCancelDown()
+    {
+        return Input.GetKeyDown(KeyCode.Escape);
+    }
+
+    bool IPlayerControls.GetExitDown()
+    {
+        return Input.GetKeyDown(KeyCode.Escape);
     }
 
     bool IPlayerControls.GetJoinGameDown()
     {
-        return Input.GetKeyDown(SubmitKey);
+        return Input.GetKeyDown(ActionKey);
     }
 
     bool IPlayerControls.GetJump()
@@ -116,6 +126,6 @@ public class PlayerKeyboardControls : IPlayerControls
 
     string IPlayerControls.GetJoinGameKeyName()
     {
-        return SubmitKey.ToString();
+        return ActionKey.ToString();
     }
 }

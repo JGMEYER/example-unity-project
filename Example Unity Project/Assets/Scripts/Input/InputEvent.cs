@@ -6,6 +6,8 @@
     PlayerPressedDown,
     PlayerPressedRight,
     PlayerPressedSubmit,
+    PlayerPressedCancel,
+    PlayerPressedExit,
 
     PlayerControlsAssigned,
 

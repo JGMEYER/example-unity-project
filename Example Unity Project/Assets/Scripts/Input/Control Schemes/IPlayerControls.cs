@@ -1,13 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public interface IPlayerControls
 {
 
     float GetMovementHorizontal();
     float GetMovementVertical();
     bool GetSubmitDown();
+    bool GetCancelDown();
+    bool GetExitDown();
     bool GetJoinGameDown();
     bool GetJump();
     bool GetUpKey();

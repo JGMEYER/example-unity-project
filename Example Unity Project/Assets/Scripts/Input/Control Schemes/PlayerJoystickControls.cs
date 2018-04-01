@@ -44,7 +44,7 @@ public class PlayerJoystickControls : IPlayerControls
     private KeyCode GetJoystickButtonKeyCode(int buttonNum)
     {
         String keyName = "Joystick" + JoystickNumber + "Button" + buttonNum;
-        return (KeyCode)System.Enum.Parse(typeof(KeyCode), keyName);
+        return (KeyCode)Enum.Parse(typeof(KeyCode), keyName);
     }
 
     private bool GetButton(int buttonNum)
@@ -81,17 +81,27 @@ public class PlayerJoystickControls : IPlayerControls
 
     bool IPlayerControls.GetSubmitDown()
     {
-        return GetButtonDown(0);
+        return GetButtonDown(0);  // A
+    }
+
+    bool IPlayerControls.GetCancelDown()
+    {
+        return GetButtonDown(1);  // B
+    }
+
+    bool IPlayerControls.GetExitDown()
+    {
+        return GetButtonDown(6);  // Back
     }
 
     bool IPlayerControls.GetJoinGameDown()
     {
-        return GetButtonDown(0);
+        return GetButtonDown(0);  // A
     }
 
     bool IPlayerControls.GetJump()
     {
-        return GetButton(0);
+        return GetButton(0);  // A
     }
 
     bool IPlayerControls.GetUpKey()
