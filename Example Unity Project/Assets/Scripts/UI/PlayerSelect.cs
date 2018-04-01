@@ -71,6 +71,26 @@ public class PlayerSelect : MonoBehaviour
         }
     }
 
+    private List<IPlayerControls> GetAvailablePlayerControlsToDisplay(List<IPlayerControls> availablePlayerControls)
+    {
+        List<IPlayerControls> playerControlsToDisplay = new List<IPlayerControls>();
+        bool joystickControlsAlreadyAdded = false;
+
+        foreach (IPlayerControls playerControls in availablePlayerControls)
+        {
+            if (!(joystickControlsAlreadyAdded && playerControls is PlayerJoystickControls)) {
+                playerControlsToDisplay.Add(playerControls);
+
+                if (playerControls is PlayerJoystickControls)
+                {
+                    joystickControlsAlreadyAdded = true;
+                }
+            }
+        }
+
+        return playerControlsToDisplay;
+    }
+
     private GameObject GetControlsLayout(IPlayerControls playerControls)
     {
         GameObject controlsLayout;
@@ -116,15 +136,18 @@ public class PlayerSelect : MonoBehaviour
         }
     }
 
-    private void DisplayAvailableControls(GameObject playerPanel, List<IPlayerControls> availablePlayerControls) {
+    private void DisplayAvailableControls(GameObject playerPanel, List<IPlayerControls> availablePlayerControls)
+    {
+        List<IPlayerControls> playerControlsToDisplay = GetAvailablePlayerControlsToDisplay(availablePlayerControls);
+
         // Hacky: assumes both prefabs same height
         float controlsLayoutHeight = uiPlayerKeyboardControlsLayoutPrefab.GetComponent<RectTransform>().rect.height;
         float controlsLayoutBuffer = 20f;
 
         // Starting Y position
-        float controlsLayoutY = ((controlsLayoutHeight * availablePlayerControls.Count) + (controlsLayoutBuffer * (availablePlayerControls.Count - 1))) / 2 - controlsLayoutHeight / 2;
+        float controlsLayoutY = ((controlsLayoutHeight * playerControlsToDisplay.Count) + (controlsLayoutBuffer * (playerControlsToDisplay.Count - 1))) / 2 - controlsLayoutHeight / 2;
 
-        foreach (IPlayerControls availableControls in availablePlayerControls)
+        foreach (IPlayerControls availableControls in playerControlsToDisplay)
         {
             GameObject controlsLayout = GetControlsLayout(availableControls);
             controlsLayout.transform.SetParent(playerPanel.transform);
