@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ReactionPlayer : Player
@@ -34,7 +32,7 @@ public class ReactionPlayer : Player
 
     private void HandleInput()
     {
-        if (controls.GetSubmitDown())
+        if (controls.GetActionKeyDown())
         {
             float pressTime = Time.timeSinceLevelLoad;
             if (reactionGameManager.Grab(playerNumber, pressTime)) {

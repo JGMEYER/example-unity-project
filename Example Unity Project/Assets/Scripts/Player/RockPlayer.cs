@@ -67,7 +67,7 @@ public class RockPlayer : Player
         }
         else
         {
-            if (controls.GetDownKey())
+            if (controls.GetActionKey())
             {
                 SetShieldActive(true);
                 health.TakeDamage(ShieldDamage * Time.deltaTime);

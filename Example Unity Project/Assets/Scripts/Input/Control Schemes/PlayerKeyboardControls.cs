@@ -124,6 +124,16 @@ public class PlayerKeyboardControls : IPlayerControls
         return Input.GetKeyDown(RightKey);
     }
 
+    bool IPlayerControls.GetActionKey()
+    {
+        return Input.GetKey(ActionKey); 
+    }
+
+    bool IPlayerControls.GetActionKeyDown()
+    {
+        return Input.GetKeyDown(ActionKey); 
+    }
+
     string IPlayerControls.GetJoinGameKeyName()
     {
         return ActionKey.ToString();

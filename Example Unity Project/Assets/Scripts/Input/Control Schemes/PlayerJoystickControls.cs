@@ -168,6 +168,16 @@ public class PlayerJoystickControls : IPlayerControls
         return rightKeyDown;
     }
 
+    bool IPlayerControls.GetActionKey()
+    {
+        return GetButton(2);  // X
+    }
+
+    bool IPlayerControls.GetActionKeyDown()
+    {
+        return GetButtonDown(2);  // X
+    }
+
     string IPlayerControls.GetJoinGameKeyName()
     {
         return "(A)";
