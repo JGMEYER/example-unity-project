@@ -26,3 +26,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/RockGame.unity
     guid: a55f229cc16db2c46be17601080e03d7
+  - enabled: 1
+    path: Assets/Scenes/EggCatchGame.unity
+    guid: 748e121869ecf2c46afe12a53cec23a4

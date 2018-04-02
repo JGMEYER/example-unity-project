@@ -1,6 +1,7 @@
 using UnityEngine;
 
-public class EggCatchPlayer : Player {
+public class EggCatchPlayer : Player
+{
 
     private Rigidbody rb;
     private float inputHorizontal;
@@ -46,6 +47,15 @@ public class EggCatchPlayer : Player {
 
         inputHorizontal = 0;
         inputVertical = 0;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        EggCatchEgg egg = other.GetComponent<EggCatchEgg>();
+        if (egg)
+        {
+            Destroy(egg.gameObject);
+        }
     }
 
 }
