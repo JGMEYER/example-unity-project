@@ -3,6 +3,9 @@ using UnityEngine;
 public class EggCatchPlayer : Player
 {
 
+    [SerializeField]
+    private EggCatchGameManager gameManager;
+
     private Rigidbody rb;
     private float inputHorizontal;
     private float inputVertical;
@@ -38,6 +41,7 @@ public class EggCatchPlayer : Player
 
         Vector3 newVelocity = new Vector3(velocityX, 0f, velocityZ);
         rb.velocity = newVelocity;
+        rb.angularVelocity = Vector3.zero;  // stop player from spinning on collision
 
         if (inputHorizontal != 0 || inputVertical != 0)
         {
@@ -54,6 +58,7 @@ public class EggCatchPlayer : Player
         EggCatchEgg egg = other.GetComponent<EggCatchEgg>();
         if (egg)
         {
+            gameManager.AddPoints(playerNumber, egg.PointValue);
             Destroy(egg.gameObject);
         }
     }

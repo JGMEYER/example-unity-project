@@ -4,6 +4,7 @@ public class EggCatchEgg : MonoBehaviour
 {
 
     public float FallSpeed = 0.1f;
+    public int PointValue = 1;
 
     public void Update()
     {
