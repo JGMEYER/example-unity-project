@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class EggCatchGameManager : GameManager<EggCatchPlayer>
 {
 
+    [SerializeField]
+    private Text gameTimer;
     [SerializeField]
     private GameObject player1Panel;
     [SerializeField]
@@ -14,6 +17,9 @@ public class EggCatchGameManager : GameManager<EggCatchPlayer>
     private GameObject player3Panel;
     [SerializeField]
     private GameObject player4Panel;
+
+    [Tooltip("seconds")]
+    public float GameTime = 45f;
 
     private Dictionary<PlayerNumber, int> points;
     private Dictionary<PlayerNumber, GameObject> playerPanels;
@@ -65,6 +71,8 @@ public class EggCatchGameManager : GameManager<EggCatchPlayer>
                 }
             }
         }
+
+        UpdateGameTimer();
     }
 
     private new void Start()
@@ -74,12 +82,59 @@ public class EggCatchGameManager : GameManager<EggCatchPlayer>
         StartCoroutine(StartRoundAfterDelay());
     }
 
+    private new void Update()
+    {
+        if (roundActive)
+        {
+            GameTime -= Time.deltaTime;
+            if (GameTime < 0f)
+            {
+                GameTime = 0f;
+                UpdateGameTimer();
+
+                PlayerNumber[] winners = GetWinners();
+                StartCoroutine(EndGameAfterDelay(winners));
+            }
+            else
+            {
+                UpdateGameTimer();
+            }
+        }
+    }
+
+    private void UpdateGameTimer()
+    {
+        float min = Mathf.Floor(GameTime / 60f);
+        float sec = GameTime % 60f;
+        float fraction = ((GameTime * 100) % 100);
+
+        gameTimer.text = String.Format("{0:00}:{1:00}:{2:00}", min, sec, fraction);
+    }
+
+    // God have mercy...
+    private PlayerNumber[] GetWinners()
+    {
+        List<PlayerNumber> winners = new List<PlayerNumber>();
+        float max = points.Aggregate((l, r) => l.Value > r.Value ? l : r).Value;  // largest point value
+
+        foreach (KeyValuePair<PlayerNumber, int> pair in points)
+        {
+            if (pair.Value == max)
+            {
+                winners.Add(pair.Key);
+            }
+        }
+
+        return winners.ToArray();
+    }
+
     public void AddPoints(PlayerNumber playerNumber, int numPoints)
     {
-        Debug.Log("Adding " + numPoints + " to player " + (int)playerNumber);
-
-        points[playerNumber] += numPoints;
-        playerPanels[playerNumber].GetComponentInChildren<Text>().text = points[playerNumber] + "";
+        if (roundActive)
+        {
+            points[playerNumber] += numPoints;
+            playerPanels[playerNumber].GetComponentInChildren<Text>().text = points[playerNumber] + "";
+        }
     }
 
 }
