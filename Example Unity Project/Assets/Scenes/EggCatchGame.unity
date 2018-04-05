@@ -1741,7 +1741,7 @@ MonoBehaviour:
     type: 2}
   bonusEggPrefab: {fileID: 114221864760548978, guid: db6eca5922c7bbe4c9de55eb42b45368,
     type: 2}
-  SpawnRadius: 15
+  SpawnRadius: 13
   SpawnChance: 0.033
   BonusSpawnChance: 0.005
 --- !u!4 &1400360091

@@ -12,15 +12,18 @@ public class EggCatchSpawner : MonoBehaviour
     public float SpawnChance = 0.2f;
     public float BonusSpawnChance = 0.005f;
 
+    private EggCatchEgg bonusEgg;
+
     private void FixedUpdate()
     {
         if (Random.value <= SpawnChance)
         {
             SpawnEggInCircle(normalEggPrefab);
         }
-        if (Random.value <= BonusSpawnChance)
+        // There can only be one!
+        if (Random.value <= BonusSpawnChance && bonusEgg == null)
         {
-            SpawnEggInCircle(bonusEggPrefab);
+            bonusEgg = SpawnEggInCircle(bonusEggPrefab);
         }
     }
 
@@ -37,12 +40,14 @@ public class EggCatchSpawner : MonoBehaviour
         return pos;
     }
 
-    private void SpawnEggInCircle(EggCatchEgg eggPrefab)
+    private EggCatchEgg SpawnEggInCircle(EggCatchEgg eggPrefab)
     {
         Vector3 pos = RandomPositionInCircle();
 
         EggCatchEgg egg = Instantiate(eggPrefab);
         egg.transform.position = pos;
+
+        return egg;
     }
 
 }
