@@ -10,6 +10,8 @@ public class EggCatchGameManager : GameManager<EggCatchPlayer>
     [SerializeField]
     private Text gameTimer;
     [SerializeField]
+    private EggCatchSpawner eggCatchSpawner;
+    [SerializeField]
     private GameObject player1Panel;
     [SerializeField]
     private GameObject player2Panel;
@@ -86,6 +88,8 @@ public class EggCatchGameManager : GameManager<EggCatchPlayer>
 
     private new void Update()
     {
+        eggCatchSpawner.SetActive(roundActive);
+
         if (roundActive)
         {
             gameTime -= Time.deltaTime;

@@ -862,6 +862,7 @@ MonoBehaviour:
   countdownTimer: {fileID: 896456262}
   victoryText: {fileID: 396907695}
   gameTimer: {fileID: 776622260}
+  eggCatchSpawner: {fileID: 1400360090}
   player1Panel: {fileID: 1189521899}
   player2Panel: {fileID: 1353182182}
   player3Panel: {fileID: 1457042278}
