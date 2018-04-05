@@ -43,7 +43,7 @@ RenderSettings:
 LightmapSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 11
-  m_GIWorkflowMode: 0
+  m_GIWorkflowMode: 1
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -89,7 +89,8 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaIndirect: 2
     m_PVRFilteringAtrousPositionSigmaAO: 1
     m_ShowResolutionOverlay: 1
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000002, guid: 069dd28132f98634681ff3e8c826b5e1,
+    type: 2}
   m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
@@ -383,6 +384,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerNumber: 4
   gameManager: {fileID: 0}
+  basket: {fileID: 0}
+  BasketFlashInterval: 0.5
+  BasketFlashColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!54 &359104375
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -471,6 +475,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerNumber: 2
   gameManager: {fileID: 0}
+  basket: {fileID: 0}
+  BasketFlashInterval: 0.5
+  BasketFlashColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!54 &465168533
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1038,6 +1045,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerNumber: 1
   gameManager: {fileID: 0}
+  basket: {fileID: 0}
+  BasketFlashInterval: 0.5
+  BasketFlashColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!54 &1185953697
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1126,6 +1136,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerNumber: 3
   gameManager: {fileID: 0}
+  basket: {fileID: 0}
+  BasketFlashInterval: 0.5
+  BasketFlashColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!54 &1231026406
 Rigidbody:
   m_ObjectHideFlags: 0
