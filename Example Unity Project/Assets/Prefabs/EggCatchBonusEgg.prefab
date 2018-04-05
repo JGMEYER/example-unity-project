@@ -109,9 +109,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8df8fce4df01b17469d4bbad214d5dba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MinSizeRatio: 0.95
-  MaxSizeRatio: 1.05
-  AnimationSpeed: 15
+  MinSizeRatio: 0.93
+  MaxSizeRatio: 1.07
+  AnimationSpeed: 10
 --- !u!135 &135521516430640334
 SphereCollider:
   m_ObjectHideFlags: 1
