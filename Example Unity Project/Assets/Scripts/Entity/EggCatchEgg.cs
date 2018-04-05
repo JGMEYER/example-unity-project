@@ -8,7 +8,7 @@ public class EggCatchEgg : MonoBehaviour
 
     public void Update()
     {
-        if (transform.position.y < 0)
+        if (transform.position.y + transform.localScale.y < 0)
         {
             Destroy(this.gameObject);
         }

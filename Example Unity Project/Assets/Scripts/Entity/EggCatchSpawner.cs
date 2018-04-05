@@ -4,16 +4,23 @@ public class EggCatchSpawner : MonoBehaviour
 {
 
     [SerializeField]
-    private EggCatchEgg eggPrefab;
+    private EggCatchEgg normalEggPrefab;
+    [SerializeField]
+    private EggCatchEgg bonusEggPrefab;
 
     public float SpawnRadius = 5f;
     public float SpawnChance = 0.2f;
+    public float BonusSpawnChance = 0.005f;
 
     private void FixedUpdate()
     {
         if (Random.value <= SpawnChance)
         {
-            SpawnEggInCircle();
+            SpawnEggInCircle(normalEggPrefab);
+        }
+        if (Random.value <= BonusSpawnChance)
+        {
+            SpawnEggInCircle(bonusEggPrefab);
         }
     }
 
@@ -30,7 +37,7 @@ public class EggCatchSpawner : MonoBehaviour
         return pos;
     }
 
-    private void SpawnEggInCircle()
+    private void SpawnEggInCircle(EggCatchEgg eggPrefab)
     {
         Vector3 pos = RandomPositionInCircle();
 

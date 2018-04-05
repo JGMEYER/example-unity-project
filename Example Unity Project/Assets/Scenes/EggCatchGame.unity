@@ -1737,10 +1737,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85681977041c06b44ab3b2d92cd6e314, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eggPrefab: {fileID: 114082003544227400, guid: ac014e5433d830d4a871eca47fd78014,
+  normalEggPrefab: {fileID: 114082003544227400, guid: ac014e5433d830d4a871eca47fd78014,
+    type: 2}
+  bonusEggPrefab: {fileID: 114221864760548978, guid: db6eca5922c7bbe4c9de55eb42b45368,
     type: 2}
   SpawnRadius: 15
   SpawnChance: 0.025
+  BonusSpawnChance: 0.005
 --- !u!4 &1400360091
 Transform:
   m_ObjectHideFlags: 0
