@@ -237,6 +237,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerNumber: 2
   gameManager: {fileID: 921709313}
+  basket: {fileID: 1287272412}
+  BasketFlashInterval: 0.1
+  BasketFlashColor: {r: 0.28676468, g: 0.28676468, b: 0.28676468, a: 1}
 --- !u!54 &353770940
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -473,6 +476,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerNumber: 1
   gameManager: {fileID: 921709313}
+  basket: {fileID: 2110717568}
+  BasketFlashInterval: 0.1
+  BasketFlashColor: {r: 0.28676468, g: 0.28676468, b: 0.28676468, a: 1}
 --- !u!4 &729180886
 Transform:
   m_ObjectHideFlags: 0
@@ -1392,6 +1398,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerNumber: 3
   gameManager: {fileID: 921709313}
+  basket: {fileID: 875844939}
+  BasketFlashInterval: 0.1
+  BasketFlashColor: {r: 0.28676468, g: 0.28676468, b: 0.28676468, a: 1}
 --- !u!54 &1307232843
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2212,6 +2221,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerNumber: 4
   gameManager: {fileID: 921709313}
+  basket: {fileID: 1934996488}
+  BasketFlashInterval: 0.1
+  BasketFlashColor: {r: 0.28676468, g: 0.28676468, b: 0.28676468, a: 1}
 --- !u!54 &2098574766
 Rigidbody:
   m_ObjectHideFlags: 0

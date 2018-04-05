@@ -19,8 +19,9 @@ public class EggCatchGameManager : GameManager<EggCatchPlayer>
     private GameObject player4Panel;
 
     [Tooltip("seconds")]
-    public float GameTime = 45f;
+    public float TotalGameTime = 45f;
 
+    private float gameTime;
     private Dictionary<PlayerNumber, int> points;
     private Dictionary<PlayerNumber, GameObject> playerPanels;
 
@@ -28,6 +29,7 @@ public class EggCatchGameManager : GameManager<EggCatchPlayer>
     {
         base.Awake();
 
+        gameTime = TotalGameTime;
         points = new Dictionary<PlayerNumber, int>();
         playerPanels = new Dictionary<PlayerNumber, GameObject>();
 
@@ -86,10 +88,10 @@ public class EggCatchGameManager : GameManager<EggCatchPlayer>
     {
         if (roundActive)
         {
-            GameTime -= Time.deltaTime;
-            if (GameTime < 0f)
+            gameTime -= Time.deltaTime;
+            if (gameTime < 0f)
             {
-                GameTime = 0f;
+                gameTime = 0f;
                 UpdateGameTimer();
 
                 PlayerNumber[] winners = GetWinners();
@@ -104,11 +106,19 @@ public class EggCatchGameManager : GameManager<EggCatchPlayer>
 
     private void UpdateGameTimer()
     {
-        float min = Mathf.Floor(GameTime / 60f);
-        float sec = GameTime % 60f;
-        float fraction = ((GameTime * 100) % 100);
+        float min = Mathf.Floor(gameTime / 60f);
+        float sec = gameTime % 60f;
+        float fraction = ((gameTime * 100) % 100);
 
-        gameTimer.text = String.Format("{0:00}:{1:00}:{2:00}", min, sec, fraction);
+        if (TotalGameTime >= 60f)
+        {
+            gameTimer.text = String.Format("{0:00}:{1:00}:{2:00}", min, sec, fraction);
+        }
+        else
+        {
+            // Much more exciting when all the numbers are moving
+            gameTimer.text = String.Format("{0:00}:{1:00}", sec, fraction);
+        }
     }
 
     // God have mercy...

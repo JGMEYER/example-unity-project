@@ -96,6 +96,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   FallSpeed: 0.1
+  PointValue: 1
 --- !u!135 &135327896876801300
 SphereCollider:
   m_ObjectHideFlags: 1

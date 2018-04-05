@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class EggCatchPlayer : Player
@@ -5,14 +6,21 @@ public class EggCatchPlayer : Player
 
     [SerializeField]
     private EggCatchGameManager gameManager;
+    [SerializeField]
+    private GameObject basket;
+
+    public float BasketFlashInterval = 0.5f;
+    public Color BasketFlashColor = Color.black;
 
     private Rigidbody rb;
+    private Color defaultBasketColor;
     private float inputHorizontal;
     private float inputVertical;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
+        defaultBasketColor = basket.GetComponent<Renderer>().material.color;
     }
 
     private void Update()
@@ -60,7 +68,16 @@ public class EggCatchPlayer : Player
         {
             gameManager.AddPoints(playerNumber, egg.PointValue);
             Destroy(egg.gameObject);
+
+            StartCoroutine(FlashBasketMaterial());
         }
+    }
+
+    private IEnumerator FlashBasketMaterial()
+    {
+        basket.GetComponent<Renderer>().material.color = BasketFlashColor;
+        yield return new WaitForSeconds(BasketFlashInterval);
+        basket.GetComponent<Renderer>().material.color = defaultBasketColor;
     }
 
 }
