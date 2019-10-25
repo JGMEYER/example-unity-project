@@ -1,2 +1,2 @@
 # example-unity-project
-Testing github with unity
+First attempt at a fully-featured unity game.
